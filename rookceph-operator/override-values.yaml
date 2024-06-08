@@ -1,0 +1,455 @@
+image:
+  repository: rook/ceph
+  tag: v1.14.5
+  pullPolicy: IfNotPresent
+
+crds:
+  enabled: true
+
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 128Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+unreachableNodeTolerationSeconds: 3
+currentNamespaceOnly: false
+annotations: {}
+logLevel: INFO
+
+rbacEnable: true
+
+rbacAggregate:
+  # -- If true, create a ClusterRole aggregated to [user facing roles](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles) for objectbucketclaims
+  enableOBCs: false
+
+pspEnable: false
+priorityClassName:
+
+containerSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 2016
+  runAsGroup: 2016
+  capabilities:
+    drop: ["ALL"]
+
+allowLoopDevices: false
+
+csi:
+  enableRbdDriver: true
+  enableCephfsDriver: true
+  disableCsiDriver: "false"
+
+  # 클러스터 외부 스토리지(aws s3 등)와의 연결시엔 필요할 수 있음
+  enableCSIHostNetwork: false
+  disableHolderPods: true
+
+  enableCephfsSnapshotter: true
+  enableNFSSnapshotter: true
+  enableRBDSnapshotter: true
+
+  # -- Enable Host mount for `/etc/selinux` directory for Ceph CSI nodeplugins
+  enablePluginSelinuxHostMount: false
+  enableCSIEncryption: false
+
+  # 하나의 스냅샷으로 여러 볼륨을 캡쳐할 수 있음 
+  enableVolumeGroupSnapshot: true
+  
+  pluginPriorityClassName: system-node-critical
+  provisionerPriorityClassName: system-cluster-critical
+
+  rbdFSGroupPolicy: "File"
+  cephFSFSGroupPolicy: "File"
+  nfsFSGroupPolicy: "File"
+
+  # -- OMAP generator generates the omap mapping between the PV name and the RBD image
+  # which helps CSI to identify the rbd images for CSI operations.
+  # `CSI_ENABLE_OMAP_GENERATOR` needs to be enabled when we are using rbd mirroring feature.
+  # By default OMAP generator is disabled and when enabled, it will be deployed as a
+  # sidecar with CSI provisioner pod, to enable set it to true.
+  enableOMAPGenerator: false
+
+  # -- Set CephFS Kernel mount options to use https://docs.ceph.com/en/latest/man/8/mount.ceph/#options.
+  # Set to "ms_mode=secure" when connections.encrypted is enabled in CephCluster CR
+  cephFSKernelMountOptions:
+
+  # -- Enable adding volume metadata on the CephFS subvolumes and RBD images.
+  # Not all users might be interested in getting volume/snapshot details as metadata on CephFS subvolume and RBD images.
+  # Hence enable metadata is false by default
+  enableMetadata: false
+
+  # -- Set replicas for csi provisioner deployment
+  provisionerReplicas: 2
+
+  clusterName:
+  logLevel: 0
+  sidecarLogLevel: 0
+
+  csiDriverNamePrefix:
+
+  rbdPluginUpdateStrategy: RollingUpdate
+  rbdPluginUpdateStrategyMaxUnavailable: 1
+
+  cephFSPluginUpdateStrategy: RollingUpdate
+  cephFSPluginUpdateStrategyMaxUnavailable: 1
+
+  nfsPluginUpdateStrategy: RollingUpdate
+  
+  grpcTimeoutInSeconds: 150
+  allowUnsupportedVersion: false
+
+  # -- The volume of the CephCSI RBD plugin DaemonSet
+  csiRBDPluginVolume:
+  #  - name: lib-modules
+  #    hostPath:
+  #      path: /run/booted-system/kernel-modules/lib/modules/
+  #  - name: host-nix
+  #    hostPath:
+  #      path: /nix
+
+  # -- The volume mounts of the CephCSI RBD plugin DaemonSet
+  csiRBDPluginVolumeMount:
+  #  - name: host-nix
+  #    mountPath: /nix
+  #    readOnly: true
+
+  # -- The volume of the CephCSI CephFS plugin DaemonSet
+  csiCephFSPluginVolume:
+  #  - name: lib-modules
+  #    hostPath:
+  #      path: /run/booted-system/kernel-modules/lib/modules/
+  #  - name: host-nix
+  #    hostPath:
+  #      path: /nix
+
+  # -- The volume mounts of the CephCSI CephFS plugin DaemonSet
+  csiCephFSPluginVolumeMount:
+  #  - name: host-nix
+  #    mountPath: /nix
+  #    readOnly: true
+
+  csiRBDProvisionerResource: |
+    - name: csi-provisioner
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+          cpu: 100m
+    - name: csi-resizer
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+          cpu: 100m
+    - name: csi-attacher
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+          cpu: 100m
+    - name: csi-snapshotter
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 516Mi
+          cpu: 200m
+    - name: csi-rbdplugin
+      resource:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          cpu: 1
+          memory: 1Gi
+    - name : csi-omap-generator
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          cpu: 500m
+          memory: 1Gi
+    - name: liveness-prometheus
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+  csiRBDPluginResource: |
+    - name: driver-registrar
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+          cpu: 100m
+    - name: csi-rbdplugin
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+          cpu: 50m
+    - name : liveness-prometheus
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+  csiCephFSProvisionerResource: |
+    - name : csi-provisioner
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 256Mi
+    - name : csi-resizer
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 256Mi
+    - name : csi-attacher
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 256Mi
+    - name : csi-snapshotter
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 256Mi
+    - name : csi-cephfsplugin
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+    - name : liveness-prometheus
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+
+  csiCephFSPluginResource: |
+    - name : driver-registrar
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+    - name : csi-cephfsplugin
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+    - name : liveness-prometheus
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+
+  csiNFSProvisionerResource: |
+    - name : csi-provisioner
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 256Mi
+    - name : csi-nfsplugin
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+    - name : csi-attacher
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+
+  csiNFSPluginResource: |
+    - name : driver-registrar
+      resource:
+        requests:
+          memory: 128Mi
+          cpu: 50m
+        limits:
+          memory: 256Mi
+    - name : csi-nfsplugin
+      resource:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+
+  # Set provisionerTolerations and provisionerNodeAffinity for provisioner pod.
+  # The CSI provisioner would be best to start on the same nodes as other ceph daemons.
+
+  provisionerTolerations:
+    - key: key
+      operator: Exists
+      effect: NoSchedule
+
+  provisionerNodeAffinity: 
+    worker-nodes: true
+  
+  pluginTolerations:
+    - key: key
+      operator: Exists
+      effect: NoSchedule
+
+  pluginNodeAffinity:
+    worker-nodes: true
+
+  enableLiveness: true
+
+  # -- CSI CephFS driver metrics port
+  cephfsLivenessMetricsPort: 9081
+
+  # -- CSI Addons server port
+  csiAddonsPort: 9070
+
+  forceCephFSKernelClient: true
+
+  rbdLivenessMetricsPort: 8080
+
+  serviceMonitor:
+    enabled: true
+    interval: 300s
+    labels: {}
+    namespace: kube-system
+
+  kubeletDirPath: /var/lib/kubelet
+
+  # -- Duration in seconds that non-leader candidates will wait to force acquire leadership.
+  csiLeaderElectionLeaseDuration: 137s
+
+  # -- Deadline in seconds that the acting leader will retry refreshing leadership before giving up.
+  csiLeaderElectionRenewDeadline: 107s
+
+  # -- Retry period in seconds the LeaderElector clients should wait between tries of actions.
+  csiLeaderElectionRetryPeriod: 26s
+
+  cephcsi:
+    repository: quay.io/cephcsi/cephcsi
+    tag: v3.11.0
+
+  registrar:
+    repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
+    tag: v2.10.1
+
+  provisioner:
+    repository: registry.k8s.io/sig-storage/csi-provisioner
+    tag: v4.0.1
+
+  snapshotter:
+    repository: registry.k8s.io/sig-storage/csi-snapshotter
+    tag: v7.0.2
+
+  attacher:
+    repository: registry.k8s.io/sig-storage/csi-attacher
+    tag: v4.5.1
+
+  resizer:
+    repository: registry.k8s.io/sig-storage/csi-resizer
+    tag: v1.10.1
+
+  imagePullPolicy: IfNotPresent
+  cephfsPodLabels:
+  nfsPodLabels:
+  rbdPodLabels:
+
+  csiAddons:
+    enabled: true
+    repository: quay.io/csiaddons/k8s-sidecar
+    tag: v0.8.0
+
+  nfs:
+    enabled: true
+
+  topology:
+    enabled: false
+    domainLabels:
+    - kubernetes.io/hostname
+
+
+  cephFSAttachRequired: true
+  rbdAttachRequired: true
+  nfsAttachRequired: true
+
+# 노드에서 새로운 스토리지 디바이스(hdd, ssd)를 찾는 데몬
+enableDiscoveryDaemon: false
+discoveryDaemonInterval: 24h
+
+# -- The timeout for ceph commands in seconds
+cephCommandsTimeoutSeconds: "15"
+useOperatorHostNetwork:
+
+# GitOps에서 OSD 수를 줄일 상황이 생기면 이 필드를 true로 설정하고 OSD를 줄여서 푸시하면 됨
+scaleDownOperator: false
+
+discover:
+  toleration: NoScehdule # or PreferNoSchedule / NoExecute
+  tolerationKey:
+  tolerations:
+  nodeAffinity:
+  podLabels:
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 100m
+    requests:
+      cpu: 10m
+      memory: 128Mi
+
+hostpathRequiresPrivileged: false
+disableDeviceHotplug: false
+discoverDaemonUdev:
+imagePullSecrets:
+enableOBCWatchOperatorNamespace: true
+obcProvisionerNamePrefix:
+
+monitoring:
+  enabled: false

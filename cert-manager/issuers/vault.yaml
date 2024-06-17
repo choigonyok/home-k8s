@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: vault-issuer
+spec:
+  acme:
+    email: "achoistic98@naver.com"
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: vault-tls
+    solvers:
+    - http01:
+        ingress:
+          class: cilium

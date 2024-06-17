@@ -1,0 +1,90 @@
+crds:
+  enabled: true
+  keep: true
+
+replicaCount: 2
+
+podDisruptionBudget:
+  enabled: true
+
+namespace: "cert-system"
+
+enableCertificateOwnerRef: true
+
+disableAutoApproval: false
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - cert-manager
+      topologyKey: kubernetes.io/hostname
+
+prometheus: 
+  enabled: false
+
+
+webhook:
+  replicaCount: 2
+  podDisruptionBudget:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - webhook
+        topologyKey: kubernetes.io/hostname
+
+  url: {}
+    # host:
+
+cainjector:
+  enabled: true
+  replicaCount: 2
+
+  podDisruptionBudget:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - cainjector
+        topologyKey: kubernetes.io/hostname

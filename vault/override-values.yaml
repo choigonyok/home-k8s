@@ -1,0 +1,281 @@
+global:
+  enabled: true
+  namespace: "vault-system"
+  imagePullSecrets: []
+  tlsDisable: true
+  externalVaultAddr: ""
+  openshift: false
+  psp:
+    enable: false
+
+  serverTelemetry:
+    prometheusOperator: false
+
+injector:
+  enabled: "false"
+
+server:
+  enabled: "true"
+  enterpriseLicense:
+    secretName: ""
+    secretKey: "license"
+
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.16.1"
+    pullPolicy: IfNotPresent
+
+  updateStrategyType: "RollingUpdate" # or OnDelete
+
+  logLevel: "info"
+  logFormat: "json"
+
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 250m
+
+  ingress:
+    enabled: true
+    labels: {}
+    annotations:
+      cert-manager.io/cluster-issuer: vault-issuer
+    ingressClassName: "cilium"
+    pathType: Prefix
+    activeService: true
+    hosts:
+      - host: vault.choigonyok.com
+        paths: []
+    extraPaths: []
+    tls:
+    - secretName: vault-tls
+      hosts:
+        - vault.choigonyok.com
+
+  hostAliases: []
+
+  route:
+    enabled: false
+
+  # k8s sa token을 이용한 vault k8s auth 설정
+  authDelegator:
+    enabled: true
+
+  extraInitContainers: null
+  extraContainers: null
+  shareProcessNamespace: false
+  extraArgs: ""
+  extraPorts: null
+
+  readinessProbe:
+    enabled: true
+    port: 8200
+    failureThreshold: 2
+    initialDelaySeconds: 5
+    periodSeconds: 60
+    successThreshold: 2
+    timeoutSeconds: 15
+  livenessProbe:
+    enabled: true
+    execCommand:
+    - /bin/sh
+    - -c
+    - /vault/userconfig/mylivenessscript/run.sh
+    path: "/v1/sys/health?standbyok=true"
+    port: 8200
+    failureThreshold: 2
+    initialDelaySeconds: 60
+    periodSeconds: 300
+    successThreshold: 2
+    timeoutSeconds: 15
+
+  terminationGracePeriodSeconds: 10
+
+  preStopSleepSeconds: 5
+
+  # Pod가 Ready 스테이트가 된 후 실행할 커맨드
+  postStart: []
+  # - /bin/sh
+  # - -c
+  # - /vault/userconfig/myscript/run.sh
+
+  extraEnvironmentVars: {}
+  extraSecretEnvironmentVars: []
+  extraVolumes: []
+
+  volumes: null
+  volumeMounts: null
+
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: vault-server
+          topologyKey: kubernetes.io/hostname
+
+  topologySpreadConstraints: []
+  tolerations: []
+
+  nodeSelector:
+    worker-nodes: true
+
+  networkPolicy:
+    enabled: true
+    egress: []
+    ingress:
+      - from:
+        - namespaceSelector: {}
+        # - namespaceSelector: { kube-system } // from loadbalancer
+        ports:
+        - port: 8200
+          protocol: TCP
+        - port: 8201
+          protocol: TCP
+
+  priorityClassName: ""
+  extraLabels:
+    app: vault-server
+
+  annotations: {}
+  configAnnotation: false
+
+  service:
+    enabled: true
+    active:
+      enabled: true
+      annotations: {}
+    standby:
+      enabled: true
+      annotations: {}
+    instanceSelector:
+      enabled: true
+
+    type: ClusterIP
+    # clusterIP: None
+
+    ipFamilyPolicy: ""
+    ipFamilies: []
+
+    publishNotReadyAddresses: true
+
+    externalTrafficPolicy: Cluster
+
+    port: 8200
+    targetPort: 8200
+    annotations: {}
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    mountPath: "/vault/data"
+    storageClass: null
+    accessMode: ReadWriteOnce
+    annotations: {}
+    labels: {}
+
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+
+  auditStorage:
+    enabled: true
+    size: 10Gi
+    mountPath: "/vault/audit"
+    storageClass: null
+    accessMode: ReadWriteOnce
+    annotations: {}
+    labels: {}
+
+  dev:
+    enabled: false
+
+  standalone:
+    enabled: "-"
+
+  ha:
+    enabled: true
+    replicas: 3
+    apiAddr: null
+    clusterAddr: null
+    raft:
+      enabled: true
+      setNodeId: true
+      config: |
+        ui = true
+        listener "tcp" {
+          tls_disable = 1
+          tls_disable_client_certs = true
+          address = ":8200"
+          cluster_address = ":8201"
+          # Enable unauthenticated metrics access (necessary for Prometheus Operator)
+          #telemetry {
+          #  unauthenticated_metrics_access = "true"
+          #}
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+        }
+
+        service_registration "kubernetes" {}
+
+    # for stateful vault, not ha
+    config: ""
+
+    disruptionBudget:
+      enabled: true
+      maxUnavailable: null
+
+  serviceAccount:
+    create: false
+    name: ""
+    createSecret: false
+    annotations: {}
+    extraLabels: {}
+    serviceDiscovery:
+      enabled: true
+
+  statefulSet:
+    annotations: {}
+
+    pod:
+      runAsNonRoot: true
+      runAsGroup: 1000
+      runAsUser: 1000
+      fsGroup: 1000
+    container:
+      allowPrivilegeEscalation: false
+
+    securityContext:
+      pod: {}
+      container: {}
+
+  hostNetwork: false
+
+ui:
+  enabled: true
+  publishNotReadyAddresses: true
+  activeVaultPodOnly: false
+  serviceType: "ClusterIP"
+  serviceNodePort: 30001
+  externalPort: 8200
+  targetPort: 8200
+
+  serviceIPFamilyPolicy: ""
+  serviceIPFamilies: []
+  externalTrafficPolicy: Cluster
+  annotations: {}
+
+# secrets-store-csi-driver-provider-vault
+csi:
+  enabled: false
+
+serverTelemetry:
+  serviceMonitor:
+    enabled: false
+  prometheusRules:
+      enabled: false

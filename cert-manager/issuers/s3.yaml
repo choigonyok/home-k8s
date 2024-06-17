@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: s3-issuer
+spec:
+  acme:
+    email: "achoistic98@naver.com"
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: s3-tls
+    solvers:
+    - http01:
+        ingress:
+          class: cilium

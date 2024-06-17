@@ -2,12 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/issuer: network-issuer
+    cert-manager.io/issuer: blog-issuer
     ingress.cilium.io/loadbalancer-mode: shared
     ingress.cilium.io/service-type: ClusterIP
-    ingress.kubernetes.io/ssl-redirect: "true"
-  name: test-ingress
-  namespace: kube-system
+  name: blog-ingress
 spec:
   ingressClassName: cilium
   rules:
@@ -21,6 +19,19 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/issuer: network-issuer
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
+  name: network-ingress
+  namespace: kube-system
+spec:
+  ingressClassName: cilium
+  rules:
   - host: network.choigonyok.com
     http:
       paths:

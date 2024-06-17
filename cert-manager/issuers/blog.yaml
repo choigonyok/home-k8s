@@ -1,14 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: network-issuer
-  namespace: kube-system
+  name: blog-issuer
 spec:
   acme:
     email: "achoistic98@naver.com"
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: network-tls
+      name: blog-tls
     solvers:
     - http01:
         ingress:

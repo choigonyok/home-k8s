@@ -1,0 +1,10 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: ceph-bucket-blog
+  namespace: rook-ceph
+spec:
+  bucketName: blog-bucket
+  generateBucketName: 
+  storageClassName: ceph-object
+  additionalConfig: null

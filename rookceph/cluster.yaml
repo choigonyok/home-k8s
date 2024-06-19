@@ -17,7 +17,7 @@ spec:
     allowMultiplePerNode: true
   mgr:
     count: 2
-    allowMultiplePerNode: true
+    allowMultiplePerNode: false
     modules:
       - name: rook
         enabled: true
@@ -49,7 +49,7 @@ spec:
   cleanupPolicy:
     confirmation: ""
     sanitizeDisks:
-      method: quick
+      method: complete
       dataSource: zero
       iteration: 1
     allowUninstallWithVolumes: false

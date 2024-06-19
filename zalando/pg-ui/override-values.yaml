@@ -1,0 +1,29 @@
+image:
+  tag: v1.11.0
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+envs:
+  appUrl: http://ui-postgres-operator-ui:8081
+  operatorApiUrl: http://postgres-operator:8080
+  operatorClusterNameLabel: "cluster-name"
+  resourcesVisible: "True"
+  targetNamespace: "*"
+  teams:
+    - "choigonyok"
+
+ingress:
+  enabled: true
+  annotations:
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
+  ingressClassName: "cilium"
+  hosts:
+    - host: postgres.choigonyok.com
+      paths: ["/"]

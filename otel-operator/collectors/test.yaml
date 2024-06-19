@@ -1,0 +1,57 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: test-otel-collector
+  namespace: mon-system
+spec:
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      hostmetrics:
+        scrapers:
+          cpu:
+          disk:
+          filesystem:
+          load:
+          memory:
+          network:
+          process:
+          processes:
+          paging:
+      fluentforward:
+        endpoint: 0.0.0.0:8006
+
+    processors:
+      batch:
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 4000
+        spike_limit_mib: 500
+      resource:
+        attributes:
+          - key: service.name
+            value: otel-collector
+            action: insert
+
+    exporters: 
+      debug:
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [otlp]
+          processors: [batch, memory_limiter, resource]
+          exporters: [debug]          
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug]
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug]

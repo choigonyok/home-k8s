@@ -154,15 +154,16 @@ server:
   #     name: plugins
   #     readOnly: true
 
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: {{ template "vault.name" . }}
-              app.kubernetes.io/instance: "{{ .Release.Name }}"
-              component: server
-          topologyKey: kubernetes.io/hostname
+  affinity: 
+  # affinity: |
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchLabels:
+  #             app.kubernetes.io/name: {{ template "vault.name" . }}
+  #             app.kubernetes.io/instance: "{{ .Release.Name }}"
+  #             component: server
+  #         topologyKey: kubernetes.io/hostname
 
   topologySpreadConstraints: []
   tolerations: []
@@ -279,7 +280,7 @@ server:
 
   ha:
     enabled: true
-    replicas: 1
+    replicas: 3
 
     # Set the api_addr configuration for Vault HA
     # See https://developer.hashicorp.com/vault/docs/configuration#api_addr

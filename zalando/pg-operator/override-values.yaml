@@ -1,0 +1,22 @@
+image:
+  tag: v1.11.0
+
+configPostgresPodResources:
+  default_cpu_limit: "1"
+  default_cpu_request: 10m
+  default_memory_limit: 500Mi
+  default_memory_request: 100Mi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 150Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+securityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false

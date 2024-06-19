@@ -1,14 +1,14 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: vault-issuer
-  namespace: vault-system
+  name: rookceph-issuer
+  namespace: rook-ceph
 spec:
   acme:
     email: "achoistic98@naver.com"
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: vault-tls
+      name: rookceph-tls
     solvers:
     - http01:
         ingress:

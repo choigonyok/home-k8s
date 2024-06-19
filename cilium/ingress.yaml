@@ -24,6 +24,29 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
+    cert-manager.io/issuer: rookceph-issuer
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
+  name: rookceph-ingress
+  namespace: rook-ceph
+spec:
+  ingressClassName: cilium
+  rules:
+  - host: storage.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: rook-ceph-mgr-dashboard
+            port:
+              number: 7000
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
     cert-manager.io/issuer: network-issuer
     ingress.cilium.io/loadbalancer-mode: shared
     ingress.cilium.io/service-type: ClusterIP
@@ -40,5 +63,28 @@ spec:
             name: hubble-ui
             port:
               number: 80
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/issuer: auth-issuer
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
+  name: auth-ingress
+  namespace: auth-system
+spec:
+  ingressClassName: cilium
+  rules:
+  - host: auth.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: keycloak-service
+            port:
+              number: 8080
         path: /
         pathType: Prefix

@@ -71,13 +71,6 @@ spec:
       class: ceph-block
     # metricsConfig:
   entityOperator: # User/Topic Operator Config
-    tlsSidecar:
-        requests:
-          memory: 10Mi
-          cpu: "10m"
-        limits:
-          cpu: 500m
-          memory: 128Mi
     topicOperator:
       watchedNamespace: efk-system
       reconciliationIntervalSeconds: 60

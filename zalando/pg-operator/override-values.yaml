@@ -20,3 +20,7 @@ securityContext:
   runAsNonRoot: true
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
+
+configKubernetes:
+  enable_pod_antiaffinity: true
+

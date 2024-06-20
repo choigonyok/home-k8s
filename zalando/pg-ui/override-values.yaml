@@ -10,7 +10,7 @@ resources:
     memory: 256Mi
 
 envs:
-  appUrl: http://ui-postgres-operator-ui:8081
+  appUrl: http://postgres-operator-ui:8081
   operatorApiUrl: http://postgres-operator:8080
   operatorClusterNameLabel: "cluster-name"
   resourcesVisible: "True"

@@ -16,24 +16,45 @@ spec:
   preservePoolsOnDelete: true
   gateway:
     port: 80
-    instances: 1
+    instances: 3
     annotations:
     placement:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
           - matchExpressions:
-            - key: worker-nodes
+            - key: node-type
               operator: In
               values:
-              - 'yes'
+              - 'worker'
     resources:
       limits:
         cpu: "500m"
         memory: "1024Mi"
       requests:
-        cpu: "500m"
-        memory: "1024Mi"
-  zone:
-    name: ap-southeast-2
-
+        cpu: "100m"
+        memory: "512Mi"
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: ceph-bucket
+  namespace: rook-ceph
+spec:
+  bucketName:
+  generateBucketName: bucket
+  storageClassName: ceph-object
+  additionalConfig:
+    maxSize: "2G"
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ceph-object
+provisioner: rook-ceph.ceph.rook.io/bucket
+parameters:
+  objectStoreName: ceph-objectstore
+  objectStoreNamespace: rook-ceph
+  bucketName: ceph-bucket
+reclaimPolicy: Retain
+allowVolumeExpansion: true

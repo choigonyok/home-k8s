@@ -126,13 +126,7 @@ server:
   # Used to define commands to run after the pod is ready.
   # This can be used to automate processes such as initialization
   # or boostrapping auth methods.
-  postStart:
-  - /bin/sh
-  - -c
-  - TEST=$(echo $(vault operator init -n 1 -t 1) | awk '/Unseal Key 1 / {print $4}')
-  - vault operator unseal $TEST
-
-  # - vault operator unseal $TEST
+  postStart: []
 
   # - vault operator init -n 1 -t 1 > /vault/tokens/root
   # - vault operator unseal $(cat /vault/tokens/root  | awk '/Unseal Key 1 / {print $4}')
@@ -166,11 +160,11 @@ server:
 
   topologySpreadConstraints: []
   tolerations: []
-  nodeSelector:
-    node-type: worker
+  nodeSelector: {}
+    # node-type: worker
 
   networkPolicy:
-    enabled: true
+    enabled: false
     egress: []
     ingress:
       - from:
@@ -279,17 +273,17 @@ server:
 
   ha:
     enabled: true
-    replicas: 1
+    replicas: 3
 
     # Set the api_addr configuration for Vault HA
     # See https://developer.hashicorp.com/vault/docs/configuration#api_addr
     # If set to null, this will be set to the Pod IP Address
-    apiAddr: https://vault.choigonyok.com
+    apiAddr:
 
     # Set the cluster_addr confuguration for Vault HA
     # See https://developer.hashicorp.com/vault/docs/configuration#cluster_addr
     # If set to null, this will be set to https://$(HOSTNAME).{{ template "vault.fullname" . }}-internal:8201
-    clusterAddr: http://vault-server-internal.vault-system.svc.cluster.local:8201
+    clusterAddr:
 
     raft:
       enabled: true
@@ -315,6 +309,24 @@ server:
 
         storage "raft" {
           path = "/vault/data"
+          retry_join {
+            leader_api_addr = "http://vault-0.vault-internal:8200"
+            leader_ca_cert_file = ""
+            leader_client_cert_file = ""
+            leader_client_key_file = ""
+          }
+          retry_join {
+            leader_api_addr = "http://vault-1.vault-internal:8200"
+            leader_ca_cert_file = ""
+            leader_client_cert_file = ""
+            leader_client_key_file = ""
+          }
+          retry_join {
+            leader_api_addr = "http://vault-2.vault-internal:8200"
+            leader_ca_cert_file = ""
+            leader_client_cert_file = ""
+            leader_client_key_file = ""
+          }
         }
 
         service_registration "kubernetes" {}
@@ -360,7 +372,7 @@ server:
 ui:
   enabled: true
   publishNotReadyAddresses: true
-  activeVaultPodOnly: true
+  activeVaultPodOnly: false
   serviceType: "ClusterIP"
   serviceNodePort: null
   externalPort: 8200
@@ -553,3 +565,4 @@ serverTelemetry:
       #    for: 5m
       #    labels:
       #      severity: critical
+

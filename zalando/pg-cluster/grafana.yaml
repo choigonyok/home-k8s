@@ -1,0 +1,36 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: grafana-pg
+  namespace: postgres-system
+spec:
+  teamId: choigonyok
+  volume:
+    size: 10G
+    storageClass: ceph-block
+  numberOfInstances: 3
+  users:
+    keycloak: 
+    - superuser
+    - createdb
+  databases:
+    grafana_db: grafana
+  enableMasterLoadBalancer: false
+  enableReplicaLoadBalancer: false
+  postgresql:
+    version: "16"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 300m
+      memory: 500Mi
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-type
+              operator: In
+              values:
+                - worker

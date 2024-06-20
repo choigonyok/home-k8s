@@ -178,7 +178,7 @@ spec:
         - mountPath: /tmp
           name: tmp-dir
       nodeSelector:
-        worker-nodes: 'no'
+        node-type: master
       priorityClassName: system-cluster-critical
       serviceAccountName: metrics-server
       volumes:

@@ -1,0 +1,38 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: fluent-bit
+  namespace: mon-system
+  labels:
+    strimzi.io/cluster: monitor
+spec:
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: log-topic
+          patternType: literal
+        operations:
+          - Describe
+          - Write
+          - Create
+        host: "*"
+      - resource:
+          type: topic
+          name: metrics-topic
+          patternType: literal
+        operations:
+          - Describe
+          - Write
+          - Create
+        host: "*"
+      - resource:
+          type: topic
+          name: trace-topic
+          patternType: literal
+        operations:
+          - Describe
+          - Write
+          - Create
+        host: "*"

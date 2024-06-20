@@ -1,0 +1,128 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: monitor
+  namespace: kafka-system
+spec:
+  pod:
+    template:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: strimzi.io/name
+                    operator: In
+                    values:
+                      - monitor-kafka
+              topologyKey: "kubernetes.io/hostname"
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #       - matchExpressions:
+        #         - key: node-type
+        #           operator: In
+        #           values:
+        #           - worker
+  kafka:
+    template:
+      kafkaContainer:
+        securityContext:
+          runAsUser: 0 
+    replicas: 3
+    version: 3.7.0
+    logging:
+      type: inline
+      loggers:
+        kafka.root.logger.level: INFO # DEBUG / ERROR / WARN / FATAL / OFF
+    jvmOptions: # Kafka에서 돌아가는 JVM 퍼포먼스 조절하기 위한 필드
+      -Xms: 256m
+      -Xmx: 2048m
+    listeners:
+      - name: plain
+        port: 9092
+        type: cluster-ip
+        tls: false
+        configuration:
+          useServiceDnsDomain: true
+      - name: tls
+        port: 9093
+        type: cluster-ip
+        tls: true
+        authentication:
+          type: tls
+    config:
+      auto.create.topics.enable: "false"
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      inter.broker.protocol.version: "3.7"
+    storage:
+      type: persistent-claim
+      size: 10Gi
+      class: ceph-block
+  zookeeper:
+    template:
+      zookeeperContainer:
+        securityContext:
+          runAsUser: 0 
+    replicas: 3
+    logging:
+      type: inline
+      loggers:
+        zookeeper.root.logger: INFO
+    resources:
+      requests:
+        memory: 10Mi
+        cpu: "10m"
+      limits:
+        memory: 8Gi
+        cpu: "2"
+    jvmOptions:
+      -Xms: 128m
+      -Xmx: 512m
+    storage:
+      type: persistent-claim
+      size: 10Gi
+      class: ceph-block
+    # metricsConfig:
+  entityOperator: # User/Topic Operator Config
+    tlsSidecar:
+        requests:
+          memory: 10Mi
+          cpu: "10m"
+        limits:
+          cpu: 500m
+          memory: 128Mi
+    topicOperator:
+      watchedNamespace: efk-system
+      reconciliationIntervalSeconds: 60
+      logging:
+        type: inline
+        loggers:
+          rootLogger.level: INFO
+      resources:
+        requests:
+          memory: 10Mi
+          cpu: "10m"
+        limits:
+          memory: 512Mi
+          cpu: "1"
+    userOperator:
+      watchedNamespace: mon-system
+      reconciliationIntervalSeconds: 60
+      logging:
+        type: inline
+        loggers:
+          rootLogger.level: INFO
+      resources:
+        requests:
+          memory: 10Mi
+          cpu: "10m"
+        limits:
+          memory: 512Mi
+          cpu: "1"
+  kafkaExporter: # Kafka의 메트릭을 외부로 보내기 위한 구성
+  cruiseControl: # 불균형을 조정하기 위한 구성, 파티션/이벤트가 쏠려있는 상황 등에서 사용

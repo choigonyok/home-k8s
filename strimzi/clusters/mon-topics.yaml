@@ -1,0 +1,35 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: log-topic
+  namespace: mon-system
+  labels:
+    strimzi.io/cluster: monitor
+spec:
+  topicName: log-topic
+  partitions: 9
+  replicas: 3
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: metrics-topic
+  namespace: mon-system
+  labels:
+    strimzi.io/cluster: monitor
+spec:
+  topicName: metrics-topic
+  partitions: 9
+  replicas: 3
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: trace-topic
+  namespace: mon-system
+  labels:
+    strimzi.io/cluster: monitor
+spec:
+  topicName: trace-topic
+  partitions: 9
+  replicas: 3

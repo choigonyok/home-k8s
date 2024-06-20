@@ -4,26 +4,8 @@ metadata:
   name: monitor
   namespace: kafka-system
 spec:
-  pod:
-    template:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: strimzi.io/name
-                    operator: In
-                    values:
-                      - monitor-kafka
-              topologyKey: "kubernetes.io/hostname"
-        # nodeAffinity:
-        #   requiredDuringSchedulingIgnoredDuringExecution:
-        #     nodeSelectorTerms:
-        #       - matchExpressions:
-        #         - key: node-type
-        #           operator: In
-        #           values:
-        #           - worker
+  rack:
+    topologyKey: "kubernetes.io/hostname"
   kafka:
     template:
       kafkaContainer:

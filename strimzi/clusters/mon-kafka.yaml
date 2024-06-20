@@ -4,9 +4,9 @@ metadata:
   name: monitor
   namespace: kafka-system
 spec:
-  rack:
-    topologyKey: "kubernetes.io/hostname"
   kafka:
+    rack:
+      topologyKey: "kubernetes.io/hostname"
     template:
       kafkaContainer:
         securityContext:

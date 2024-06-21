@@ -12,7 +12,7 @@ spec:
       version: "v2"
       auth:
         tokenSecretRef:
-          name: "vault-rookt-token"
+          name: "vault-root-token"
           key: "token"
 ---
 # 외부 Vault 서버와 연결하기 위해 Vault Authn Token을 제공하는 오브젝트입니다.

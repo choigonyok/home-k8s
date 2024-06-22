@@ -113,14 +113,7 @@ console:
       ingress.cilium.io/loadbalancer-mode: shared
       ingress.cilium.io/service-type: ClusterIP
     tls: []
-    host: console.local
+    host: s3.choigonyok.com
     path: /
     pathType: Prefix
     number: 9090
-  volumes:
-    - name: tmp
-      emptyDir: {}
-  volumeMounts:
-    - name: tmp
-      readOnly: false
-      mountPath: /tmp/certs/CAs

@@ -19,9 +19,6 @@ additionalLabels: {}
 additionalAnnotations: {}
 ignoreChartChecksums: false
 extraArgs: []
-# example for enabling FTP:
-#   - --ftp=\"address=:8021\"
-#   - --ftp=\"passive-port-range=10000-10010\"
 
 extraVolumes: []
 extraVolumeMounts: []
@@ -51,7 +48,7 @@ mountPath: "/export"
 bucketRoot: ""
 
 drivesPerNode: 1
-replicas: 3
+replicas: 4
 pools: 1
 
 tls:
@@ -150,7 +147,7 @@ makePolicyJob:
   exitCommand: ""
 
 users:
-  - accessKey: admin
+  - accessKey: choigonyok
     existingSecret: minio-vault-secret
     existingSecretKey: rootPassword
     policy: consoleAdmin
@@ -165,7 +162,11 @@ makeUserJob:
       memory: 128Mi
   exitCommand: ""
 
-svcaccts: []
+svcaccts:
+  - accessKey: choigonyok-svcacct
+    existingSecret: minio-vault-secret
+    existingSecretKey: rootAcctsPassword
+    user: choigonyok
 
 makeServiceAccountJob:
   securityContext:
@@ -218,9 +219,7 @@ postJob:
   affinity: {}
 
 environment:
-  MINIO_REGION: "ap-northeast-2"
-
-extraSecret: ~
+extraSecret: "minio-vault-secret"
 
 oidc:
   enabled: false
@@ -234,7 +233,6 @@ oidc:
   claimName: "policy"
   scopes: "openid,profile,email"
   redirectUri: "https://console-endpoint-url/oauth_callback"
-  # Can leave empty
   claimPrefix: ""
   comment: ""
   displayName: ""
@@ -256,7 +254,7 @@ serviceAccount:
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     includeNode: false
     public: true
     additionalLabels: {}

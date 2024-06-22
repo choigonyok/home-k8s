@@ -1,0 +1,338 @@
+nameOverride: ""
+fullnameOverride: ""
+clusterDomain: cluster.local
+
+image:
+  repository: quay.io/minio/minio
+  tag: RELEASE.2024-04-18T19-09-19Z
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+mcImage:
+  repository: quay.io/minio/mc
+  tag: RELEASE.2024-04-18T16-45-29Z
+  pullPolicy: IfNotPresent
+
+mode: distributed
+
+additionalLabels: {}
+additionalAnnotations: {}
+ignoreChartChecksums: false
+
+extraArgs: []
+extraVolumes: []
+extraVolumeMounts: []
+extraContainers: []
+
+minioAPIPort: "9000"
+minioConsolePort: "9001"
+
+deploymentUpdate:
+  type: RollingUpdate
+  maxUnavailable: 0
+  maxSurge: 100%
+
+statefulSetUpdate:
+  updateStrategy: RollingUpdate
+
+priorityClassName: ""
+
+runtimeClassName: ""
+
+rootUser: ""
+rootPassword: ""
+
+existingSecret: "minio-vault-secret" # with Vault external-secrets-operator
+
+## Directory on the MinIO pof
+certsPath: "/etc/minio/certs/"
+configPathmc: "/etc/minio/mc/"
+
+## Path where PV would be mounted on the MinIO Pod
+mountPath: "/export"
+## Override the root directory which the minio server should serve from.
+## If left empty, it defaults to the value of {{ .Values.mountPath }}
+## If defined, it must be a sub-directory of the path specified in {{ .Values.mountPath }}
+##
+bucketRoot: ""
+
+# Number of drives attached to a node
+drivesPerNode: 1
+# Number of MinIO containers running
+replicas: 3
+# Number of expanded MinIO clusters
+pools: 1
+
+## TLS Settings for MinIO
+tls:
+  enabled: false
+  certSecret: ""
+  publicCrt: public.crt
+  privateKey: private.key
+
+trustedCertsSecret: ""
+
+persistence:
+  enabled: true
+  annotations: {}
+  existingClaim: ""
+  storageClass: "ceph-block"
+  volumeName: ""
+  accessMode: ReadWriteOnce
+  size: 100Gi
+  subPath: ""
+
+service:
+  type: ClusterIP
+  clusterIP: ~
+  port: "9000"
+  nodePort: null
+  loadBalancerIP: ~
+  externalIPs: []
+  annotations: {}
+
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: Cluster
+
+ingress:
+  enabled: false
+  ingressClassName: ~
+  labels: {}
+  annotations: {}
+  path: /
+  hosts: []
+  tls: []
+
+consoleService:
+  type: ClusterIP
+  clusterIP: ~
+  port: "9001"
+  nodePort: ~
+  loadBalancerIP: ~
+  externalIPs: []
+  annotations: {}
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: Cluster
+
+consoleIngress:
+  enabled: true
+  ingressClassName: cilium
+  labels: {}
+  annotations:
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
+  path: /
+  hosts:
+    - s3.choigonyok.com
+  tls: []
+
+nodeSelector: {}
+  # node-type: worker
+tolerations: []
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - minio
+      topologyKey: "kubernetes.io/hostname"
+
+podLabels:
+  app: minio
+
+topologySpreadConstraints: []
+securityContext:
+  enabled: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+  readOnlyRootFilesystem: false
+
+podAnnotations:
+  vault.hashicorp.com/agent-inject: true
+  vault.hashicorp.com/agent-inject-secret-test: k8s/data/minio
+  vault.hashicorp.com/agent-inject-status: update
+  vault.hashicorp.com/role: internal-app
+  vault.hashicorp.com/agent-inject-template-test: |
+    {{- with secret "k8s/data/minio" -}}
+    postgres://{{ .Data.username }}:{{ .Data.password }}@postgres:5432/appdb?sslmode=disable
+    {{- end }}
+
+resources:
+  requests:
+    memory: 1Gi
+    cpu: 100m
+  limits:
+    memory: 4Gi
+    cpu: 1
+
+policies: []
+
+makePolicyJob:
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+  resources:
+    requests:
+      memory: 128Mi
+  exitCommand: ""
+
+users: []
+
+makeUserJob:
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+  resources:
+    requests:
+      memory: 128Mi
+  exitCommand: ""
+
+svcaccts: []
+  ## accessKey, secretKey and parent user to be assigned to the service accounts
+  ## Add new service accounts as explained here https://min.io/docs/minio/kubernetes/upstream/administration/identity-access-management/minio-user-management.html#service-accounts
+  # - accessKey: console-svcacct
+  #   secretKey: console123
+  #   user: console
+  ## Or you can refer to specific secret
+  # - accessKey: externalSecret
+  #   existingSecret: my-secret
+  #   existingSecretKey: password
+  #   user: console
+  ## You also can pass custom policy
+  # - accessKey: console-svcacct
+  #   secretKey: console123
+  #   user: console
+  #   policy:
+  #     statements:
+  #       - resources:
+  #           - 'arn:aws:s3:::example*/*'
+  #         actions:
+  #           - "s3:AbortMultipartUpload"
+  #           - "s3:GetObject"
+  #           - "s3:DeleteObject"
+  #           - "s3:PutObject"
+  #           - "s3:ListMultipartUploadParts"
+
+makeServiceAccountJob:
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+  resources:
+    requests:
+      memory: 128Mi
+  exitCommand: ""
+
+buckets:
+  - name: bucket1
+    # bucket [none|download|upload|public]
+    policy: none
+    purge: false
+    versioning: true # remove this key if you do not want versioning feature
+    objectlocking: false
+
+makeBucketJob:
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+  resources:
+    requests:
+      memory: 128Mi
+  exitCommand: ""
+
+customCommands:
+
+customCommandJob:
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+  resources:
+    requests:
+      memory: 128Mi
+  exitCommand: ""
+
+## Merge jobs
+postJob:
+  podAnnotations: {}
+  annotations: {}
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+environment: {}
+extraSecret: "minio-vault-secret" # env secret
+
+oidc:
+  enabled: false
+  configUrl: "https://identity-provider-url/.well-known/openid-configuration"
+  clientId: "minio"
+  clientSecret: ""
+  # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
+  existingClientSecretName: ""
+  existingClientIdKey: ""
+  existingClientSecretKey: ""
+  claimName: "policy"
+  scopes: "openid,profile,email"
+  redirectUri: "https://console-endpoint-url/oauth_callback"
+  # Can leave empty
+  claimPrefix: ""
+  comment: ""
+  displayName: ""
+
+networkPolicy:
+  enabled: false
+  # Specifies whether the policies created will be standard Network Policies (flavor: kubernetes)
+  # or Cilium Network Policies (flavor: cilium)
+  flavor: cilium
+  allowExternal: true
+  # only when using flavor: cilium
+  egressEntities:
+   - kube-apiserver
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 2
+
+serviceAccount:
+  create: true
+  name: "minio-sa"
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    includeNode: false
+    public: true
+    additionalLabels: {}
+    annotations: {}
+    relabelConfigs: {}
+    relabelConfigsCluster: {}
+      # metricRelabelings:
+      #   - regex: (server|pod)
+      #     action: labeldrop
+    namespace: ~
+    # Scrape interval, for example `interval: 30s`
+    interval: ~
+    # Scrape timeout, for example `scrapeTimeout: 10s`
+    scrapeTimeout: ~
+
+etcd:
+  endpoints: []
+  pathPrefix: ""
+  corednsPathPrefix: ""
+  clientCert: ""
+  clientCertKey: ""

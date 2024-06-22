@@ -38,7 +38,7 @@ presets:
   kubernetesEvents:
     enabled: true
   clusterMetrics:
-    enabled: true
+    enabled: false
 
 configMap:
   create: true
@@ -271,7 +271,7 @@ ingress:
   annotations:
     ingress.cilium.io/loadbalancer-mode: shared
     ingress.cilium.io/service-type: ClusterIP
-  ingressClassName: nginx
+  ingressClassName: cilium
   hosts:
     - host: otel.choigonyok.com
       paths:

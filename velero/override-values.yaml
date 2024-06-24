@@ -1,0 +1,238 @@
+namespace:
+  labels: {}
+
+image:
+  repository: velero/velero
+  tag: v1.13.2
+  pullPolicy: IfNotPresent
+  imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+annotations: {}
+secretAnnotations: {}
+labels: {}
+podAnnotations: {}
+podLabels: {}
+resources: {}
+upgradeJobResources: {}
+upgradeCRDsJob:
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraEnvVars: {}
+
+dnsPolicy: ClusterFirst
+initContainers:
+  - name: velero-plugin-for-csi
+    image: velero/velero-plugin-for-csi:v0.7.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.9.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+podSecurityContext: {}
+containerSecurityContext: {}
+lifecycle: {}
+priorityClassName: ""
+terminationGracePeriodSeconds: 3600
+livenessProbe:
+  httpGet:
+    path: /metrics
+    port: http-monitoring
+    scheme: HTTP
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /metrics
+    port: http-monitoring
+    scheme: HTTP
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 5
+
+tolerations: []
+affinity: {}
+nodeSelector: {}
+dnsConfig: {}
+extraVolumes: []
+extraVolumeMounts: []
+extraObjects: []
+
+metrics:
+  enabled: false
+  scrapeInterval: 30s
+  scrapeTimeout: 10s
+
+  service:
+    annotations: {}
+    labels: {}
+
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8085"
+    prometheus.io/path: "/metrics"
+
+  serviceMonitor:
+    autodetect: true
+    enabled: false
+    annotations: {}
+    additionalLabels: {}
+
+  nodeAgentPodMonitor:
+    autodetect: true
+    enabled: false
+    annotations: {}
+    additionalLabels: {}
+
+  prometheusRule:
+    autodetect: true
+    enabled: false
+    additionalLabels: {}
+    spec: []
+
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+  resources: {}
+  annotations: {}
+  labels: {}
+
+upgradeCRDs: true
+cleanUpCRDs: true
+
+configuration:
+  backupStorageLocation:
+  - name: aws-s3-storage # 수정
+    provider: velero.io/aws
+    bucket: blog # 수정
+    caCert:
+    prefix:
+    default: true
+    validationFrequency:
+    accessMode: ReadWrite
+    credential:
+      name: s3-credential
+      key: keys
+    config:
+      region: ap-northeast-2
+      s3ForcePathStyle: true
+      s3Url: http://S3_STORAGE_URL:PORT # 수정
+    annotations: {}
+
+  volumeSnapshotLocation:
+  - name:
+    provider:
+    credential:
+      name:
+      key:
+    config: {}
+    annotations: {}
+
+  uploaderType:
+  backupSyncPeriod:
+  fsBackupTimeout:
+  clientBurst:
+  clientPageSize:
+  clientQPS:
+  defaultBackupStorageLocation:
+  defaultItemOperationTimeout:
+  defaultBackupTTL:
+  defaultVolumeSnapshotLocations:
+  disableControllers:
+  disableInformerCache: false
+  garbageCollectionFrequency:
+  logFormat:
+  logLevel:
+  metricsAddress:
+  pluginDir:
+  profilerAddress:
+  restoreOnlyMode:
+  restoreResourcePriorities:
+  storeValidationFrequency:
+  terminatingResourceTimeout:
+  defaultSnapshotMoveData:
+  features:
+  namespace:
+  extraArgs: []
+  extraEnvVars: {}
+  defaultVolumesToFsBackup: true
+  defaultRepoMaintainFrequency:
+
+rbac:
+  create: true
+  clusterAdministrator: true
+  clusterAdministratorName: cluster-admin
+
+serviceAccount:
+  server:
+    create: true
+    name:
+    annotations:
+    labels:
+    imagePullSecrets: []
+
+credentials:
+  useSecret: true
+  name: s3-credential
+  existingSecret:
+  secretContents:
+    keys: |
+      [default]
+      aws_access_key_id=ACCESS_KEY_ID # 수정
+      aws_secret_access_key=SECRET_ACCESS_KEY # 수정
+  extraEnvVars: {}
+  extraSecretRef: ""
+
+backupsEnabled: true
+snapshotsEnabled: false
+deployNodeAgent: true
+
+nodeAgent:
+  podVolumePath: /var/lib/kubelet/pods
+  priorityClassName: ""
+  resources: {}
+  tolerations: []
+  annotations: {}
+  labels: {}
+  useScratchEmptyDir: true
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraEnvVars: {}
+  dnsPolicy: ClusterFirst
+  podSecurityContext:
+    runAsUser: 0
+  containerSecurityContext: {}
+  lifecycle: {}
+  nodeSelector: {}
+  affinity: {}
+  dnsConfig: {}
+
+schedules:
+  rafay-backup:
+    disabled: true # 수정
+    labels:
+    annotations:
+    schedule: "1 * * * *" # 수정
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "48h" # 수정
+      storageLocation: aws-s3-storage # 수정
+      includedNamespaces:
+      - blog-system # 수정
+
+configMaps: {}

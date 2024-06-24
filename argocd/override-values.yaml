@@ -1,0 +1,94 @@
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+repoServer:
+  replicas: 2
+  initContainers:
+    - name: download-tools
+      image: alpine/curl
+      env:
+        - name: AVP_VERSION
+          value: 1.16.1
+      command: [sh, -c]
+      args:
+        - >-
+          curl -L https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v$(AVP_VERSION)/argocd-vault-plugin_$(AVP_VERSION)_linux_amd64 -o argocd-vault-plugin &&
+          chmod +x argocd-vault-plugin &&
+          mv argocd-vault-plugin /custom-tools/
+      volumeMounts:
+        - mountPath: /custom-tools
+          name: custom-tools
+  extraContainers:
+    - name: avp-helm
+      command: [/var/run/argocd/argocd-cmp-server]
+      image: quay.io/argoproj/argocd:v2.7.4
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+      volumeMounts:
+        - mountPath: /var/run/argocd
+          name: var-files
+        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+          subPath: avp-helm.yaml
+          name: cmp-plugin
+        - mountPath: /tmp
+          name: tmp-dir
+        - mountPath: /home/argocd/cmp-server/plugins
+          name: plugins
+        - name: custom-tools
+          subPath: argocd-vault-plugin
+          mountPath: /usr/local/bin/argocd-vault-plugin
+    - name: avp
+      command: [/var/run/argocd/argocd-cmp-server]
+      image: quay.io/argoproj/argocd:v2.7.4
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+      volumeMounts:
+        - mountPath: /var/run/argocd
+          name: var-files
+        - mountPath: /home/argocd/cmp-server/plugins
+          name: plugins
+        - mountPath: /tmp
+          name: tmp-dir
+        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+          subPath: avp.yaml
+          name: cmp-plugin
+        - name: custom-tools
+          subPath: argocd-vault-plugin
+          mountPath: /usr/local/bin/argocd-vault-plugin
+
+  volumes:
+    - configMap:
+        name: cmp-plugin
+      name: cmp-plugin
+    - name: custom-tools
+      emptyDir: {}
+    - name: tmp-dir
+      emptyDir: {}
+
+applicationSet:
+  replicas: 2
+
+global:
+  domain: cd.choigonyok.com
+  logging:
+    format: json
+    level: debug
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  replicas: 2
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    annotations:
+      ingress.cilium.io/loadbalancer-mode: shared
+      ingress.cilium.io/service-type: ClusterIP
+    extraTls: []

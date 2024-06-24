@@ -21,7 +21,7 @@ metadata:
   name: "lb-pool"
 spec:
   blocks:
-  - cidr: "192.168.123.108/29"
+  - cidr: <path:home-k8s/data/cilium/manifest/CiliumLoadBalancerIPPool#spec.blocks.cidr>
   serviceSelector:
     matchLabels:
       cilium.io/ingress: "true"

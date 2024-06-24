@@ -5,6 +5,17 @@ controller:
   replicas: 1
 
 repoServer:
+  rbac:
+    - apiGroups:
+      - ""
+      resources:
+      - secrets
+      verbs:
+      - get
+      - watch
+      - list
+      resourceNames:
+      - avp-secret
   replicas: 2
   initContainers:
     - name: download-tools
@@ -82,6 +93,14 @@ global:
 configs:
   params:
     server.insecure: true
+  cm:
+    resource.exclusions: |
+      - apiGroups:
+        - cilium.io
+        kinds:
+        - CiliumIdentity
+        clusters:
+        - "*"
 
 server:
   replicas: 2

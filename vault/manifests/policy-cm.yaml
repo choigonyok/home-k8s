@@ -5,6 +5,10 @@ metadata:
   namespace: vault-system
 data:
   minio.hcl: |
-    path "k8s/data/minio" {
+    path "home-k8s/data/minio/*" {
+      capabilities = ["read", "list"]
+    }
+  mon.hcl: |
+    path "home-k8s/data/mon/*" {
       capabilities = ["read", "list"]
     }

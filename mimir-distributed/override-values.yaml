@@ -56,6 +56,8 @@ distributor:
       memory: 4Gi
 
 ingester:
+  zoneAwareReplication:
+    enabled: false
   persistentVolume:
     size: 50Gi
   replicas: 3
@@ -84,9 +86,6 @@ ingester:
                 values:
                   - ingester
           topologyKey: 'kubernetes.io/hostname'
-
-  zoneAwareReplication:
-    topologyKey: 'kubernetes.io/hostname'
 
 admin-cache:
   enabled: true
@@ -176,7 +175,7 @@ store_gateway:
                   - store-gateway
           topologyKey: 'kubernetes.io/hostname'
   zoneAwareReplication:
-    topologyKey: 'kubernetes.io/hostname'
+    enabled: false
 
 nginx:
   replicas: 1

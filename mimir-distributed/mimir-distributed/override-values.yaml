@@ -31,6 +31,11 @@ alertmanager:
       memory: 1Gi
   statefulSet:
     enabled: true
+  containerSecurityContext:
+    allowPrivilegeEscalation: true
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+    runAsUser: 0
 
 compactor:
   persistentVolume:
@@ -41,6 +46,11 @@ compactor:
     requests:
       cpu: 1
       memory: 1.5Gi
+  containerSecurityContext:
+    allowPrivilegeEscalation: true
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+    runAsUser: 0
 
 distributor:
   replicas: 2
@@ -143,8 +153,6 @@ ruler:
       memory: 2Gi
 
 store_gateway:
-  securityContext: {}
-
   containerSecurityContext:
     allowPrivilegeEscalation: true
     readOnlyRootFilesystem: false

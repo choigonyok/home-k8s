@@ -62,7 +62,11 @@ distributor:
       memory: 4Gi
 
 ingester:
-  containerSecurityContext: {}
+  containerSecurityContext:
+    allowPrivilegeEscalation: true
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+    runAsUser: 0
   zoneAwareReplication:
     enabled: false
   persistentVolume:

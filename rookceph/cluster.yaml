@@ -123,7 +123,7 @@ spec:
     useAllDevices: false
     deviceFilter: ^nvme
     config:
-      osdsPerDevice: "1"
+      osdsPerDevice: "2"
     onlyApplyOSDPlacement: false
   disruptionManagement:
     managePodBudgets: true
@@ -164,7 +164,7 @@ spec:
 
 ## Force reset disk
 # umount /dev/nvme0n1
-# ssgdisk --zap-all /dev/nvme0n1
+# sgdisk --zap-all /dev/nvme0n1
 # dd if=/dev/zero of="/dev/nvme0n1" bs=1M count=100 oflag=direct,dsync
 # blkdiscard /dev/nvme0n1
 # partprobe /dev/nvme0n1

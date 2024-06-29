@@ -18,6 +18,8 @@ data:
           - "-c"
           - |
             helm repo add bitnami https://charts.bitnami.com/bitnami
+            helm repo add minio https://charts.min.io/
+            helm repo add grafana https://grafana.github.io/helm-charts
             helm repo update
             helm dependency build
       discover:
@@ -55,5 +57,3 @@ data:
             cat \$(find . -type f -name '*.yaml' -exec grep -l '<path' {} \\;) |
             argocd-vault-plugin generate -s argocd-system:avp-secret -
       lockRepo: false
-
-# - "find . -name '*.yaml' | xargs -I {} grep '<path' {} | grep ."

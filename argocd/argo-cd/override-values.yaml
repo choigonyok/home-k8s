@@ -90,18 +90,37 @@ global:
     format: json
     level: debug
 
+  affinity:
+    podAntiAffinity: soft
+    nodeAffinity:
+      type: hard
+      matchExpressions:
+        - key: node-type
+          operator: In
+          values:
+           - worker
+
 configs:
   params:
     server.insecure: true
   cm:
     resource.exclusions: |
       - apiGroups:
-        - cilium.io
+          - cilium.io
         kinds:
-        - CiliumIdentity
+          - CiliumIdentity
         clusters:
-        - "*"
-
+          - '*'
+  #   oidc.config: |
+  #     name: Keycloak
+  #     issuer: http://keycloak.kind.cluster/auth/realms/master
+  #     clientID: argocd
+  #     clientSecret: $CLIENT_SECRET
+  #     requestedScopes: ['openid', 'profile', 'email', 'groups']
+  # rbacConfig:
+  #   policy.default: role:readonly
+  #   policy.csv: |
+  #     g, argocd-admin, role:admin
 server:
   replicas: 2
   ingress:

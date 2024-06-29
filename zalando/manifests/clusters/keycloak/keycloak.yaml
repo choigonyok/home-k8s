@@ -10,11 +10,11 @@ spec:
     storageClass: ceph-block
   numberOfInstances: 3
   users:
-    keycloak: 
+    <path:home-k8s/data/zalando/clusters/keycloak#rootUser>: 
     - superuser
     - createdb
   databases:
-    keycloak_db: keycloak
+    <path:home-k8s/data/zalando/clusters/keycloak#dbName>: <path:home-k8s/data/zalando/clusters/keycloak#rootUser>
   enableMasterLoadBalancer: false
   enableReplicaLoadBalancer: false
   postgresql:

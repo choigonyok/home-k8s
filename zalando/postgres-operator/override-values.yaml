@@ -23,3 +23,6 @@ securityContext:
 
 configKubernetes:
   enable_pod_antiaffinity: true
+
+nodeSelector:
+  node-type: worker

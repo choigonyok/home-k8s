@@ -27,3 +27,6 @@ ingress:
   hosts:
     - host: postgres.choigonyok.com
       paths: ["/"]
+
+nodeSelector:
+  node-type: worker

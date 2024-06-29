@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-zalando
-  namespace: argocd
+  namespace: argocd-system
 spec:
   destination:
     name: ''

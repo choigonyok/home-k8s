@@ -92,14 +92,10 @@ global:
 
   affinity:
     podAntiAffinity: soft
-    nodeAffinity:
-      type: hard
-      matchExpressions:
-        - key: node-type
-          operator: In
-          values:
-           - worker
 
+  nodeSelector:
+    node-type: worker
+    
 configs:
   params:
     server.insecure: true

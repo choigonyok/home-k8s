@@ -163,13 +163,13 @@ spec:
         disabled: false
 
 ## Force reset disk
-umount /dev/nvme0n1
-ssgdisk --zap-all /dev/nvme0n1
-dd if=/dev/zero of="/dev/nvme0n1" bs=1M count=100 oflag=direct,dsync
-blkdiscard /dev/nvme0n1
-partprobe /dev/nvme0n1
+# umount /dev/nvme0n1
+# ssgdisk --zap-all /dev/nvme0n1
+# dd if=/dev/zero of="/dev/nvme0n1" bs=1M count=100 oflag=direct,dsync
+# blkdiscard /dev/nvme0n1
+# partprobe /dev/nvme0n1
 
-ls /dev/mapper/ceph-* | xargs -I% -- dmsetup remove %
+# ls /dev/mapper/ceph-* | xargs -I% -- dmsetup remove %
 
-rm -rf /dev/ceph-*
-rm -rf /dev/mapper/ceph--*
+# rm -rf /dev/ceph-*
+# rm -rf /dev/mapper/ceph--*

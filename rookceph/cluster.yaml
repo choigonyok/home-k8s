@@ -55,14 +55,16 @@ spec:
               - worker
     osd:
       podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: rookceph
-              operator: In
-              values:
-              - osd
-          topologyKey: "kubernetes.io/hostname"
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 50
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: rookceph
+                operator: In
+                values:
+                - osd
+            topologyKey: "kubernetes.io/hostname"
   monitoring:
     enabled: false
     metricsDisabled: false

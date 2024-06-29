@@ -14,7 +14,7 @@ spec:
   upgradeOSDRequiresHealthyPGs: false
   mon:
     count: 3
-    allowMultiplePerNode: true
+    allowMultiplePerNode: false
   mgr:
     count: 2
     allowMultiplePerNode: false
@@ -44,15 +44,6 @@ spec:
               operator: In
               values:
               - worker
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: rookceph
-              operator: In
-              values:
-              - mon
-          topologyKey: "kubernetes.io/hostname"
     mgr:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -62,15 +53,6 @@ spec:
               operator: In
               values:
               - worker
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: rookceph
-              operator: In
-              values:
-              - mgr
-          topologyKey: "kubernetes.io/hostname"
     osd:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -182,8 +164,13 @@ spec:
         disabled: false
 
 ## Force reset disk
-# umount /dev/nvme0n1
-# sgdisk --zap-all /dev/nvme0n1
-# dd if=/dev/zero of="/dev/nvme0n1" bs=1M count=100 oflag=direct,dsync
-# blkdiscard /dev/nvme0n1
-# partprobe /dev/nvme0n1
+umount /dev/nvme0n1
+ssgdisk --zap-all /dev/nvme0n1
+dd if=/dev/zero of="/dev/nvme0n1" bs=1M count=100 oflag=direct,dsync
+blkdiscard /dev/nvme0n1
+partprobe /dev/nvme0n1
+
+ls /dev/mapper/ceph-* | xargs -I% -- dmsetup remove %
+
+rm -rf /dev/ceph-*
+rm -rf /dev/mapper/ceph--*

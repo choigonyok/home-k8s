@@ -121,6 +121,9 @@ helm upgrade cilium cilium/cilium --version 1.15.6 \
     --reuse-values \
     --namespace kube-system
 
+# kubectl -n kube-system rollout restart deployment/cilium-operator
+# kubectl -n kube-system rollout restart ds/cilium
+
 kubectl apply -f /home/choigonyok/home-k8s/cilium/external-ip.yaml
 
 cilium connectivity test

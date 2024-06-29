@@ -10,7 +10,7 @@ spec:
     storageClass: ceph-block
   numberOfInstances: 3
   users:
-    keycloak: 
+    grafana: 
     - superuser
     - createdb
   databases:

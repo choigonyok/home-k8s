@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-zalando
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: postgres-system
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/postgres-operator-ui
+      targetRevision: HEAD
+      plugin:
+        name: argocd-vault-plugin-helm
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/postgres-operator
+      targetRevision: HEAD
+      plugin:
+        name: argocd-vault-plugin-helm
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/manifests/clusters/grafana
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/manifests/clusters/keycloak
+      targetRevision: HEAD      
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

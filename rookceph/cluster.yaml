@@ -93,7 +93,6 @@ spec:
     allowUninstallWithVolumes: false
 
   annotations:
-  labels:
   resources:
     mgr:
       limits:

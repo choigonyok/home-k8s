@@ -211,13 +211,22 @@ buckets:
     purge: false
     versioning: true
     objectlocking: false
-  - name:  loki
+  - name:  loki-chunks
     policy: none
     purge: false
     versioning: true
     objectlocking: false
-
-
+  - name:  loki-ruler
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
+  - name:  loki-admin
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
+    
 makeBucketJob:
   securityContext:
     enabled: false

@@ -82,11 +82,11 @@ config:
     extensions: [basicauth/client, health_check]
     pipelines:
       metrics:
-        reciever: [hostmetrics]
+        receivers: [hostmetrics]
         processors: []
         exporters: [prometheusremotewrite]
       logs:
-        reciever: [filelog]
+        receivers: [filelog]
         processors: [resource]
         exporters: [loki]
 

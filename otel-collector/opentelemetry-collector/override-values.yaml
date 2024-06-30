@@ -76,8 +76,8 @@ config:
   receivers:
     otlp:
       protocols:
-        grpc: # on port 4317
-        http: # on port 4318
+        http: 
+          endpoint: "localhost:4318"
     hostmetrics:
       root_path: /
       collection_interval: 10s

@@ -1,0 +1,23 @@
+global:
+  redis:
+    password: <path:home-k8s/data/redis/config/rootPassword>
+  storageClass: "ceph-block"
+
+namespaceOverride: "redis-system"
+
+master:
+  nodeSelector:
+    node-type: worker
+  podAffinityPreset: "soft"
+  pdb:
+    create: true
+    minAvailable: "1"
+
+replica:
+  replicaCount: 2
+  nodeSelector:
+    node-type: worker
+  podAffinityPreset: "soft"
+
+sentinel:
+  enabled: true"

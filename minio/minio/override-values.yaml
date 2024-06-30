@@ -161,6 +161,9 @@ users:
   - accessKey: velero
     secretKey: <path:home-k8s/data/minio/users/velero#password>
     policy: consoleAdmin
+  - accessKey: loki
+    secretKey: <path:home-k8s/data/minio/users/loki#password>
+    policy: consoleAdmin
 
 makeUserJob:
   securityContext:
@@ -208,6 +211,12 @@ buckets:
     purge: false
     versioning: true
     objectlocking: false
+  - name:  loki
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
+
 
 makeBucketJob:
   securityContext:

@@ -25,7 +25,10 @@ spec:
       targetRevision: HEAD
     - repoURL: 'https://github.com/choigonyok/home-k8s.git'
       path: zalando/manifests/clusters/keycloak
-      targetRevision: HEAD      
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/manifests/clusters/harbor
+      targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

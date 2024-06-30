@@ -158,28 +158,18 @@ plugins: []
   ## and specify the name of the plugin after the semicolon. Like this:
   # - https://grafana.com/api/plugins/marcusolsson-json-datasource/versions/1.3.2/download;marcusolsson-json-datasource
 
-## Configure grafana datasources
-## ref: http://docs.grafana.org/administration/provisioning/#datasources
-##
-datasources: {}
-#  datasources.yaml:
-#    apiVersion: 1
-#    datasources:
-#    - name: Prometheus
-#      type: prometheus
-#      url: http://prometheus-prometheus-server
-#      access: proxy
-#      isDefault: true
-#    - name: CloudWatch
-#      type: cloudwatch
-#      access: proxy
-#      uid: cloudwatch
-#      editable: false
-#      jsonData:
-#        authType: default
-#        defaultRegion: us-east-1
-#    deleteDatasources: []
-#    - name: Prometheus
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://app-loki-query-frontend-headless.log-system.svc.cluster.local:3100
+      jsonData:
+        timeout: 60
+        maxLines: 1000
+        
 
 ## Configure grafana alerting (can be templated)
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting

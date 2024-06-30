@@ -118,7 +118,7 @@ nodeSelector: {}
 tolerations: []
 affinity:
   podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
+    preferredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
           matchLabels:
             app: minio

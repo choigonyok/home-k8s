@@ -40,12 +40,12 @@ ingester:
   zoneAwareReplication:
     zoneA:
       nodeSelector:
-        worker-node: 1
+        worker-node: first
     zoneB:
       nodeSelector:
-        worker-node: 2
+        worker-node: second
     zoneC:
-        worker-node: 3
+        worker-node: third
   persistence:
     enabled: true
     size: 10Gi

@@ -39,7 +39,20 @@ config:
       default_labels_enabled:
         exporter: false
         job: true
+  
+  processors:
+    attributes:
+      actions:
+        - action: insert
+          key: loki.attribute.labels
+          value: event.domain
 
+    resource:
+      attributes:
+        - action: insert
+          key: loki.resource.labels
+          value: service.name
+  
   extensions:
     # basicauth/server:
     #   htpasswd: 
@@ -54,27 +67,26 @@ config:
       endpoint: ${env:MY_POD_IP}:13133
 
   receivers:
-    hostmetrics:
-      root_path: /
-      collection_interval: 10s
-      scrapers:
-        cpu:
-        load:
-        memory:
-        disk:
-        filesystem:
-        network:
+  #   hostmetrics:
+  #     root_path: /
+  #     collection_interval: 10s
+  #     scrapers:
+  #       cpu:
+  #       load:
+  #       memory:
+  #       disk:
+  #       filesystem:
+  #       network:
 
   service:
     extensions: [basicauth/client, health_check]
     pipelines:
       metrics:
-        receivers: [hostmetrics]
         processors: []
         exporters: [prometheusremotewrite]
       logs:
-        exporters:
-          - loki
+        processors: [attributes, resource]
+        exporters: [loki]
 
 image:
   repository: "otel/opentelemetry-collector-contrib"

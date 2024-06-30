@@ -30,6 +30,8 @@ configMap:
 
 config:
   exporters:
+    logging:
+      loglevel: debug
     prometheusremotewrite:
       auth:
         authenticator: basicauth/client
@@ -86,7 +88,7 @@ config:
         exporters: [prometheusremotewrite]
       logs:
         processors: [resource]
-        exporters: [loki]
+        exporters: [loki, logging]
 
 image:
   repository: "otel/opentelemetry-collector-contrib"

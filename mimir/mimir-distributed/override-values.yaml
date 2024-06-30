@@ -7,8 +7,8 @@ mimir:
           endpoint: app-minio-svc.minio-system.svc.cluster.local:9000
           insecure: true
           region: ap-northeast-2
-          secret_access_key: "mimir"
-          access_key_id: <path:home-k8s/data/minio/users/mimir#password>
+          access_key_id: "mimir"
+          secret_access_key: <path:home-k8s/data/minio/users/mimir#password>
     blocks_storage:
       s3:
         bucket_name: mimir-blocks

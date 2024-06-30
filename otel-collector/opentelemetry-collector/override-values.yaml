@@ -74,14 +74,19 @@ config:
         disk:
         filesystem:
         network:
+    filelog:
+      include:
+        - /var/log/pods/*/*/*.log
 
   service:
     extensions: [basicauth/client, health_check]
     pipelines:
       metrics:
+        reciever: [hostmetrics]
         processors: []
         exporters: [prometheusremotewrite]
       logs:
+        reciever: [filelog]
         processors: [resource]
         exporters: [loki]
 

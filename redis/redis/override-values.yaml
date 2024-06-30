@@ -20,4 +20,4 @@ replica:
   podAffinityPreset: "soft"
 
 sentinel:
-  enabled: true"
+  enabled: true

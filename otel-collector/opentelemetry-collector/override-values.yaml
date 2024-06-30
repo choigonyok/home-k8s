@@ -1,0 +1,288 @@
+nameOverride: ""
+fullnameOverride: ""
+
+mode: "daemonset"
+
+namespaceOverride: "otel-system"
+
+presets:
+  logsCollection:
+    enabled: true
+    includeCollectorLogs: false
+    storeCheckpoints: false
+    maxRecombineLogSize: 102400
+  hostMetrics:
+    enabled: true
+  kubernetesAttributes:
+    enabled: true
+    extractAllPodLabels: true
+    extractAllPodAnnotations: true
+  kubeletMetrics:
+    enabled: true
+  kubernetesEvents:
+    enabled: true
+  clusterMetrics:
+    enabled: false
+
+configMap:
+  create: true
+  existingName: ""
+
+config:
+  exporters:
+    prometheusremotewrite:
+      auth:
+        authenticator: basicauth/client
+      endpoint: http://MIMIR_NGINX_SVC.mon-system.svc.cluster.local/api/v1/push
+
+  extensions:
+    # basicauth/server:
+    #   htpasswd: 
+    #     file: .htpasswd
+    #     inline: |
+    #       ${env:BASIC_AUTH_USERNAME}:${env:BASIC_AUTH_PASSWORD}
+    basicauth/client:
+      client_auth: 
+        username: username
+        password: password
+    health_check:
+      endpoint: ${env:MY_POD_IP}:13133
+
+  receivers:
+    hostmetrics:
+      root_path: /
+      collection_interval: 10s
+      scrapers:
+        cpu:
+        load:
+        memory:
+        disk:
+        filesystem:
+        network:
+
+  service:
+    extensions: [basicauth/client, health_check]
+    pipelines:
+      metrics:
+        receivers: [hostmetrics]
+        processors: []
+        exporters: [prometheusremotewrite]
+
+image:
+  repository: "otel/opentelemetry-collector-contrib"
+  pullPolicy: IfNotPresent
+  tag: ""
+  digest: ""
+imagePullSecrets: []
+
+command:
+  name: ""
+  extraArgs: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "otel-sa"
+
+clusterRole:
+  create: true
+  annotations: {}
+  name: ""
+  rules:
+  - apiGroups:
+    - ''
+    resources:
+    - 'pods'
+    - 'nodes'
+    verbs:
+    - 'get'
+    - 'list'
+    - 'watch'
+
+  clusterRoleBinding:
+    annotations: {}
+    name: ""
+
+podSecurityContext: {}
+securityContext:
+  allowPrivilegeEscalation: true
+  readOnlyRootFilesystem: false
+  runAsNonRoot: false
+  runAsUser: 0
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+
+priorityClassName: ""
+
+extraEnvs:
+  - name: K8S_NODE_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.hostIP
+extraEnvsFrom: []
+extraVolumes: []
+extraVolumeMounts: []
+
+ports:
+  otlp:
+    enabled: true
+    containerPort: 4317
+    servicePort: 4317
+    hostPort: 4317
+    protocol: TCP
+    # nodePort: 30317
+    appProtocol: grpc
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    servicePort: 4318
+    hostPort: 4318
+    protocol: TCP
+  jaeger-compact:
+    enabled: true
+    containerPort: 6831
+    servicePort: 6831
+    hostPort: 6831
+    protocol: UDP
+  jaeger-thrift:
+    enabled: true
+    containerPort: 14268
+    servicePort: 14268
+    hostPort: 14268
+    protocol: TCP
+  jaeger-grpc:
+    enabled: true
+    containerPort: 14250
+    servicePort: 14250
+    hostPort: 14250
+    protocol: TCP
+  zipkin:
+    enabled: true
+    containerPort: 9411
+    servicePort: 9411
+    hostPort: 9411
+    protocol: TCP
+  metrics:
+    enabled: true
+    containerPort: 8888
+    servicePort: 8888
+    protocol: TCP
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 512Mi
+
+podAnnotations: {}
+podLabels: {}
+additionalLabels: {}
+hostNetwork: false
+hostAliases: []
+dnsPolicy: ""
+dnsConfig: {}
+
+# only used with deployment mode
+replicaCount: 1
+revisionHistoryLimit: 3
+
+annotations: {}
+extraContainers: []
+
+initContainers: []
+
+lifecycleHooks: {}
+livenessProbe:
+  httpGet:
+    port: 13133
+    path: /
+
+readinessProbe:
+  httpGet:
+    port: 13133
+    path: /
+
+service:
+  enabled: true
+  type: ClusterIP
+  externalTrafficPolicy: Cluster
+  annotations: {}
+
+ingress:
+  enabled: false
+  annotations: {}
+  ingressClassName: ""
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          port: 4318
+
+  additionalIngresses: []
+
+podMonitor:
+  enabled: true
+  metricsEndpoints:
+    - port: metrics
+      interval: 10s
+
+  extraLabels: {}
+
+serviceMonitor:
+  enabled: true
+  metricsEndpoints:
+    - port: metrics
+      interval: 10s
+
+  extraLabels: {}
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  behavior: {}
+  targetCPUUtilizationPercentage: 80
+
+rollout:
+  rollingUpdate: {}
+  strategy: RollingUpdate
+
+prometheusRule:
+  enabled: false
+  groups: []
+  defaultRules:
+    enabled: false
+  extraLabels: {}
+
+statefulset:
+  volumeClaimTemplates: []
+  podManagementPolicy: "Parallel"
+  persistentVolumeClaimRetentionPolicy:
+    enabled: false
+    whenDeleted: Retain
+    whenScaled: Retain
+
+networkPolicy:
+  enabled: false
+  annotations: {}
+  allowIngressFrom: []
+  extraIngressRules: []
+  egressRules: []
+  #  - to:
+  #      - namespaceSelector: {}
+  #      - ipBlock:
+  #          cidr: 192.168.10.10/24
+  #    ports:
+  #      - port: 1234
+  #        protocol: TCP
+
+useGOMEMLIMIT: true
+shareProcessNamespace: false
+

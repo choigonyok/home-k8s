@@ -203,6 +203,11 @@ buckets:
     purge: false
     versioning: true
     objectlocking: false
+  - name:  postgresql
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
 
 makeBucketJob:
   securityContext:

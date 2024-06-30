@@ -49,7 +49,7 @@ config:
           key: service_name 
           from_attribute: service.name 
         - action: insert 
-          key: loki.resource.labels 
+          key: loki.resource.labels
           value: service_name           
   
   extensions:
@@ -76,9 +76,6 @@ config:
         disk:
         filesystem:
         network:
-    filelog:
-      include:
-        - /var/log/pods/*/*/*.log
 
   service:
     extensions: [basicauth/client, health_check]
@@ -88,7 +85,6 @@ config:
         processors: []
         exporters: [prometheusremotewrite]
       logs:
-        # receivers: [filelog]
         processors: [resource]
         exporters: [loki]
 

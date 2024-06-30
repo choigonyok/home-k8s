@@ -45,14 +45,20 @@ config:
         level: true
 
   processors:
-    resource: 
-      attributes:  
-        - action: insert 
-          key: service_name 
-          from_attribute: service.name 
-        - action: insert 
-          key: loki.resource.labels
-          value: service_name           
+    resource:  
+      attributes:
+      - action: insert
+        key: service_name
+        from_attribute: service.name
+      - action: insert
+        key: service_namespace
+        from_attribute: service.namespace
+      - action: insert
+        key: compose_service
+        from_attribute: compose_service
+      - action: insert
+        key: loki.resource.labels
+        value: service_name, service_namespace, compose_service
   
   extensions:
     # basicauth/server:
@@ -68,6 +74,10 @@ config:
       endpoint: ${env:MY_POD_IP}:13133
 
   receivers:
+    otlp:
+      protocols:
+        grpc: # on port 4317
+        http: # on port 4318
     hostmetrics:
       root_path: /
       collection_interval: 10s
@@ -87,6 +97,7 @@ config:
         processors: []
         exporters: [prometheusremotewrite]
       logs:
+        receivers: [otlp]
         processors: [resource]
         exporters: [loki, logging]
 

@@ -296,7 +296,7 @@ grafana.ini:
     name: "<path:home-k8s/data/zalando/clusters/grafana#dbName>"
     user: "<path:home-k8s/data/zalando/clusters/grafana#rootUser>"
     password: "<path:home-k8s/data/zalando/clusters/grafana#rootPassword>"
-    ssl_mode: "disable"
+    ssl_mode: "require"
 
 ## grafana Authentication can be enabled with the following values on grafana.ini
  # server:

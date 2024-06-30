@@ -1,0 +1,85 @@
+loki:
+  schemaConfig:
+    configs:
+      - from: 2024-04-01
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  ingester:
+    chunk_encoding: snappy
+  tracing:
+    enabled: true
+  querier:
+    max_concurrent: 4
+
+  storage:
+    type: s3
+    bucketNames:
+      chunks: "loki-chunks"
+      ruler: "loki-ruler"
+      admin: "loki-admin"
+    s3:
+      s3: http://app-minio-svc.minio-system.svc.cluster.local:9000
+      endpoint: 
+      region: ap-northeast-2
+      secretAccessKey: <path:home-k8s/data/minio/users/loki#username>
+      accessKeyId: <path:home-k8s/data/minio/users/loki#password>
+      s3ForcePathStyle: true
+      insecure: true
+      http_config: {}
+
+deploymentMode: Distributed
+
+minio:
+    enabled: false
+
+ingester:
+  replicas: 3
+  nodeSelector:
+    node-type: worker
+querier:
+  replicas: 3
+  nodeSelector:
+    node-type: worker
+  maxUnavailable: 2
+queryFrontend:
+  nodeSelector:
+    node-type: worker
+  replicas: 2
+  maxUnavailable: 1
+queryScheduler:
+  nodeSelector:
+    node-type: worker
+  replicas: 2
+distributor:
+  nodeSelector:
+    node-type: worker
+  replicas: 3
+  maxUnavailable: 2
+compactor:
+  nodeSelector:
+    node-type: worker
+  replicas: 1
+indexGateway:
+  nodeSelector:
+    node-type: worker
+  replicas: 2
+  maxUnavailable: 1
+
+bloomCompactor:
+  replicas: 0
+bloomGateway:
+  replicas: 0
+
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+
+singleBinary:
+  replicas: 0

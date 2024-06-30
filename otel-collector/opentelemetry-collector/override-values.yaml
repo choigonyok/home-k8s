@@ -41,17 +41,14 @@ config:
         job: true
   
   processors:
-    attributes:
-      actions:
-        - action: insert
-          key: loki.attribute.labels
-          value: event.domain
-
-    resource:
-      attributes:
-        - action: insert
-          key: loki.resource.labels
-          value: service.name
+    resource: 
+      attributes:  
+        - action: insert 
+          key: service_name 
+          from_attribute: service.name 
+        - action: insert 
+          key: loki.resource.labels 
+          value: service_name           
   
   extensions:
     # basicauth/server:
@@ -85,7 +82,7 @@ config:
         processors: []
         exporters: [prometheusremotewrite]
       logs:
-        processors: [attributes, resource]
+        processors: [resource]
         exporters: [loki]
 
 image:

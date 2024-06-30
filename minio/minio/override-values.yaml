@@ -158,6 +158,9 @@ users:
   - accessKey: mimir
     secretKey: <path:home-k8s/data/minio/users/mimir#password>
     policy: consoleAdmin
+  - accessKey: velero
+    secretKey: <path:home-k8s/data/minio/users/velero#password>
+    policy: consoleAdmin
 
 makeUserJob:
   securityContext:

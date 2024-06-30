@@ -37,11 +37,11 @@ config:
     loki:
       endpoint: http://app-loki-distributor-headless.log-system.svc.cluster.local:3100/loki/api/v1/push
       default_labels_enabled:
-        exporter: false
+        exporter: true
         job: true
-      labels:
-        job: "opentelemetry"
-  
+        instance: true
+        level: true
+
   processors:
     resource: 
       attributes:  

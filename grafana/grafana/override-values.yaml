@@ -96,7 +96,7 @@ extraContainers: ""
 extraContainerVolumes: []
 persistence:
   type: pvc
-  enabled: true
+  enabled: false
   storageClassName: ceph-block
   accessModes:
     - ReadWriteOnce
@@ -106,7 +106,7 @@ persistence:
   extraPvcLabels: {}
 
   inMemory:
-    enabled: false
+    enabled: true
 
 initChownData:
   enabled: true

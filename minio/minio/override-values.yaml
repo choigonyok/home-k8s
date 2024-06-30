@@ -37,9 +37,8 @@ statefulSetUpdate:
 
 priorityClassName: ""
 runtimeClassName: ""
-rootUser: ""
-rootPassword: ""
-existingSecret: "minio-vault-secret"
+rootUser: <path:home-k8s/data/minio/users/root#username>
+rootPassword: <path:home-k8s/data/minio/users/root#password>
 
 certsPath: "/etc/minio/certs/"
 configPathmc: "/etc/minio/mc/"
@@ -117,7 +116,13 @@ consoleIngress:
 
 nodeSelector: {}
 tolerations: []
-affinity: {}
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app: minio
+        topologyKey: kubernetes.io/hostname
 topologySpreadConstraints: []
 
 securityContext:
@@ -129,7 +134,8 @@ securityContext:
   readOnlyRootFilesystem: false
 
 podAnnotations: {}
-podLabels: {}
+podLabels:
+  app: minio
 resources:
   requests:
     memory: 2Gi
@@ -147,9 +153,8 @@ makePolicyJob:
   exitCommand: ""
 
 users:
-  - accessKey: choigonyok
-    existingSecret: minio-vault-secret
-    existingSecretKey: rootPassword
+  - accessKey: mimir
+    secretKey: <path:home-k8s/data/minio/users/mimir#password>
     policy: consoleAdmin
 
 makeUserJob:
@@ -163,10 +168,9 @@ makeUserJob:
   exitCommand: ""
 
 svcaccts:
-  - accessKey: choigonyok-svcacct
-    existingSecret: minio-vault-secret
-    existingSecretKey: rootAcctsPassword
-    user: choigonyok
+  - accessKey: mimir-svcacct
+    secretKey: <path:home-k8s/data/minio/svcaccts/mimir#password>
+    user: mimir
 
 makeServiceAccountJob:
   securityContext:
@@ -179,7 +183,17 @@ makeServiceAccountJob:
   exitCommand: ""
 
 buckets:
-  - name: test
+  - name:  mimir-alertmanager
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
+  - name:  mimir-ruler
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
+  - name:  mimir-blocks
     policy: none
     purge: false
     versioning: true
@@ -219,7 +233,6 @@ postJob:
   affinity: {}
 
 environment:
-extraSecret: "minio-vault-secret"
 
 oidc:
   enabled: false

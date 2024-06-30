@@ -130,7 +130,7 @@ configuration:
     config:
       region: ap-northeast-2
       s3ForcePathStyle: true
-      s3Url: http://app-minio-svc.mino-system.svc.cluster.local:9000 # 수정
+      s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
     annotations: {}
 
   volumeSnapshotLocation:

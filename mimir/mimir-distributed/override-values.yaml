@@ -4,7 +4,7 @@ mimir:
       storage:
         backend: s3
         s3:
-          endpoint: minio-svc.minio-system.svc.cluster.local:9000
+          endpoint: app-minio-svc.minio-system.svc.cluster.local:9000
           insecure: true
           region: ap-northeast-2
           secret_access_key: "mimir"

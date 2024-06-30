@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     name: ''
-    namespace: monitor-system
+    namespace: log-system
     server: https://kubernetes.default.svc
   project: default
   sources:

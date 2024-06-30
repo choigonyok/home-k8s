@@ -38,7 +38,14 @@ minio:
 
 ingester:
   zoneAwareReplication:
-    enabled: false
+    zoneA:
+      nodeSelector:
+        worker-node: 1
+    zoneB:
+      nodeSelector:
+        worker-node: 2
+    zoneC:
+        worker-node: 3
   persistence:
     enabled: true
     size: 10Gi

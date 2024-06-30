@@ -39,6 +39,8 @@ config:
       default_labels_enabled:
         exporter: false
         job: true
+      labels:
+        job: "opentelemetry"
   
   processors:
     resource: 

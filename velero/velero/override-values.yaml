@@ -116,9 +116,9 @@ cleanUpCRDs: true
 
 configuration:
   backupStorageLocation:
-  - name: aws-s3-storage # 수정
+  - name: minio-postgres
     provider: velero.io/aws
-    bucket: blog # 수정
+    bucket: postgresql
     caCert:
     prefix:
     default: true
@@ -130,7 +130,7 @@ configuration:
     config:
       region: ap-northeast-2
       s3ForcePathStyle: true
-      s3Url: http://S3_STORAGE_URL:PORT # 수정
+      s3Url: http://app-minio-svc.mino-system.svc.cluster.local:9000 # 수정
     annotations: {}
 
   volumeSnapshotLocation:
@@ -166,7 +166,7 @@ configuration:
   terminatingResourceTimeout:
   defaultSnapshotMoveData:
   features:
-  namespace:
+  namespace: backup-system
   extraArgs: []
   extraEnvVars: {}
   defaultVolumesToFsBackup: true
@@ -192,8 +192,8 @@ credentials:
   secretContents:
     keys: |
       [default]
-      aws_access_key_id=ACCESS_KEY_ID # 수정
-      aws_secret_access_key=SECRET_ACCESS_KEY # 수정
+      aws_access_key_id=<path:home-k8s/data/minio/users/velero#username>
+      aws_secret_access_key=<path:home-k8s/data/minio/users/velero#password>
   extraEnvVars: {}
   extraSecretRef: ""
 
@@ -222,17 +222,19 @@ nodeAgent:
   dnsConfig: {}
 
 schedules:
-  rafay-backup:
-    disabled: true # 수정
+  postgresql-backup:
+    disabled: false
     labels:
     annotations:
-    schedule: "1 * * * *" # 수정
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-options: Delete=false,Prune=false
+    schedule: "3 * * * *"
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "48h" # 수정
-      storageLocation: aws-s3-storage # 수정
+      ttl: "10m"
+      storageLocation: minio-postgres
       includedNamespaces:
-      - blog-system # 수정
+      - postgres-system
 
 configMaps: {}

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-minio
+  namespace: argocd-system
+spec:
+  destination:
+    name: ''
+    namespace: minio-system
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: minio/minio
+      targetRevision: HEAD
+      plugin:
+        name: argocd-vault-plugin-helm
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

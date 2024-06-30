@@ -37,33 +37,63 @@ minio:
     enabled: false
 
 ingester:
+  zoneAwareReplication:
+    enabled: false
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   replicas: 3
   nodeSelector:
     node-type: worker
 querier:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   replicas: 3
   nodeSelector:
     node-type: worker
   maxUnavailable: 2
 queryFrontend:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   nodeSelector:
     node-type: worker
   replicas: 2
   maxUnavailable: 1
 queryScheduler:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   nodeSelector:
     node-type: worker
   replicas: 2
 distributor:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   nodeSelector:
     node-type: worker
   replicas: 3
   maxUnavailable: 2
 compactor:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   nodeSelector:
     node-type: worker
   replicas: 1
 indexGateway:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
   nodeSelector:
     node-type: worker
   replicas: 2

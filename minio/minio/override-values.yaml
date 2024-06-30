@@ -119,7 +119,9 @@ tolerations: []
 affinity:
   podAntiAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
+    - weight: 50
+      podAffinityTerm:
+        labelSelector:
           matchLabels:
             app: minio
         topologyKey: kubernetes.io/hostname

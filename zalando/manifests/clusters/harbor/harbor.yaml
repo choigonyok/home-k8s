@@ -1,0 +1,36 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: harbor-pg
+  namespace: postgres-system
+spec:
+  teamId: choigonyok
+  volume:
+    size: 10G
+    storageClass: ceph-block
+  numberOfInstances: 3
+  users:
+    <path:home-k8s/data/zalando/clusters/harbor#rootUser>:
+    - superuser
+    - createdb
+  databases:
+    <path:home-k8s/data/zalando/clusters/harbor#dbName>: <path:home-k8s/data/zalando/clusters/harbor#rootUser>
+  enableMasterLoadBalancer: false
+  enableReplicaLoadBalancer: false
+  postgresql:
+    version: "16"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 300m
+      memory: 500Mi
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-type
+              operator: In
+              values:
+                - worker

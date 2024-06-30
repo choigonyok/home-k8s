@@ -3,7 +3,7 @@ fullnameOverride: ""
 
 mode: "daemonset"
 
-namespaceOverride: "otel-system"
+namespaceOverride: "monitor-system"
 
 presets:
   logsCollection:
@@ -33,7 +33,7 @@ config:
     prometheusremotewrite:
       auth:
         authenticator: basicauth/client
-      endpoint: http://MIMIR_NGINX_SVC.mon-system.svc.cluster.local/api/v1/push
+      endpoint: http://app-mimir-nginx.monitor-system.svc.cluster.local/api/v1/push
 
   extensions:
     # basicauth/server:

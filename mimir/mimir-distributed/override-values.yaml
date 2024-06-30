@@ -27,10 +27,10 @@ alertmanager:
   replicas: 2
   resources:
     limits:
-      memory: 1.4Gi
+      memory: 512Gi
     requests:
-      cpu: 1
-      memory: 1Gi
+      cpu: 100m
+      memory: 128Mi
   statefulSet:
     enabled: true
   containerSecurityContext:
@@ -46,10 +46,10 @@ compactor:
     size: 20Gi
   resources:
     limits:
-      memory: 2.1Gi
-    requests:
-      cpu: 1
       memory: 1.5Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
   containerSecurityContext:
     allowPrivilegeEscalation: true
     readOnlyRootFilesystem: false
@@ -62,10 +62,10 @@ distributor:
   replicas: 2
   resources:
     limits:
-      memory: 5.7Gi
+      memory: 2Gi
     requests:
-      cpu: 2
-      memory: 4Gi
+      cpu: 500m
+      memory: 512Mi
 
 ingester:
   nodeSelector:
@@ -82,10 +82,10 @@ ingester:
   replicas: 3
   resources:
     limits:
-      memory: 12Gi
+      memory: 3Gi
     requests:
-      cpu: 3.5
-      memory: 8Gi
+      cpu: 250m
+      memory: 512Mi
   topologySpreadConstraints: {}
   affinity:
     podAntiAffinity:
@@ -155,10 +155,10 @@ querier:
   replicas: 1
   resources:
     limits:
-      memory: 5.6Gi
+      memory: 1.5Gi
     requests:
-      cpu: 2
-      memory: 4Gi
+      cpu: 250m
+      memory: 512Mi
 
 query_frontend:
   nodeSelector:
@@ -166,10 +166,10 @@ query_frontend:
   replicas: 1
   resources:
     limits:
-      memory: 2.8Gi
-    requests:
-      cpu: 2
       memory: 2Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
 
 ruler:
   nodeSelector:

@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     name: ''
-    namespace: auth-system
+    namespace: keycloak-system
     server: https://kubernetes.default.svc
   project: default
   sources:

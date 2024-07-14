@@ -1,4 +1,4 @@
-namespaceOverride: ""
+namespaceOverride: "keycloak-system"
 
 image:
   registry: docker.io

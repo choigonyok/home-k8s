@@ -7,7 +7,7 @@ image:
   debug: false
 
 auth:
-  adminUser: <path:home-k8s/data/keycloak/admin#username>
+  adminUser: choigonyok
   adminPassword: <path:home-k8s/data/keycloak/admin#password>
   existingSecret: ""
   passwordSecretKey: ""
@@ -33,8 +33,8 @@ resources:
     cpu: 100m
     memory: 128Mi
   limits:
-    cpu: 300m
-    memory: 256Mi
+    cpu: 500m
+    memory: 1024Mi
 
 nodeAffinityPreset:
   type: "soft" # or hard

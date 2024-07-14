@@ -15,6 +15,9 @@ spec:
       targetRevision: HEAD
       plugin:
         name: argocd-vault-plugin-helm
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: vault/vault
+      targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

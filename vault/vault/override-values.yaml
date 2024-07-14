@@ -1,19 +1,6 @@
 global:
   enabled: true
   namespace: "vault-system"
-  imagePullSecrets: []
-  tlsDisable: true
-  externalVaultAddr: ""
-
-  openshift: false
-  psp:
-    enable: false
-    annotations: |
-      seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default,runtime/default
-      apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
-      seccomp.security.alpha.kubernetes.io/defaultProfileName:  runtime/default
-      apparmor.security.beta.kubernetes.io/defaultProfileName:  runtime/default
-
   serverTelemetry:
     prometheusOperator: true
 
@@ -23,18 +10,9 @@ injector:
 server:
   enabled: true
 
-  enterpriseLicense:
-    secretName: ""
-    secretKey: "license"
-
-  image:
-    repository: "hashicorp/vault"
-    tag: "1.16.1"
-    pullPolicy: IfNotPresent
-
   updateStrategyType: "OnDelete"
   logLevel: "info"
-  logFormat: "json"
+  logFormat: "standard"
 
   resources:
     requests:
@@ -48,7 +26,6 @@ server:
     enabled: true
     labels:
     annotations:
-      cert-manager.io/issuer: vault-issuer
       ingress.cilium.io/loadbalancer-mode: shared
       ingress.cilium.io/service-type: ClusterIP
 
@@ -64,90 +41,19 @@ server:
       hosts:
         - vault.choigonyok.com
 
-  hostAliases: []
-  route:
-    enabled: false
-    activeService: true
-    labels: {}
-    annotations: {}
-    host: chart-example.local
-    tls:
-      termination: passthrough
-
   # https://developer.hashicorp.com/vault/docs/auth/kubernetes
   authDelegator:
     enabled: true
 
-  extraInitContainers: null
-  extraContainers: null
-  shareProcessNamespace: false
-  extraArgs: ""
-  extraPorts: null
-  readinessProbe:
-    enabled: true
-    port: 8200
-    failureThreshold: 2
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    successThreshold: 1
-    timeoutSeconds: 3
-  livenessProbe:
-    enabled: false
-    execCommand: []
-    path: "/v1/sys/health?standbyok=true"
-    port: 8200
-    failureThreshold: 2
-    initialDelaySeconds: 60
-    periodSeconds: 5
-    successThreshold: 1
-    timeoutSeconds: 3
-
-  terminationGracePeriodSeconds: 10
-  preStopSleepSeconds: 5
-
-  postStart: []
-
-  extraEnvironmentVars: {}
-  extraSecretEnvironmentVars: []
   extraVolumes:
     - type: configMap
       name: vault-policy
       path: /vault/policies
 
-  volumes: null
-  volumeMounts: null
-
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: {{ template "vault.name" . }}
-              app.kubernetes.io/instance: "{{ .Release.Name }}"
-              component: server
-          topologyKey: kubernetes.io/hostname
-
-  topologySpreadConstraints: []
-  tolerations: []
   nodeSelector:
     node-type: worker
 
-  networkPolicy:
-    enabled: false
-    egress: []
-    ingress:
-      - from:
-        - namespaceSelector: {}
-        ports:
-        - port: 8200
-          protocol: TCP
-        - port: 8201
-          protocol: TCP
 
-  priorityClassName: ""
-  extraLabels: {}
-  annotations: {}
-  configAnnotation: false
 
   service:
     enabled: true
@@ -165,17 +71,8 @@ server:
     # clusterIP: None # for headless service
     # type: ClusterIP
 
-    ipFamilyPolicy: ""
-    ipFamilies: []
-    publishNotReadyAddresses: true
-    externalTrafficPolicy: Cluster
-
     activeNodePort: 30001
     standbyNodePort: 30002
-
-    port: 8200
-    targetPort: 8200
-    annotations: {}
 
   dataStorage:
     enabled: true
@@ -202,56 +99,17 @@ server:
 
   dev:
     enabled: false
-    devRootToken: "root"
-
-  standalone:
-    enabled: false
-
-    config: |
-      ui = true
-
-      listener "tcp" {
-        tls_disable = 1
-        tls_disable_client_certs = true
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
-        # Enable unauthenticated metrics access (necessary for Prometheus Operator)
-        #telemetry {
-        #  unauthenticated_metrics_access = "true"
-        #}
-      }
-      storage "file" {
-        path = "/vault/data"
-      }
-
-      # Example configuration for using auto-unseal, using Google Cloud KMS. The
-      # GKMS keys must already exist, and the cluster must have a service account
-      # that is authorized to access GCP KMS.
-      #seal "gcpckms" {
-      #   project     = "vault-helm-dev"
-      #   region      = "global"
-      #   key_ring    = "vault-helm-unseal-kr"
-      #   crypto_key  = "vault-helm-unseal-key"
-      #}
-
-      # Example configuration for enabling Prometheus metrics in your config.
-      #telemetry {
-      #  prometheus_retention_time = "30s"
-      #  disable_hostname = true
-      #}
+    config: ""
 
   ha:
     enabled: true
     replicas: 3
 
     apiAddr:
-
     clusterAddr:
-
     raft:
       enabled: true
       setNodeId: true
-
       config: |
         ui = true
 
@@ -305,14 +163,6 @@ server:
     serviceDiscovery:
       enabled: true
 
-  statefulSet:
-    annotations: {}
-    securityContext:
-      pod: {}
-      container: {}
-
-  hostNetwork: false
-
 ui:
   enabled: true
   publishNotReadyAddresses: true
@@ -330,96 +180,13 @@ ui:
 csi:
   enabled: false
 
-  image:
-    repository: "hashicorp/vault-csi-provider"
-    tag: "1.4.2"
-    pullPolicy: IfNotPresent
-
-  volumes: null
-
-  volumeMounts: null
-
-  resources: {}
-
-  hmacSecretName: ""
-
-  daemonSet:
-    updateStrategy:
-      type: RollingUpdate
-      maxUnavailable: ""
-    annotations: {}
-    providersDir: "/etc/kubernetes/secrets-store-csi-providers"
-    kubeletRootDir: "/var/lib/kubelet"
-    extraLabels: {}
-    securityContext:
-      pod: {}
-      container: {}
-
-  pod:
-    annotations: {}
-    tolerations: []
-    nodeSelector: {}
-    affinity: {}
-    extraLabels: {}
-
-  agent:
-    enabled: false
-    extraArgs: []
-
-    image:
-      repository: "hashicorp/vault"
-      tag: "1.16.1"
-      pullPolicy: IfNotPresent
-
-    logFormat: standard
-    logLevel: info
-
-    resources:
-      requests:
-        memory: 128i
-        cpu: 100m
-      limits:
-        memory: 512Mi
-        cpu: 250m
-
-  priorityClassName: ""
-
-  serviceAccount:
-    annotations: {}
-    extraLabels: {}
-
-  readinessProbe:
-    failureThreshold: 2
-    initialDelaySeconds: 30
-    periodSeconds: 5
-    successThreshold: 1
-    timeoutSeconds: 5
-  livenessProbe:
-    failureThreshold: 2
-    initialDelaySeconds: 30
-    periodSeconds: 5
-    successThreshold: 1
-    timeoutSeconds: 5
-
-  debug: false
-
-  # Pass arbitrary additional arguments to vault-csi-provider.
-  # See https://developer.hashicorp.com/vault/docs/platform/k8s/csi/configurations#command-line-arguments
-  # for the available command line flags.
-  extraArgs: []
-
-# Vault is able to collect and publish various runtime metrics.
-# Enabling this feature requires setting adding `telemetry{}` stanza to
-# the Vault configuration. There are a few examples included in the `config` sections above.
-#
-# For more information see:
 # https://developer.hashicorp.com/vault/docs/configuration/telemetry
 # https://developer.hashicorp.com/vault/docs/internals/telemetry
 serverTelemetry:
   serviceMonitor:
     enabled: true
     selectors: {}
-    interval: 30s
+    interval: 10s
     scrapeTimeout: 10s
 
   prometheusRules:

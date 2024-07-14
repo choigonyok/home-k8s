@@ -148,9 +148,9 @@ oidc:
   existingClientIdKey: ""
   existingClientSecretKey: ""
   claimName: "consoleAdmin"
-  scopes: "openid,profile,email"
+  scopes: "openid,profile,email,roles"
   redirectUri: "https://s3.choigonyok.com/oauth_callback"
-  claimPrefix: ""
+  claimPrefix: "roles"
   comment: "test"
   displayName: "Login with Keycloak"
 

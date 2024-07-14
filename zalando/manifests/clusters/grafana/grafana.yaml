@@ -10,11 +10,11 @@ spec:
     storageClass: ceph-block
   numberOfInstances: 3
   users:
-    <path:home-k8s/data/zalando/clusters/grafana#rootUser>:
+    <path:home-k8s/data/zalando/clusters/grafana#user>:
     - superuser
     - createdb
   databases:
-    <path:home-k8s/data/zalando/clusters/grafana#dbName>: <path:home-k8s/data/zalando/clusters/grafana#rootUser>
+    <path:home-k8s/data/zalando/clusters/grafana#db>: <path:home-k8s/data/zalando/clusters/grafana#user>
   enableMasterLoadBalancer: false
   enableReplicaLoadBalancer: false
   postgresql:

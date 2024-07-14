@@ -7,8 +7,8 @@ image:
   debug: false
 
 auth:
-  adminUser: choigonyok
-  adminPassword: <path:home-k8s/data/keycloak/admin#password>
+  adminUser: admin
+  adminPassword: "test"
   existingSecret: ""
   passwordSecretKey: ""
   annotations: {}
@@ -28,13 +28,13 @@ proxy: edge # or reencrypt, passthrough
 
 replicaCount: 3
 
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 1
-    memory: 1024Mi
+resources: {}
+##   requests:
+##     cpu: 100m
+##     memory: 128Mi
+##   limits:
+##     cpu: 300m
+##     memory: 256Mi
 
 nodeAffinityPreset:
   type: "soft" # or hard
@@ -48,20 +48,13 @@ adminIngress:
   enabled: true
   ingressClassName: "cilium"
   pathType: ImplementationSpecific
-  hostname: keycloak.choigonyok.com
+  hostname: auth.choigonyok.com
   path: "/"
   servicePort: http
   annotations:
     ingress.cilium.io/loadbalancer-mode: shared
     ingress.cilium.io/service-type: ClusterIP
-  tls: false
-  labels: {}
-  selfSigned: false
-  extraHosts: []
-  extraPaths: []
-  extraTls: []
-  secrets: []
-  extraRules: []
+  tls: true
 
 networkPolicy:
   enabled: false

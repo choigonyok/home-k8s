@@ -168,7 +168,7 @@ readinessProbe:
 createGlobalResources: true
 # Create clusterroles that extend existing clusterroles to interact with strimzi crds
 # Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
-createAggregateRoles: false
+createAggregateRoles: true
 # Override the exclude pattern for exclude some labels
 labelsExclusionPattern: ""
 # Controls whether Strimzi generates network policy resources (By default true)

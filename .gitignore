@@ -1,1 +1,8 @@
 *.DS_Store*
+keycloak/certificate.pem
+keycloak/key.pem
+nginx/nginx.conf
+k8s-generate.sh
+
+*.cred
+

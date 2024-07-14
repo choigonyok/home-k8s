@@ -62,25 +62,3 @@ spec:
               number: 80
         path: /
         pathType: Prefix
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
-  name: auth-ingress
-  namespace: auth-system
-spec:
-  ingressClassName: cilium
-  rules:
-  - host: auth.choigonyok.com
-    http:
-      paths:
-      - backend:
-          service:
-            name: keycloak-service
-            port:
-              number: 8080
-        path: /
-        pathType: Prefix

@@ -1,0 +1,33 @@
+# https://circleci.com/docs/container-runner-installation/
+agent:
+  replicaCount: 3
+  resources:
+      limits:
+        cpu: 1
+        memory: 2048Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  resourceClasses:
+    choigonyok/home-k8s:
+      token: e84eb66acd7e42c5d874225b7c6b4535456ef80351e6b3d834a86dda746ada171db9c8a6e57bc6c9
+  nodeSelector: {}
+    # node-type: worker
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/component
+            operator: In
+            values:
+            - controller
+        topologyKey: "kubernetes.io/hostname"
+pdb:
+  create: true
+  minAvailable: 1
+  maxUnavailable: 1
+
+runnerAPI: "https://ci.choigonyok.com"
+name: "circle-ci"

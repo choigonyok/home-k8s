@@ -50,7 +50,11 @@ sudo cp -i /etc/kubernetes/admin.conf /home/choigonyok/.kube/config
 sudo chown choigonyok:choigonyok /home/choigonyok/.kube/config
 export KUBECONFIG=/home/choigonyok/.kube/config
 
-kubectl label node k8s-{NUM} node-role.kubernetes.io/worker-{NUM}=
+kubectl label node k8s-2 node-role.kubernetes.io/worker-1=
+kubectl label node k8s-3 node-role.kubernetes.io/worker-2=
+kubectl label node k8s-4 node-role.kubernetes.io/worker-3=
+
+
 
 CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
 CLI_ARCH=amd64

@@ -2,7 +2,7 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: log-topic
-  namespace: mon-system
+  namespace: kafka-system
   labels:
     strimzi.io/cluster: monitor
 spec:
@@ -14,7 +14,7 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: metrics-topic
-  namespace: mon-system
+  namespace: kafka-system
   labels:
     strimzi.io/cluster: monitor
 spec:
@@ -26,10 +26,14 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: trace-topic
-  namespace: mon-system
+  namespace: kafka-system
   labels:
     strimzi.io/cluster: monitor
 spec:
   topicName: trace-topic
   partitions: 9
   replicas: 3
+
+# ./kafka-console-consumer.sh --topic log-topic --bootstrap-server monitor-kafka-plain-bootstrap:9092 --from-beginning
+
+# ./kafka-console-producer.sh --topic log-topic --bootstrap-server monitor-kafka-plain-bootstrap:9092

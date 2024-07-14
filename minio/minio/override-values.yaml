@@ -20,6 +20,9 @@ drivesPerNode: 1
 replicas: 4
 pools: 1
 
+extraArgs:
+- --console-address=:9001
+
 tls:
   enabled: false
   certSecret: ""

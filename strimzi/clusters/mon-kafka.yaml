@@ -25,6 +25,12 @@ spec:
         port: 9092
         type: cluster-ip
         tls: false
+        # authentication:
+        #   type: plain
+        #   username: kafka
+        #   passwordSecret:
+        #     secretName: kafka-vault-secret
+        #     password: passwordKey
         configuration:
           useServiceDnsDomain: true
       - name: tls
@@ -72,7 +78,7 @@ spec:
     # metricsConfig:
   entityOperator: # User/Topic Operator Config
     topicOperator:
-      watchedNamespace: efk-system
+      watchedNamespace: kafka-system
       reconciliationIntervalSeconds: 60
       logging:
         type: inline
@@ -86,7 +92,7 @@ spec:
           memory: 512Mi
           cpu: "1"
     userOperator:
-      watchedNamespace: mon-system
+      watchedNamespace: kafka-system
       reconciliationIntervalSeconds: 60
       logging:
         type: inline

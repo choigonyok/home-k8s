@@ -28,6 +28,9 @@ server:
     annotations:
       ingress.cilium.io/loadbalancer-mode: shared
       ingress.cilium.io/service-type: ClusterIP
+  annotations:
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
 
     ingressClassName: "cilium"
     pathType: Prefix

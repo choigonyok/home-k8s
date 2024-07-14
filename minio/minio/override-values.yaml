@@ -1,39 +1,4 @@
-nameOverride: ""
-fullnameOverride: ""
-clusterDomain: cluster.local
-image:
-  repository: quay.io/minio/minio
-  tag: RELEASE.2024-04-18T19-09-19Z
-  pullPolicy: IfNotPresent
-
-imagePullSecrets: []
-
-mcImage:
-  repository: quay.io/minio/mc
-  tag: RELEASE.2024-04-18T16-45-29Z
-  pullPolicy: IfNotPresent
-
 mode: distributed
-
-additionalLabels: {}
-additionalAnnotations: {}
-ignoreChartChecksums: false
-extraArgs: []
-
-extraVolumes: []
-extraVolumeMounts: []
-extraContainers: []
-
-minioAPIPort: "9000"
-minioConsolePort: "9001"
-
-deploymentUpdate:
-  type: RollingUpdate
-  maxUnavailable: 0
-  maxSurge: 100%
-
-statefulSetUpdate:
-  updateStrategy: RollingUpdate
 
 priorityClassName: ""
 runtimeClassName: ""
@@ -66,41 +31,10 @@ persistence:
   volumeName: ""
   accessMode: ReadWriteOnce
   size: 250Gi
-
   subPath: ""
-
-service:
-  type: ClusterIP
-  clusterIP: ~
-  port: "9000"
-  nodePort: 32000
-  loadBalancerIP: ~
-  externalIPs: []
-  annotations: {}
-
-  loadBalancerSourceRanges: []
-  externalTrafficPolicy: Cluster
 
 ingress:
   enabled: false
-  ingressClassName: ~
-  labels: {}
-  annotations: {}
-  path: /
-  hosts: []
-  tls: []
-
-consoleService:
-  type: ClusterIP
-  clusterIP: ~
-  port: "9001"
-  nodePort: 32001
-  loadBalancerIP: ~
-  externalIPs: []
-  annotations: {}
-  loadBalancerSourceRanges: []
-
-  externalTrafficPolicy: Cluster
 
 consoleIngress:
   enabled: true
@@ -136,59 +70,28 @@ securityContext:
   readOnlyRootFilesystem: false
 
 podAnnotations: {}
+
 podLabels:
   app: minio
+
 resources:
   requests:
     memory: 2Gi
 
 policies: []
 
-makePolicyJob:
-  securityContext:
-    enabled: false
-    runAsUser: 1000
-    runAsGroup: 1000
-  resources:
-    requests:
-      memory: 128Mi
-  exitCommand: ""
+users: []
+  # - accessKey: mimir
+  #   secretKey: <path:home-k8s/data/minio/users/mimir#password>
+  #   policy: consoleAdmin
+  # - accessKey: velero
+  #   secretKey: <path:home-k8s/data/minio/users/velero#password>
+  #   policy: consoleAdmin
+  # - accessKey: loki
+  #   secretKey: <path:home-k8s/data/minio/users/loki#password>
+  #   policy: consoleAdmin
 
-users:
-  - accessKey: mimir
-    secretKey: <path:home-k8s/data/minio/users/mimir#password>
-    policy: consoleAdmin
-  - accessKey: velero
-    secretKey: <path:home-k8s/data/minio/users/velero#password>
-    policy: consoleAdmin
-  - accessKey: loki
-    secretKey: <path:home-k8s/data/minio/users/loki#password>
-    policy: consoleAdmin
-
-makeUserJob:
-  securityContext:
-    enabled: false
-    runAsUser: 1000
-    runAsGroup: 1000
-  resources:
-    requests:
-      memory: 128Mi
-  exitCommand: ""
-
-svcaccts:
-  - accessKey: mimir-svcacct
-    secretKey: <path:home-k8s/data/minio/svcaccts/mimir#password>
-    user: mimir
-
-makeServiceAccountJob:
-  securityContext:
-    enabled: false
-    runAsUser: 1000
-    runAsGroup: 1000
-  resources:
-    requests:
-      memory: 128Mi
-  exitCommand: ""
+svcaccts: []
 
 buckets:
   - name:  mimir-alertmanager
@@ -226,67 +129,29 @@ buckets:
     purge: false
     versioning: true
     objectlocking: false
-    
-makeBucketJob:
-  securityContext:
-    enabled: false
-    runAsUser: 1000
-    runAsGroup: 1000
-  resources:
-    requests:
-      memory: 128Mi
-  exitCommand: ""
-
-customCommands:
-customCommandJob:
-  securityContext:
-    enabled: false
-    runAsUser: 1000
-    runAsGroup: 1000
-  resources:
-    requests:
-      memory: 128Mi
-  exitCommand: ""
-
-postJob:
-  podAnnotations: {}
-  annotations: {}
-  securityContext:
-    enabled: false
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 environment:
 
 oidc:
-  enabled: false
-  configUrl: "https://identity-provider-url/.well-known/openid-configuration"
-  clientId: "minio"
-  clientSecret: ""
-  # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
+  enabled: true
+  configUrl: "https://auth.choigonyok.com/.well-known/openid-configuration"
+  clientId: "minio-oauth"
+  clientSecret: <path:home-k8s/data/grafana/minio#client_secret>
   existingClientSecretName: ""
   existingClientIdKey: ""
   existingClientSecretKey: ""
   claimName: "policy"
-  scopes: "openid,profile,email"
-  redirectUri: "https://console-endpoint-url/oauth_callback"
+  scopes: "openid,profile,email,roles"
+  redirectUri: "https://s3.choigonyok.com/oauth_callback"
   claimPrefix: ""
   comment: ""
   displayName: ""
 
 networkPolicy:
   enabled: false
-  flavor: cilium
-  allowExternal: true
-  egressEntities:
-   - kube-apiserver
 
 podDisruptionBudget:
-  enabled: false
+  enabled: true
   maxUnavailable: 1
 
 serviceAccount:
@@ -295,7 +160,7 @@ serviceAccount:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: true
     includeNode: false
     public: true
     additionalLabels: {}

@@ -79,6 +79,13 @@ resources:
     memory: 2Gi
 
 policies: []
+# - name: adminpolicy
+#   statements:
+#     - effect: Allow 
+#       resources:
+#         - 'arn:aws:s3:::*'
+#       actions:
+#         - "s3:*"
 
 users: []
   # - accessKey: mimir
@@ -140,12 +147,12 @@ oidc:
   existingClientSecretName: ""
   existingClientIdKey: ""
   existingClientSecretKey: ""
-  claimName: "email"
+  claimName: "consoleAdmin"
   scopes: "openid,profile,email"
   redirectUri: "https://s3.choigonyok.com/oauth_callback"
   claimPrefix: ""
   comment: "test"
-  displayName: "test2"
+  displayName: "Login with Keycloak"
 
 networkPolicy:
   enabled: false

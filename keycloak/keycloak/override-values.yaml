@@ -48,13 +48,20 @@ adminIngress:
   enabled: true
   ingressClassName: "cilium"
   pathType: ImplementationSpecific
-  hostname: auth.choigonyok.com
+  hostname: keycloak.choigonyok.com
   path: "/"
   servicePort: http
   annotations:
     ingress.cilium.io/loadbalancer-mode: shared
     ingress.cilium.io/service-type: ClusterIP
   tls: false
+  labels: {}
+  selfSigned: false
+  extraHosts: []
+  extraPaths: []
+  extraTls: []
+  secrets: []
+  extraRules: []
 
 networkPolicy:
   enabled: false

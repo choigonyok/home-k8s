@@ -48,7 +48,7 @@ data:
           command:
             - sh
             - "-c"
-            - "find . -type f -namee '*.yaml' -exec grep -l '<path' {} \\\;"
+            - "find . -type f -name '*.yaml' -exec grep -l '<path' {} \\;"
       generate:
         command:
           - bash

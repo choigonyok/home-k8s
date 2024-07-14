@@ -20,9 +20,6 @@ drivesPerNode: 1
 replicas: 4
 pools: 1
 
-extraArgs:
-- --console-address=:9001
-
 tls:
   enabled: false
   certSecret: ""
@@ -51,6 +48,7 @@ consoleIngress:
   annotations:
     ingress.cilium.io/loadbalancer-mode: shared
     ingress.cilium.io/service-type: ClusterIP
+    ingress.cilium.io/websocket: enabled
   path: /
   hosts:
     - s3.choigonyok.com

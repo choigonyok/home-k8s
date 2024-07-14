@@ -7,8 +7,8 @@ image:
   debug: false
 
 auth:
-  adminUser: <path:keycloak/admin#username>
-  adminPassword: <path:keycloak/admin#password>
+  adminUser: <path:home-k8s/keycloak/admin#username>
+  adminPassword: <path:home-k8s/keycloak/admin#password>
 
 ## ref: https://www.keycloak.org/server/keycloak-truststore
 spi:
@@ -60,7 +60,7 @@ externalDatabase:
   port: 5432
   user: keycloak
   database: keycloak_db
-  password: <path:postgres/keycloak#password>
+  password: <path:home-k8s/postgres/keycloak#password>
 
 ## ref: https://www.keycloak.org/server/caching
 cache:

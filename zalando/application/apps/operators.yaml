@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-zalando
+  name: app-zalando-operators
   namespace: argocd-system
   annotations:
     argocd.argoproj.io/sync-wave: "50"

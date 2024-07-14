@@ -33,7 +33,7 @@ data:
           - bash
           - "-c"
           - |
-            helm template \$ARGOCD_APP_NAME --include-crds -n \$ARGOCD_APP_NAMESPACE -f ./override-values.yaml . |
+            helm template $ARGOCD_APP_NAME --include-crds -n $ARGOCD_APP_NAMESPACE -f ./override-values.yaml . |
             argocd-vault-plugin generate -s argocd-system:avp-secret -
       lockRepo: false
   avp.yaml: |

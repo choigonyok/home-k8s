@@ -53,7 +53,5 @@ data:
         command:
           - bash
           - "-c"
-          - |
-            cat \$(find . -type f -name '*.yaml' -exec grep -l '<path' {} \\;) |
-            argocd-vault-plugin generate -s argocd-system:avp-secret -
+          - "cat \$(find . -type f -name '*.yaml' -exec grep -l '<path' {} \\\;) | argocd-vault-plugin generate -s argocd-system:avp-secret -"
       lockRepo: false

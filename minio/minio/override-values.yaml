@@ -140,7 +140,7 @@ buckets:
 environment:
 
 oidc:
-  enabled: true
+  enabled: false
   configUrl: "https://auth.choigonyok.com/realms/home-k8s/.well-known/openid-configuration"
   clientId: "minio-oauth"
   clientSecret: <path:home-k8s/data/grafana/minio#client_secret>

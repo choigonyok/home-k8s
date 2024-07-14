@@ -134,7 +134,7 @@ environment:
 
 oidc:
   enabled: true
-  configUrl: "https://auth.choigonyok.com/.well-known/openid-configuration"
+  configUrl: "https://auth.choigonyok.com/realms/home-k8s/.well-known/openid-configuration"
   clientId: "minio-oauth"
   clientSecret: <path:home-k8s/data/grafana/minio#client_secret>
   existingClientSecretName: ""

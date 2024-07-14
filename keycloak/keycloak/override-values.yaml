@@ -61,6 +61,13 @@ externalDatabase:
   user: keycloak
   database: keycloak_db
   password: <path:home-k8s/data/postgres/keycloak#password>
+  existingSecret: ""
+  existingSecretHostKey: ""
+  existingSecretPortKey: ""
+  existingSecretUserKey: ""
+  existingSecretDatabaseKey: ""
+  existingSecretPasswordKey: ""
+  annotations: {}
 
 ## ref: https://www.keycloak.org/server/caching
 cache:

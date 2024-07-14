@@ -87,7 +87,7 @@ applicationSet:
 global:
   domain: cd.choigonyok.com
   logging:
-    format: json
+    format: text
     level: debug
 
   affinity:

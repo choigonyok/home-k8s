@@ -7,8 +7,8 @@ image:
   debug: false
 
 auth:
-  adminUser: admin
-  adminPassword: "test"
+  adminUser: <path:home-k8s/keycloak/admin#username>
+  adminPassword: <path:home-k8s/keycloak/admin#password>
   existingSecret: ""
   passwordSecretKey: ""
   annotations: {}
@@ -28,13 +28,13 @@ proxy: edge # or reencrypt, passthrough
 
 replicaCount: 3
 
-resources: {}
-##   requests:
-##     cpu: 100m
-##     memory: 128Mi
-##   limits:
-##     cpu: 300m
-##     memory: 256Mi
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
 
 nodeAffinityPreset:
   type: "soft" # or hard

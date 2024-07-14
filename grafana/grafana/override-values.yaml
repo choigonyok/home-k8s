@@ -38,10 +38,10 @@ ingress:
   tls: []
 
 resources:
-  limits:
+  requests:
     cpu: 200m
     memory: 256Mi
-  requests:
+  limits:
     cpu: 1
     memory: 2048Mi
 

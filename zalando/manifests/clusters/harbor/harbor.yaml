@@ -10,11 +10,11 @@ spec:
     storageClass: ceph-block
   numberOfInstances: 3
   users:
-    <path:home-k8s/data/zalando/clusters/harbor#user>:
+    harbor:
     - superuser
     - createdb
   databases:
-    <path:home-k8s/data/zalando/clusters/harbor#db>: <path:home-k8s/data/zalando/clusters/harbor#user>
+    harbor_db: harbor
   enableMasterLoadBalancer: false
   enableReplicaLoadBalancer: false
   postgresql:

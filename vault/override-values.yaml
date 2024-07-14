@@ -36,10 +36,7 @@ server:
       - host: vault.choigonyok.com
         paths: ["/"]
     extraPaths: []
-    tls:
-    - secretName: vault-crt
-      hosts:
-        - vault.choigonyok.com
+    tls: []
 
   # https://developer.hashicorp.com/vault/docs/auth/kubernetes
   authDelegator:

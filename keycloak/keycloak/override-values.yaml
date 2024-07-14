@@ -84,4 +84,4 @@ cache:
 
 logging:
   output: default
-  level: ALL
+  level: INFO

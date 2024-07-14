@@ -4,7 +4,7 @@ image:
   registry: docker.io
   repository: bitnami/keycloak
   tag: 24.0.5-debian-12-r1
-  debug: false
+  debug: true
 
 auth:
   adminUser: <path:home-k8s/data/keycloak/admin#username>

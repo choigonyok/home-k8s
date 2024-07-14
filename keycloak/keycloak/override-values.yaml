@@ -28,13 +28,13 @@ proxy: edge # or reencrypt, passthrough
 
 replicaCount: 3
 
-resources: {}
-#   requests:
-#     cpu: 100m
-#     memory: 128Mi
-#   limits:
-#     cpu: 300m
-#     memory: 256Mi
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
 
 nodeAffinityPreset:
   type: "soft" # or hard

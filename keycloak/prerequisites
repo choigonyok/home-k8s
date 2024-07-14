@@ -1,5 +1,0 @@
-kubectl apply -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.0/kubernetes/keycloaks.k8s.keycloak.org-v1.yml
-kubectl apply -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.0/kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml
-kubectl apply -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.0/kubernetes/kubernetes.yml -n auth-system
-kubectl create secret generic keycloak-db-secret --from-literal=username=[your_database_username] --from-literal=password=[your_database_password] # Can find in pg cluster secrets
-kubectl create secret tls example-tls-secret -n auth-system  --cert ./certificate.pem --key ./key.pem

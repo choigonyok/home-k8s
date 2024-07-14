@@ -1,0 +1,73 @@
+namespaceOverride: ""
+
+image:
+  registry: docker.io
+  repository: bitnami/keycloak
+  tag: 24.0.5-debian-12-r1
+  debug: false
+
+auth:
+  adminUser: <path:keycloak/admin#username>
+  adminPassword: <path:keycloak/admin#password>
+
+## ref: https://www.keycloak.org/server/keycloak-truststore
+spi:
+  existingSecret: ""
+  truststorePassword: ""
+  truststoreFilename: "keycloak-spi.truststore.jks"
+  passwordsSecret: ""
+  hostnameVerificationPolicy: ""
+
+production: true
+
+proxy: edge # or reencrypt, passthrough
+
+replicaCount: 3
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
+
+nodeAffinityPreset:
+  type: "soft"
+  key: "node-type"
+  values:
+    - worker
+
+podAntiAffinityPreset: soft
+
+adminIngress:
+  enabled: true
+  ingressClassName: "cilum"
+  pathType: ImplementationSpecific
+  hostname: auth.choigonyok.com
+  path: "/"
+  servicePort: http
+  tls: false
+
+networkPolicy:
+  enabled: false
+
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: "pg-keycloak.postgres-system.svc.cluster.local"
+  port: 5432
+  user: keycloak
+  database: keycloak_db
+  password: <path:postgres/keycloak#password>
+
+## ref: https://www.keycloak.org/server/caching
+cache:
+  enabled: true
+  stackName: kubernetes
+  stackFile: ""
+
+logging:
+  output: default
+  level: ALL

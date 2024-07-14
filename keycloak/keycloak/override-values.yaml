@@ -51,6 +51,9 @@ adminIngress:
   hostname: auth.choigonyok.com
   path: "/"
   servicePort: http
+  annotations:
+    ingress.cilium.io/loadbalancer-mode: shared
+    ingress.cilium.io/service-type: ClusterIP
   tls: false
 
 networkPolicy:

@@ -56,7 +56,7 @@ postgresql:
   enabled: false
 
 externalDatabase:
-  host: "pg-keycloak.postgres-system.svc.cluster.local"
+  host: "keycloak-pg.postgres-system.svc.cluster.local"
   port: 5432
   user: keycloak
   database: keycloak_db

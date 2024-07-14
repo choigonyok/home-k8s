@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: app-zalando
   namespace: argocd-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "-50"
 spec:
   destination:
     name: ''
@@ -11,7 +13,13 @@ spec:
   project: default
   sources:
     - repoURL: 'https://github.com/choigonyok/home-k8s.git'
-      path: zalando/application/apps
+      path: zalando/manifests/clusters/grafana
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/manifests/clusters/keycloak
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: zalando/manifests/clusters/harbor
       targetRevision: HEAD
   syncPolicy:
     automated:

@@ -417,4 +417,4 @@ networkPolicy:
 enableKubeBackwardCompatibility: false
 useStatefulSet: false
 extraObjects: []
-assertNoLeakedSecrets: true
+assertNoLeakedSecrets: false

@@ -140,12 +140,12 @@ oidc:
   existingClientSecretName: ""
   existingClientIdKey: ""
   existingClientSecretKey: ""
-  claimName: "policy"
-  scopes: "openid,profile,email,roles"
+  claimName: "email"
+  scopes: "openid,profile,email"
   redirectUri: "https://s3.choigonyok.com/oauth_callback"
   claimPrefix: ""
-  comment: ""
-  displayName: ""
+  comment: "test"
+  displayName: "test2"
 
 networkPolicy:
   enabled: false

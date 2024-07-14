@@ -1,3 +1,8 @@
+image:
+  repository: quay.io/minio/minio
+  tag: RELEASE.2019-08-14T20-37-41Z
+  pullPolicy: IfNotPresent
+
 mode: distributed
 
 priorityClassName: ""

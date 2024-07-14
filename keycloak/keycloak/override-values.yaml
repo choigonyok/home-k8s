@@ -9,6 +9,9 @@ image:
 auth:
   adminUser: <path:home-k8s/data/keycloak/admin#username>
   adminPassword: <path:home-k8s/data/keycloak/admin#password>
+  existingSecret: ""
+  passwordSecretKey: ""
+  annotations: {}
 
 ## ref: https://www.keycloak.org/server/keycloak-truststore
 spi:

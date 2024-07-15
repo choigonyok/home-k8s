@@ -3,9 +3,6 @@ global:
   logLevel: "info"
   logJSON: false
   name: consul
-
-  # (Refer to [`-domain`](https://developer.hashicorp.com/consul/docs/agent/config/cli-flags#_domain)) and the domain services synced from
-  # Consul into Kubernetes will have, e.g. `service-name.service.consul`.
   domain: consul
   image: hashicorp/consul:1.19.0
   imageK8S: hashicorp/consul-k8s-control-plane:1.5.0
@@ -16,147 +13,7 @@ global:
   secretsBackend:
     vault:
       vaultNamespace: "vault-system"
-      enabled: true
-
-      # The Vault role for the Consul server.
-      # The role must be connected to the Consul server's service account.
-      # The role must also have a policy with read capabilities for the following secrets:
-      # - gossip encryption key defined by the `global.gossipEncryption.secretName` value
-      # - certificate issue path defined by the `server.serverCert.secretName` value
-      # - CA certificate defined by the `global.tls.caCert.secretName` value
-      # - replication token defined by the `global.acls.replicationToken.secretName` value if `global.federation.enabled` is `true`
-      # To discover the service account name of the Consul server, run
-      # ```shell-session
-      # $ helm template --show-only templates/server-serviceaccount.yaml <release-name> hashicorp/consul
-      # ```
-      # and check the name of `metadata.name`.
-      consulServerRole: ""
-
-      # The Vault role for the Consul client.
-      # The role must be connected to the Consul client's service account.
-      # The role must also have a policy with read capabilities for the gossip encryption
-      # key defined by the `global.gossipEncryption.secretName` value.
-      # To discover the service account name of the Consul client, run
-      # ```shell-session
-      # $ helm template --show-only templates/client-serviceaccount.yaml <release-name> hashicorp/consul
-      # ```
-      # and check the name of `metadata.name`.
-      consulClientRole: ""
-
-      # A Vault role for the Consul `server-acl-init` job, which manages setting ACLs so that clients and components can obtain ACL tokens.
-      # The role must be connected to the `server-acl-init` job's service account.
-      # The role must also have a policy with read and write capabilities for the bootstrap, replication or partition tokens
-      # To discover the service account name of the `server-acl-init` job, run
-      # ```shell-session
-      # $ helm template --show-only templates/server-acl-init-serviceaccount.yaml \
-      #   --set global.acls.manageSystemACLs=true <release-name> hashicorp/consul
-      # ```
-      # and check the name of `metadata.name`.
-      manageSystemACLsRole: ""
-
-      # [Enterprise Only] A Vault role that allows the Consul `partition-init` job to read a Vault secret for the partition ACL token.
-      #  The `partition-init` job bootstraps Admin Partitions on Consul servers.
-      # .
-      # This role must be bound the `partition-init` job's service account.
-      # To discover the service account name of the `partition-init` job, run with Helm values for the client cluster:
-      # ```shell-session
-      # $ helm template --show-only templates/partition-init-serviceaccount.yaml -f client-cluster-values.yaml <release-name> hashicorp/consul
-      # ```
-      # and check the name of `metadata.name`.
-      adminPartitionsRole: ""
-
-      # The Vault role to read Consul connect-injector webhook's CA
-      # and issue a certificate and private key.
-      # A Vault policy must be created which grants issue capabilities to
-      # `global.secretsBackend.vault.connectInject.tlsCert.secretName`.
-      connectInjectRole: ""
-
-      # The Vault role for all Consul components to read the Consul's server's CA Certificate (unauthenticated).
-      # The role should be connected to the service accounts of all Consul components, or alternatively `*` since it
-      # will be used only against the `pki/cert/ca` endpoint which is unauthenticated. A policy must be created which grants
-      # read capabilities to `global.tls.caCert.secretName`, which is usually `pki/cert/ca`.
-      consulCARole: ""
-
-      # This value defines additional annotations for
-      # Vault agent on any pods where it'll be running.
-      # This should be formatted as a multi-line string.
-      #
-      # ```yaml
-      # annotations: |
-      #   "sample/annotation1": "foo"
-      #   "sample/annotation2": "bar"
-      # ```
-      #
-      # @type: string
-      agentAnnotations: null
-
-      # Configuration for Vault server CA certificate. This certificate will be mounted
-      # to any pod where Vault agent needs to run.
-      ca:
-        # The name of the Kubernetes or Vault secret that holds the Vault CA certificate.
-        # A Kubernetes secret must be in the same namespace that Consul is installed into.
-        secretName: ""
-        # The key within the Kubernetes or Vault secret that holds the Vault CA certificate.
-        secretKey: ""
-
-      # Configuration for the Vault Connect CA provider.
-      # The provider will be configured to use the Vault Kubernetes auth method
-      # and therefore requires the role provided by `global.secretsBackend.vault.consulServerRole`
-      # to have permissions to the root and intermediate PKI paths.
-      # Please refer to [Vault ACL policies](https://developer.hashicorp.com/consul/docs/connect/ca/vault#vault-acl-policies)
-      # documentation for information on how to configure the Vault policies.
-      connectCA:
-        # The address of the Vault server.
-        address: ""
-
-        # The mount path of the Kubernetes auth method in Vault.
-        authMethodPath: "kubernetes"
-
-        # The path to a PKI secrets engine for the root certificate.
-        # For more details, please refer to [Vault Connect CA configuration](https://developer.hashicorp.com/consul/docs/connect/ca/vault#rootpkipath).
-        rootPKIPath: ""
-
-        # The path to a PKI secrets engine for the generated intermediate certificate.
-        # For more details, please refer to [Vault Connect CA configuration](https://developer.hashicorp.com/consul/docs/connect/ca/vault#intermediatepkipath).
-        intermediatePKIPath: ""
-
-        # Additional Connect CA configuration in JSON format.
-        # Please refer to [Vault Connect CA configuration](https://developer.hashicorp.com/consul/docs/connect/ca/vault#configuration)
-        # for all configuration options available for that provider.
-        #
-        # Example:
-        #
-        # ```yaml
-        # additionalConfig: |
-        #   {
-        #     "connect": [{
-        #       "ca_config": [{
-        #            "leaf_cert_ttl": "36h"
-        #         }]
-        #     }]
-        #   }
-        # ```
-        additionalConfig: |
-          {}
-
-      connectInject:
-        # Configuration to the Vault Secret that Kubernetes uses on
-        # Kubernetes pod creation, deletion, and update, to get CA certificates
-        # used issued from vault to send webhooks to the ConnectInject.
-        caCert:
-          # The Vault secret path that contains the CA certificate for
-          # Connect Inject webhooks.
-          # @type: string
-          secretName: null
-
-        # Configuration to the Vault Secret that Kubernetes uses on
-        # Kubernetes pod creation, deletion, and update, to get TLS certificates
-        # used issued from vault to send webhooks to the ConnectInject.
-        tlsCert:
-          # The Vault secret path that issues TLS certificates for connect
-          # inject webhooks.
-          # @type: string
-          secretName: null
+      enabled: false
 
   argocd:
     enabled: true
@@ -252,15 +109,8 @@ dns:
 ui:
   enabled: true
 
-  # Configure the service for the Consul UI.
   service:
-    # This will enable/disable registering a
-    # Kubernetes Service for the Consul UI. This value only takes effect if `ui.enabled` is
-    # true and taking effect.
     enabled: true
-
-    # The service type to register.
-    # @type: string
     type: ClusterIP
 
   ingress:
@@ -284,19 +134,12 @@ connectInject:
   replicas: 3
   default: false
 
-  transparentProxy:
-    defaultEnabled: true
-    defaultOverwriteProbes: true
-
   disruptionBudget:
     enabled: true
     maxUnavailable: 2
     minAvailable: null
 
   apiGateway:
-    manageExternalCRDs: true
-    manageNonStandardCRDs: false
-
     managedGatewayClass:
       nodeSelector: |
         node-type: worker
@@ -312,24 +155,15 @@ connectInject:
         defaultInstances: 3
         maxInstances: 3
         minInstances: 1
-
-  cni:
-    enabled: false
-
+  
   metrics:
     defaultEnabled: false
-    defaultEnableMerging: false
-    defaultMergedMetricsPort: 20100
-    defaultPrometheusScrapePort: 20200
-    defaultPrometheusScrapePath: "/metrics"
+
 
   logLevel: "info"
-
-  k8sAllowNamespaces: ["log-system", "metric-system", "trace-system"]
-
+  k8sAllowNamespaces: ["*"]
   nodeSelector: |
     node-type: worker
-
   affinity: null
 
 tests:
@@ -337,3 +171,59 @@ tests:
 
 telemetryCollector:
   enabled: false
+
+
+
+
+
+
+
+---
+# Configure global settings in this section.
+global:
+  name: consul
+  # Bootstrap ACLs within Consul. This is highly recommended.
+  acls:
+    manageSystemACLs: true
+  # Gossip encryption
+  gossipEncryption:
+    autoGenerate: true
+# Configure your Consul servers in this section.
+server:
+  # Specify three servers that wait until all are healthy to bootstrap the Consul cluster.
+  replicas: 3
+  # Specify the resources that servers request for placement. These values will serve a large environment.
+  resources:
+    requests:
+      memory: '32Gi'
+      cpu: '4'
+      disk: '50Gi'
+    limits:
+      memory: '32Gi'
+      cpu: '4'
+      disk: '50Gi'
+  # If using Enterprise, reference the Kubernetes secret that holds your license here
+  enterpriseLicense:
+    secretName: 'consul-license'
+    secretKey: 'key'
+# Configure Consul clients in this section
+client:
+  # Specify the resources that clients request for deployment.
+  resources:
+    requests:
+      memory: '8Gi'
+      cpu: '2'
+      disk: '15Gi'
+    limits:
+      memory: '8Gi'
+      cpu: '2'
+      disk: '15Gi'
+# Enable and configure the Consul UI.
+ui:
+  enabled: true
+# Enable Consul connect pod injection
+connectInject:
+  enabled: true
+  default: true
+controller:
+  enabled: true

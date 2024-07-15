@@ -1,0 +1,129 @@
+alloy:
+  configMap:
+    create: true
+    content: |-
+      logging {
+        level = "info"
+        format = "logfmt"
+      }
+
+      otelcol.receiver.otlp "otel" {
+        output {
+          logs    = [otelcol.processor.attributes.default.input]
+          # metrics = [otelcol.exporter.prometheus.otel.input]
+          # traces  = [otelcol.exporter.otlp.tempo.input]
+          metrics = []
+          traces  = []
+        }
+        grpc {
+          endpoint = "0.0.0.0:4317"
+        }
+        http {
+          endpoint = "0.0.0.0:4318"
+        }
+      }
+
+      otelcol.exporter.prometheus "otel" {
+        forward_to = [prometheus.remote_write.otel.receiver]
+      }
+
+      prometheus.remote_write "otel" {
+        endpoint {
+          url = "http://app-mimir-distributor-headless.metric-system.svc.cluster.local:8080/api/v1/push"
+        }
+      }
+
+      otelcol.exporter.otlp "tempo" {
+        client {
+            endpoint = "tempo-distributor-discovery.trace-system.svc.cluster.local:4317"
+            tls {
+                insecure             = true
+                insecure_skip_verify = true
+            }
+        }
+      }
+
+      otelcol.processor.attributes "default" {
+        action {
+          key    = "loki.resource.labels"
+          action = "insert"
+          value  = "k8s.namespace.name, k8s.pod.name, k8s.container.name, cni.projectcalico.org/podIP, k8s.node.name"
+        }
+
+        output {
+          logs = [otelcol.exporter.loki.default.input]
+        }
+      }
+
+      otelcol.exporter.loki "default" {
+        forward_to = [loki.relabel.namespace.receiver]
+      }
+
+      loki.relabel "namespace" {
+        forward_to = [loki.relabel.podname.receiver]
+        rule {
+          action        = "replace"
+          source_labels = ["k8s_namespace_name"]
+          target_label  = "namespace"
+        }
+      }
+
+      loki.relabel "podname" {
+        # forward_to = [loki.relabel.podip.receiver]
+        forward_to = [loki.relabel.nodename.receiver]
+        rule {
+          action        = "replace"
+          source_labels = ["k8s_pod_name"]
+          target_label  = "pod"
+        }
+      }
+
+      # loki.relabel "podip" {
+      #   forward_to = [loki.relabel.nodename.receiver]
+      #   rule {
+      #     action        = "replace"
+      #     source_labels = ["cni_projectcalico_org_podIP"]
+      #     target_label  = "ip"
+      #   }
+      # }
+      
+      loki.relabel "nodename" {
+        forward_to = [loki.relabel.containername.receiver]
+        rule {
+          action        = "replace"
+          source_labels = ["k8s_node_name"]
+          target_label  = "node"
+        }
+      }
+
+      loki.relabel "containername" {
+        forward_to = [loki.relabel.labelkeep.receiver]
+        rule {
+          action        = "replace"
+          source_labels = ["k8s_container_name"]
+          target_label  = "container"
+        }
+      }
+
+      loki.relabel "labelkeep" {
+        forward_to = [loki.write.local.receiver]
+
+        rule {
+          action        = "labelkeep"
+          regex         = "container|node|pod|ip|namespace"
+        }
+      }
+
+      loki.write "local" {
+        endpoint {
+          url = "http://app-loki-gateway.log-system.svc.cluster.local:80/loki/api/v1/push"
+        }
+      }
+      
+  clustering:
+    enabled: true
+    portName: http
+
+  mounts:
+    varlog: false
+    dockercontainers: false

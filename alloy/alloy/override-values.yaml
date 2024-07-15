@@ -10,8 +10,6 @@ alloy:
       otelcol.receiver.otlp "otel" {
         output {
           logs    = [otelcol.processor.attributes.default.input]
-          # metrics = [otelcol.exporter.prometheus.otel.input]
-          # traces  = [otelcol.exporter.otlp.tempo.input]
           metrics = []
           traces  = []
         }
@@ -69,7 +67,6 @@ alloy:
       }
 
       loki.relabel "podname" {
-        # forward_to = [loki.relabel.podip.receiver]
         forward_to = [loki.relabel.nodename.receiver]
         rule {
           action        = "replace"
@@ -77,15 +74,6 @@ alloy:
           target_label  = "pod"
         }
       }
-
-      # loki.relabel "podip" {
-      #   forward_to = [loki.relabel.nodename.receiver]
-      #   rule {
-      #     action        = "replace"
-      #     source_labels = ["cni_projectcalico_org_podIP"]
-      #     target_label  = "ip"
-      #   }
-      # }
       
       loki.relabel "nodename" {
         forward_to = [loki.relabel.containername.receiver]
@@ -119,7 +107,21 @@ alloy:
           url = "http://app-loki-gateway.log-system.svc.cluster.local:80/loki/api/v1/push"
         }
       }
-      
+
+# metrics = [otelcol.exporter.prometheus.otel.input]
+# traces  = [otelcol.exporter.otlp.tempo.input]
+
+# forward_to = [loki.relabel.podip.receiver]
+
+# loki.relabel "podip" {
+#   forward_to = [loki.relabel.nodename.receiver]
+#   rule {
+#     action        = "replace"
+#     source_labels = ["cni_projectcalico_org_podIP"]
+#     target_label  = "ip"
+#   }
+# }
+
   clustering:
     enabled: true
     portName: http

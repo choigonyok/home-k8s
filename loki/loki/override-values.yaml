@@ -1,116 +1,163 @@
+deploymentMode: Distributed
+
 loki:
   auth_enabled: false
+
   schemaConfig:
     configs:
-      - from: 2024-04-01
+      - from: 2020-07-01
         store: tsdb
         object_store: s3
         schema: v13
         index:
-          prefix: loki_index_
+          prefix: index_
           period: 24h
+
   ingester:
     chunk_encoding: snappy
+    
   tracing:
     enabled: true
+
   querier:
     max_concurrent: 4
 
+  distributor:
+    otlp_config:
+      default_resource_attributes_as_index_labels: 
+        - service.name
+        - service.namespace
+        - service.instance.id
+        - deployment.environment
+        - k8s.namespace.name
+        - k8s.pod.name
+        - k8s.container.name
+        - k8s.replicaset.name
+        - k8s.deployment.name
+        - k8s.statefulset.name 
+        - k8s.daemonset.name
+        - k8s.cronjob.name
+        - event.domain
+        - event.name
+        - k8s.job.name
+
+  compactor:
+    working_directory: /loki/retention
+    compaction_interval: 10m
+    retention_enabled: true 
+    retention_delete_delay: 2h
+    retention_delete_worker_count: 150
+    delete_request_store: s3
+  limits_config:
+    retention_period: 24h
+    allow_structured_metadata: true
+
+    otlp_config:
+      resource_attributes:
+        ignore_defaults: false
+
   storage:
-    type: s3
     bucketNames:
-      chunks: "loki-chunks"
-      ruler: "loki-ruler"
-      admin: "loki-admin"
+      chunks: loki-chunks
+      ruler: loki-ruler
+      admin: loki-admin
+    type: s3
     s3:
       s3: http://app-minio-svc.minio-system.svc.cluster.local:9000
-      endpoint: 
+      endpoint:
       region: ap-northeast-2
-      secretAccessKey: <path:home-k8s/data/minio/users/loki#password>
-      accessKeyId: <path:home-k8s/data/minio/users/loki#username>
+      accessKeyId: <path:home-k8s/data/minio/users/root#username>
+      secretAccessKey: <path:home-k8s/data/minio/users/root#password>
       s3ForcePathStyle: true
       insecure: true
       http_config: {}
+  storage_config:
+    tsdb_shipper:
+      active_index_directory: /loki/index
+      cache_location: /loki/index_cache
+      cache_ttl: 24h
 
-deploymentMode: Distributed
+compactor:
+  replicas: 1
+  affinity: {}
+  nodeSelector:
+    node-type: worker
+  extraVolumes:
+    - name: retention
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: retention
+      mountPath: /loki/retention
 
-minio:
-    enabled: false
+distributor:
+  replicas: 3
+  affinity: null
+  nodeSelector:
+    node-type: worker
+  maxUnavailable: 2
+
+indexGateway:
+  replicas: 2
+  affinity: {}
+  nodeSelector:
+    node-type: worker
+  maxUnavailable: 1
+  extraVolumes:
+    - name: cache
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: cache
+      mountPath: /loki/index_cache
 
 ingester:
+  replicas: 3
+  affinity: {}
+  nodeSelector:
+    node-type: worker
   zoneAwareReplication:
     zoneA:
       nodeSelector:
-        worker-node: first
+        node-number: one
     zoneB:
       nodeSelector:
-        worker-node: second
+        node-number: two
     zoneC:
-        worker-node: third
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
-  replicas: 3
-  nodeSelector:
-    node-type: worker
+      nodeSelector:
+        node-number: three
+  extraVolumes:
+    - name: index
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: index
+      mountPath: /loki/index
+
 querier:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
   replicas: 3
+  affinity: null
   nodeSelector:
     node-type: worker
   maxUnavailable: 2
+
 queryFrontend:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
+  replicas: 2
+  affinity: {}
   nodeSelector:
     node-type: worker
-  replicas: 2
   maxUnavailable: 1
+
 queryScheduler:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
-  nodeSelector:
-    node-type: worker
   replicas: 2
-distributor:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
+  affinity: {}
   nodeSelector:
     node-type: worker
-  replicas: 3
-  maxUnavailable: 2
-compactor:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
-  nodeSelector:
-    node-type: worker
-  replicas: 1
-indexGateway:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: ceph-block
-  nodeSelector:
-    node-type: worker
-  replicas: 2
-  maxUnavailable: 1
 
 bloomCompactor:
   replicas: 0
 bloomGateway:
   replicas: 0
+
+minio:
+  enabled: false
 
 backend:
   replicas: 0
@@ -120,4 +167,4 @@ write:
   replicas: 0
 
 singleBinary:
-  replicas: 0
+  replicas: 0 

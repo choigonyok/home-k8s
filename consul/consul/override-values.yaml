@@ -134,7 +134,7 @@ connectInject:
   default: false
 
   disruptionBudget:
-    enabled: true
+    enabled: false
     maxUnavailable: 2
     minAvailable: null
 

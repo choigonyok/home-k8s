@@ -83,9 +83,6 @@ config:
         disk:
         filesystem:
         network:
-      tls:
-        insecure: true
-        insecure_skip_verify: true
     otlp:
       protocols:
         grpc:
@@ -101,10 +98,10 @@ config:
         receivers: []
         processors: []
         exporters: [otlphttp/logs]
-      # metrics:
-      #   receivers: [] # hostmetrics
-      #   processors: [transform]
-      #   exporters: [otlphttp/metrics]
+      metrics:
+        receivers: [] # hostmetrics
+        processors: [transform]
+        exporters: [otlphttp/metrics]
       # traces:
       #   receivers: [otlp]
       #   processors: []

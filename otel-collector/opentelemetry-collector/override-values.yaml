@@ -19,7 +19,7 @@ presets:
     extractAllPodLabels: true
     extractAllPodAnnotations: true
   kubeletMetrics:
-    enabled: true
+    enabled: false
   kubernetesEvents:
     enabled: false 
   clusterMetrics:

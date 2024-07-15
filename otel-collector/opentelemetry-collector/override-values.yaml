@@ -132,7 +132,6 @@ clusterRole:
     resources:
     - 'pods'
     - 'nodes'
-    - 'containers'
     verbs:
     - 'get'
     - 'list'

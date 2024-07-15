@@ -87,8 +87,20 @@ ingester:
     readOnlyRootFilesystem: false
     runAsNonRoot: false
     runAsUser: 0
+    
   zoneAwareReplication:
-    enabled: false
+    enabled: true
+    topologyKey: 'kubernetes.io/hostname'
+    zones:
+    - name: zone-a
+      nodeSelector:
+        node-number: one
+    - name: zone-b
+      nodeSelector:
+        node-number: two
+    - name: zone-c
+      nodeSelector:
+        node-number: three
   persistentVolume:
     enabled: false
   replicas: 3
@@ -98,25 +110,6 @@ ingester:
     requests:
       cpu: 250m
       memory: 512Mi
-  topologySpreadConstraints: {}
-  affinity:
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-              - key: target
-                operator: In
-                values:
-                  - ingester
-          topologyKey: 'kubernetes.io/hostname'
-
-        - labelSelector:
-            matchExpressions:
-              - key: app.kubernetes.io/component
-                operator: In
-                values:
-                  - ingester
-          topologyKey: 'kubernetes.io/hostname'
 
 admin-cache:
   nodeSelector:
@@ -212,27 +205,20 @@ store_gateway:
     requests:
       cpu: 100m
       memory: 128Mi
-  topologySpreadConstraints: {}
-  affinity:
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-              - key: target # support for enterprise.legacyLabels
-                operator: In
-                values:
-                  - store-gateway
-          topologyKey: 'kubernetes.io/hostname'
 
-        - labelSelector:
-            matchExpressions:
-              - key: app.kubernetes.io/component
-                operator: In
-                values:
-                  - store-gateway
-          topologyKey: 'kubernetes.io/hostname'
   zoneAwareReplication:
-    enabled: false
+    enabled: true
+    topologyKey: 'kubernetes.io/hostname'
+    zones:
+    - name: zone-a
+      nodeSelector:
+        node-number: one
+    - name: zone-b
+      nodeSelector:
+        node-number: two
+    - name: zone-c
+      nodeSelector:
+        node-number: three
 
 nginx:
   nodeSelector:

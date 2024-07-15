@@ -52,8 +52,7 @@ server:
   updatePartition: 0
 
   disruptionBudget:
-    enabled: true
-    maxUnavailable: 2
+    enabled: false
 
   affinity: |
     podAntiAffinity:

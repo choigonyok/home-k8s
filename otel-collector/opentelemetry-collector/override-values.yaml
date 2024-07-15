@@ -3,9 +3,10 @@ fullnameOverride: ""
 
 mode: "daemonset"
 
-namespaceOverride: "monitor-system"
+namespaceOverride: "otel-system"
 
 presets:
+  # https://opentelemetry.io/docs/kubernetes/collector/components/#filelog-receiver
   logsCollection:
     enabled: true
     includeCollectorLogs: false
@@ -20,7 +21,7 @@ presets:
   kubeletMetrics:
     enabled: true
   kubernetesEvents:
-    enabled: true
+    enabled: false 
   clusterMetrics:
     enabled: false
 
@@ -30,36 +31,22 @@ configMap:
 
 config:
   exporters:
-    logging:
-      loglevel: info
-    prometheusremotewrite:
-      auth:
-        authenticator: basicauth/client
-      endpoint: http://app-mimir-nginx.metric-system.svc.cluster.local/api/v1/push
-    loki:
-      endpoint: http://app-loki-distributor-headless.log-system.svc.cluster.local:3100/loki/api/v1/push
-      default_labels_enabled:
-        exporter: true
-        job: true
-        instance: true
-        level: true
-
-  processors:
-    resource:  
-      attributes:
-      - action: insert
-        key: service_name
-        from_attribute: service.name
-      - action: insert
-        key: service_namespace
-        from_attribute: service.namespace
-      - action: insert
-        key: compose_service
-        from_attribute: compose_service
-      - action: insert
-        key: loki.resource.labels
-        value: service_name, service_namespace, compose_service
-  
+    otlphttp/metrics:
+      endpoint: http://app-alloy-cluster.alloy-system.svc.cluster.local:4318
+      tls:
+        insecure: true
+        insecure_skip_verify: true
+    otlphttp/logs:
+      endpoint: http://app-alloy-cluster.alloy-system.svc.cluster.local:4318
+      tls:
+        insecure: true
+        insecure_skip_verify: true
+    otlp:
+      endpoint: http://app-alloy-cluster.alloy-system.svc.cluster.local:4317
+      tls:
+        insecure: true
+        insecure_skip_verify: true
+        
   extensions:
     # basicauth/server:
     #   htpasswd: 
@@ -73,11 +60,19 @@ config:
     health_check:
       endpoint: ${env:MY_POD_IP}:13133
 
+  processors:
+    transform:
+      metric_statements:
+        - context: datapoint
+          statements:
+          - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+          - set(attributes["container"], resource.attributes["k8s.container.name"])
+          - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+          - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+          - set(attributes["node"], resource.attributes["k8s.node.name"])
+          - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+    
   receivers:
-    otlp:
-      protocols:
-        http: 
-          endpoint: "localhost:4318"
     hostmetrics:
       root_path: /
       collection_interval: 10s
@@ -88,19 +83,30 @@ config:
         disk:
         filesystem:
         network:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 127.0.0.1:4317
+        http:
+          endpoint: 127.0.0.1:4318
+
 
   service:
     extensions: [basicauth/client, health_check]
     pipelines:
-      metrics:
-        receivers: [hostmetrics]
-        processors: []
-        exporters: [prometheusremotewrite]
       logs:
-        receivers: [otlp]
-        processors: [resource]
-        exporters: [loki, logging]
-
+        receivers: []
+        processors: []
+        exporters: [otlphttp/logs]
+      # metrics:
+      #   receivers: [] # hostmetrics
+      #   processors: [transform]
+      #   exporters: [otlphttp/metrics]
+      # traces:
+      #   receivers: [otlp]
+      #   processors: []
+      #   exporters: [otlp]
+    
 image:
   repository: "otel/opentelemetry-collector-contrib"
   pullPolicy: IfNotPresent
@@ -142,6 +148,10 @@ securityContext:
   readOnlyRootFilesystem: false
   runAsNonRoot: false
   runAsUser: 0
+  # capabilities:
+  #   add:
+  #     - SYS_PTRACE
+  #     - SYS_ADMIN
 
 nodeSelector: {}
 tolerations: []
@@ -282,6 +292,7 @@ autoscaling:
   maxReplicas: 10
   behavior: {}
   targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 rollout:
   rollingUpdate: {}
@@ -308,13 +319,6 @@ networkPolicy:
   allowIngressFrom: []
   extraIngressRules: []
   egressRules: []
-  #  - to:
-  #      - namespaceSelector: {}
-  #      - ipBlock:
-  #          cidr: 192.168.10.10/24
-  #    ports:
-  #      - port: 1234
-  #        protocol: TCP
 
 useGOMEMLIMIT: true
 shareProcessNamespace: false

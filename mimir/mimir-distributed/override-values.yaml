@@ -29,7 +29,7 @@ mimir:
         kvstore:
           store: consul
           consul:
-            host: consul-server.ha-system.svc.cluster.local:3500
+            host: consul-server.ha-system.svc.cluster.local:8500
 
 alertmanager:
   nodeSelector:
@@ -87,7 +87,7 @@ ingester:
     readOnlyRootFilesystem: false
     runAsNonRoot: false
     runAsUser: 0
-    
+
   zoneAwareReplication:
     enabled: true
     topologyKey: 'kubernetes.io/hostname'

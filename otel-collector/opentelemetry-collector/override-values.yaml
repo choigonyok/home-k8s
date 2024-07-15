@@ -73,6 +73,15 @@ config:
           - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
     
   receivers:
+    kubeletstats:
+      collection_interval: 10s
+      auth_type: 'serviceAccount'
+      endpoint: '${env:K8S_NODE_NAME}:10250'
+      insecure_skip_verify: true
+      metric_groups:
+        - node
+        - pod
+        - container
     hostmetrics:
       root_path: /
       collection_interval: 10s
@@ -90,6 +99,11 @@ config:
         http:
           endpoint: 127.0.0.1:4318
 
+  kubeletstats:
+    collection_interval: 10s
+    auth_type: "none"
+    endpoint: "http://${env:K8S_NODE_NAME}:10255"
+    insecure_skip_verify: true
 
   service:
     extensions: [basicauth/client, health_check]
@@ -99,7 +113,7 @@ config:
         processors: []
         exporters: [otlphttp/logs]
       metrics:
-        receivers: [] # hostmetrics
+        receivers: [kubeletstats, hostmetrics]
         processors: [transform]
         exporters: [otlphttp/metrics]
       # traces:
@@ -165,6 +179,10 @@ extraEnvs:
     valueFrom:
       fieldRef:
         fieldPath: status.hostIP
+  - name: K8S_NODE_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: spec.nodeName
 extraEnvsFrom: []
 extraVolumes: []
 extraVolumeMounts: []
@@ -322,4 +340,3 @@ networkPolicy:
 
 useGOMEMLIMIT: true
 shareProcessNamespace: false
-

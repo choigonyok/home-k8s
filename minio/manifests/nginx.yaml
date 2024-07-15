@@ -44,10 +44,7 @@ data:
   nginx.conf: |
     upstream minio_console {
       least_conn;
-      server app-minio-0.app-minio-console.minio-system.svc.cluster.local:9001;
-      server app-minio-1.app-minio-console.minio-systemsvc.cluster.local:9001;
-      server app-minio-2.app-minio-console.minio-systemsvc.cluster.local:9001;
-      server app-minio-3.app-minio-console.minio-systemsvc.cluster.local:9001;
+      server app-minio-console.minio-systemsvc.cluster.local:9001;
     }
 
     server {

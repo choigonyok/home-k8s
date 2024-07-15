@@ -42,6 +42,7 @@ metadata:
   namespace: minio-system
 data:
   nginx.conf: |
+    events {}
     http {
       upstream minio_console {
         server app-minio-console.minio-system.svc.cluster.local:9001;

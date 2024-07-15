@@ -7,8 +7,8 @@ mimir:
           endpoint: app-minio-svc.minio-system.svc.cluster.local:9000
           insecure: true
           region: ap-northeast-2
-          access_key_id: "mimir"
-          secret_access_key: <path:home-k8s/data/minio/users/mimir#password>
+          access_key_id: <path:home-k8s/data/minio/users/root#username>
+          secret_access_key: <path:home-k8s/data/minio/users/root#password>
     blocks_storage:
       s3:
         bucket_name: mimir-blocks
@@ -18,6 +18,18 @@ mimir:
     ruler_storage:
       s3:
         bucket_name: mimir-ruler
+    limits:
+      compactor_blocks_retention_period: 1h
+      accept_ha_samples: true
+      ha_cluster_label: mimir
+      ha_replica_label: __mimir_repl__
+    distributor:
+      ha_tracker:
+        enable_ha_tracker: true
+        kvstore:
+          store: consul
+          consul:
+            host: consul-server.ha-system.svc.cluster.local:3500
 
 alertmanager:
   nodeSelector:

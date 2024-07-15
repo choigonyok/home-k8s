@@ -98,7 +98,7 @@ config:
         processors: []
         exporters: [otlphttp/logs]
       metrics:
-        receivers: [kubeletstats, hostmetrics]
+        receivers: []
         processors: [transform]
         exporters: [otlphttp/metrics]
       # traces:

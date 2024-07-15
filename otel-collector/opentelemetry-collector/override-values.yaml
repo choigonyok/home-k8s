@@ -19,7 +19,7 @@ presets:
     extractAllPodLabels: true
     extractAllPodAnnotations: true
   kubeletMetrics:
-    enabled: false
+    enabled: true
   kubernetesEvents:
     enabled: false 
   clusterMetrics:
@@ -90,16 +90,11 @@ config:
         http:
           endpoint: 127.0.0.1:4318
 
-    kubeletstats:
-      collection_interval: 10s
-      auth_type: "serviceAccount"
-      endpoint: "${env:K8S_NODE_IP}:10250"
-
   service:
     extensions: [basicauth/client, health_check]
     pipelines:
       logs:
-        receivers: []
+        receivers: [filelog]
         processors: []
         exporters: [otlphttp/logs]
       metrics:

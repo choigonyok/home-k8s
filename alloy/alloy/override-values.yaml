@@ -10,7 +10,7 @@ alloy:
       otelcol.receiver.otlp "otel" {
         output {
           logs    = [otelcol.processor.attributes.default.input]
-          metrics = []
+          metrics = [otelcol.exporter.prometheus.otel.input]
           traces  = []
         }
         grpc {
@@ -108,7 +108,6 @@ alloy:
         }
       }
 
-# metrics = [otelcol.exporter.prometheus.otel.input]
 # traces  = [otelcol.exporter.otlp.tempo.input]
 
 # forward_to = [loki.relabel.podip.receiver]

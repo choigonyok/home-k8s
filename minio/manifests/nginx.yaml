@@ -50,7 +50,7 @@ data:
       server {
         listen       80;
         listen  [::]:80;
-        server_name  *;
+        server_name  s3.choigonoyk.com;
 
         ignore_invalid_headers off;
         client_max_body_size 0;

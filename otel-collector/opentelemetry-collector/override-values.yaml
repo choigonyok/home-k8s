@@ -94,11 +94,6 @@ config:
       collection_interval: 10s
       auth_type: "serviceAccount"
       endpoint: "https://${env:K8S_NODE_IP}:10250"
-      insecure_skip_verify: true
-      metric_groups:
-        - node
-        - pod
-        - container
 
   service:
     extensions: [basicauth/client, health_check]
@@ -108,7 +103,7 @@ config:
         processors: []
         exporters: [otlphttp/logs]
       metrics:
-        receivers: [hostmetrics]
+        receivers: [kubeletstats, hostmetrics]
         processors: [transform]
         exporters: [otlphttp/metrics]
       # traces:

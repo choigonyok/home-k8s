@@ -3,7 +3,7 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-mode: standalone
+mode: distributed
 
 priorityClassName: ""
 runtimeClassName: ""
@@ -17,7 +17,7 @@ mountPath: "/export"
 bucketRoot: ""
 
 drivesPerNode: 1
-replicas: 1
+replicas: 4
 pools: 1
 
 tls:

@@ -83,6 +83,9 @@ config:
         disk:
         filesystem:
         network:
+      tls:
+        insecure: true
+        insecure_skip_verify: true
     otlp:
       protocols:
         grpc:

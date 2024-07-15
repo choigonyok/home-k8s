@@ -35,7 +35,7 @@ alertmanager:
   nodeSelector:
     node-type: worker
   persistentVolume:
-    enabled: true
+    enabled: false
   replicas: 2
   resources:
     limits:
@@ -55,7 +55,7 @@ compactor:
   nodeSelector:
     node-type: worker
   persistentVolume:
-    size: 20Gi
+    enabled: false
   resources:
     limits:
       memory: 1Gi
@@ -90,7 +90,7 @@ ingester:
   zoneAwareReplication:
     enabled: false
   persistentVolume:
-    size: 50Gi
+    enabled: false
   replicas: 3
   resources:
     limits:
@@ -204,7 +204,7 @@ store_gateway:
     runAsUser: 0
 
   persistentVolume:
-    size: 10Gi
+    enabled: false
   replicas: 3
   resources:
     limits:

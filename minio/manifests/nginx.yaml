@@ -43,21 +43,16 @@ metadata:
 data:
   nginx.conf: |
     upstream minio_console {
-      least_conn;
-      server app-minio-console.minio-systemsvc.cluster.local:9001;
+      server app-minio-console.minio-system.svc.cluster.local:9001;
     }
 
     server {
       listen       80;
       listen  [::]:80;
-      server_name  s3.choigonyok.com;
+      server_name  *;
 
-      # Allow special characters in headers
       ignore_invalid_headers off;
-      # Allow any size file to be uploaded.
-      # Set to a value such as 1000m; to restrict file size to a specific value
       client_max_body_size 0;
-      # Disable buffering
       proxy_buffering off;
       proxy_request_buffering off;
 
@@ -73,16 +68,13 @@ data:
 
           proxy_connect_timeout 300;
 
-          # To support websockets in MinIO versions released after January 2023
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
-          # Some environments may encounter CORS errors (Kubernetes + Nginx Ingress)
-          # Uncomment the following line to set the Origin request to an empty string
           # proxy_set_header Origin '';
 
           chunked_transfer_encoding off;
 
-          proxy_pass https://minio_console; # This uses the upstream directive definition to load balance
+          proxy_pass http://minio_console; # This uses the upstream directive definition to load balance
       }
     }

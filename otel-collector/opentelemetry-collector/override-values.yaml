@@ -90,15 +90,15 @@ config:
         http:
           endpoint: 127.0.0.1:4318
 
-    kubeletstats:
-      collection_interval: 10s
-      auth_type: "none"
-      endpoint: "https://${env:K8S_NODE_IP}:10250"
-      insecure_skip_verify: true
-      metric_groups:
-        - node
-        - pod
-        - container
+    # kubeletstats:
+    #   collection_interval: 10s
+    #   auth_type: "none"
+    #   endpoint: "https://${env:K8S_NODE_IP}:10250"
+    #   insecure_skip_verify: true
+    #   metric_groups:
+    #     - node
+    #     - pod
+    #     - container
 
   service:
     extensions: [basicauth/client, health_check]
@@ -108,7 +108,7 @@ config:
         processors: []
         exporters: [otlphttp/logs]
       metrics:
-        receivers: [kubeletstats, hostmetrics]
+        receivers: [hostmetrics]
         processors: [transform]
         exporters: [otlphttp/metrics]
       # traces:

@@ -90,15 +90,15 @@ config:
         http:
           endpoint: 127.0.0.1:4318
 
-  kubeletstats:
-    collection_interval: 10s
-    auth_type: "none"
-    endpoint: "http://${env:K8S_NODE_NAME}:10250"
-    insecure_skip_verify: true
-    metric_groups:
-      - node
-      - pod
-      - container
+    kubeletstats:
+      collection_interval: 10s
+      auth_type: "none"
+      endpoint: "http://${env:K8S_NODE_NAME}:10250"
+      insecure_skip_verify: true
+      metric_groups:
+        - node
+        - pod
+        - container
 
   service:
     extensions: [basicauth/client, health_check]

@@ -132,6 +132,22 @@ configuration:
       s3ForcePathStyle: true
       s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
     annotations: {}
+  - name: minio-vault
+    provider: velero.io/aws
+    bucket: vault
+    caCert:
+    prefix:
+    default: true
+    validationFrequency:
+    accessMode: ReadWrite
+    credential:
+      name: s3-credential
+      key: keys
+    config:
+      region: ap-northeast-2
+      s3ForcePathStyle: true
+      s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
+    annotations: {}
 
   volumeSnapshotLocation:
   - name:
@@ -236,5 +252,19 @@ schedules:
       storageLocation: minio-postgres
       includedNamespaces:
       - postgres-system
+  vault-backup:
+    disabled: false
+    labels:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-options: Delete=false,Prune=false
+    schedule: "*/3 * * * *"
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "10m"
+      storageLocation: minio-vault
+      includedNamespaces:
+      - vault-system
 
 configMaps: {}

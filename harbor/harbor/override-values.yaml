@@ -12,6 +12,23 @@ externalURL: https://registry.choigonyok.com
 
 persistence:
   enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    jobservice:
+      jobLog:
+        existingClaim: ""
+        storageClass: "ceph-fs"
+        subPath: ""
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        annotations: {}
+      trivy:
+        existingClaim: ""
+        storageClass: "ceph-fs"
+        subPath: ""
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        annotations: {}
   imageChartStorage:
     disableredirect: true
     type: s3
@@ -71,110 +88,33 @@ exporter:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-exporter
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-exporter
 
 nginx:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-nginx
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-nginx
 
 portal:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-portal
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-portal
 
 core:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-core
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-core
 
 jobservice:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-jobservice
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-jobservice
 
 registry:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-registry
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-registry
 
 trivy:
   replicas: 3
   nodeSelector: |
     node-type: worker
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 50
-        podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: harbor-trivy
-          topologyKey: kubernetes.io/hostname
-  podLabels: |
-    app: harbor-trivy

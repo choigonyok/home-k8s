@@ -1,6 +1,6 @@
 global:
   redis:
-    password: <path:home-k8s/data/redis/root/password>
+    password: <path:home-k8s/data/redis/root#password>
   storageClass: "ceph-block"
 
 namespaceOverride: "redis-system"

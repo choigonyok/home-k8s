@@ -192,8 +192,8 @@ credentials:
   secretContents:
     keys: |
       [default]
-      aws_access_key_id=<path:home-k8s/data/minio/users/velero#username>
-      aws_secret_access_key=<path:home-k8s/data/minio/users/velero#password>
+      aws_access_key_id=<path:home-k8s/data/minio/users/root#username>
+      aws_secret_access_key=<path:home-k8s/data/minio/users/root#password>
   extraEnvVars: {}
   extraSecretRef: ""
 
@@ -223,7 +223,7 @@ nodeAgent:
 
 schedules:
   postgresql-backup:
-    disabled: false
+    disabled: true
     labels:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous

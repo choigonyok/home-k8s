@@ -135,10 +135,10 @@ controller:
     enabled: true
     paths:
     - backend:
-      service:
-        name: app-jenkins
-        port:
-          number: 8080
+        service:
+          name: app-jenkins
+          port:
+            number: 8080
       pathType: Prefix
     apiVersion: "extensions/v1"
     labels: {}

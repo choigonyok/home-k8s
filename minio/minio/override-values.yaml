@@ -127,6 +127,16 @@ buckets:
     purge: false
     versioning: true
     objectlocking: false
+  - name:  vault
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
+  - name:  redis
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
   - name:  loki-chunks
     policy: none
     purge: false

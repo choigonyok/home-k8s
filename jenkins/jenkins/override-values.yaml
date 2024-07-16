@@ -146,7 +146,7 @@ controller:
       ingress.cilium.io/loadbalancer-mode: shared
       ingress.cilium.io/service-type: ClusterIP
     ingressClassName: cilium
-    path: /
+    path: "/"
     hostName: ci.choigonyok.com
     resourceRootUrl:
     tls: []

@@ -171,6 +171,10 @@ jobservice:
     harbor: jobservice
 
 registry:
+  registry:
+    image:
+      repository: goharbor/registry-photon
+      tag: v2.5.1
   replicas: 3
   nodeSelector:
     node-type: worker

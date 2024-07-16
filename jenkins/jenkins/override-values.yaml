@@ -133,15 +133,13 @@ controller:
 
   ingress:
     enabled: true
-    paths:
-    - backend:
-        serviceName: app-jenkins
-        servicePort: "8080"
+    paths: []
     apiVersion: "extensions/v1"
     labels: {}
     annotations:
       ingress.cilium.io/loadbalancer-mode: shared
       ingress.cilium.io/service-type: ClusterIP
+    ingressClassName: cilium
     path: /
     hostName: ci.choigonyok.com
     resourceRootUrl:

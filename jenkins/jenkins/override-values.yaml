@@ -139,7 +139,7 @@ controller:
         name: app-jenkins
         port:
           number: 8080
-    pathType: ImplementationSpecific
+    pathType: Prefix
     apiVersion: "extensions/v1"
     labels: {}
     annotations:

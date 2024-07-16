@@ -140,13 +140,13 @@ controller:
           port:
             number: 8080
       pathType: Prefix
+      path: "/"
     apiVersion: "extensions/v1"
     labels: {}
     annotations:
       ingress.cilium.io/loadbalancer-mode: shared
       ingress.cilium.io/service-type: ClusterIP
     ingressClassName: cilium
-    path: "/"
     hostName: ci.choigonyok.com
     resourceRootUrl:
     tls: []

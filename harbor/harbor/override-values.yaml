@@ -78,7 +78,7 @@ redis:
     trivyAdapterIndex: "5"
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
-    username: ""
+    username: "default"
     password: <path:home-k8s/data/redis/root#password>
     existingSecret: ""
   podAnnotations: {}
@@ -137,9 +137,6 @@ core:
     repository: goharbor/harbor-core
     tag: v2.5.1
   replicas: 3
-  extraEnvVars:
-    - name: REDIS_PASSWORD
-      value: <path:home-k8s/data/redis/root#password>
   nodeSelector:
     node-type: worker
   affinity:

@@ -223,7 +223,7 @@ nodeAgent:
 
 schedules:
   postgresql-backup:
-    disabled: true
+    disabled: false
     labels:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous

@@ -164,6 +164,22 @@ configuration:
       s3ForcePathStyle: true
       s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
     annotations: {}
+  - name: minio-jenkins
+    provider: velero.io/aws
+    bucket: jenkins
+    caCert:
+    prefix:
+    default: true
+    validationFrequency:
+    accessMode: ReadWrite
+    credential:
+      name: s3-credential
+      key: keys
+    config:
+      region: ap-northeast-2
+      s3ForcePathStyle: true
+      s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
+    annotations: {}
 
   volumeSnapshotLocation:
   - name:
@@ -260,11 +276,11 @@ schedules:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-options: Delete=false,Prune=false
-    schedule: "*/3 * * * *"
+    schedule: "0 0 * * *"
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "10m"
+      ttl: "7d"
       storageLocation: minio-postgres
       includedNamespaces:
       - postgres-system
@@ -274,11 +290,11 @@ schedules:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-options: Delete=false,Prune=false
-    schedule: "*/3 * * * *"
+    schedule: "0 0 * * *"
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "10m"
+      ttl: "7d"
       storageLocation: minio-vault
       includedNamespaces:
       - vault-system
@@ -288,13 +304,27 @@ schedules:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-options: Delete=false,Prune=false
-    schedule: "*/3 * * * *"
+    schedule: "0 0 * * *"
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "10m"
+      ttl: "7d"
       storageLocation: minio-redis
       includedNamespaces:
       - redis-system
+  jenkins-backup:
+    disabled: false
+    labels:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-options: Delete=false,Prune=false
+    schedule: "0 0 * * *"
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "7d"
+      storageLocation: minio-jenkins
+      includedNamespaces:
+      - jenkins-system
 
 configMaps: {}

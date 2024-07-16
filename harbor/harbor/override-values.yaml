@@ -86,35 +86,57 @@ redis:
 
 exporter:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker
 
 nginx:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-nginx
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    app: harbor-nginx
 
 portal:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker
 
 core:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-core
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    app: harbor-core
 
 jobservice:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker
 
 registry:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker
 
 trivy:
   replicas: 3
-  nodeSelector: |
+  nodeSelector:
     node-type: worker

@@ -5,14 +5,8 @@ global:
 
 namespaceOverride: "redis-system"
 
-master:
-  count: 1
-  nodeSelector:
-    node-type: worker
-  resourcesPreset: "small"
-
 replica:
-  replicaCount: 2
+  replicaCount: 3
   nodeSelector:
     node-type: worker
   podAffinityPreset: "soft"

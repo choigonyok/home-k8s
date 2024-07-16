@@ -133,7 +133,13 @@ controller:
 
   ingress:
     enabled: true
-    paths: []
+    paths:
+    - backend:
+      service:
+        name: app-jenkins
+        port:
+          number: 8080
+    pathType: ImplementationSpecific
     apiVersion: "extensions/v1"
     labels: {}
     annotations:

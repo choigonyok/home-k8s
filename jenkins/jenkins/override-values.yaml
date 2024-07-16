@@ -9,8 +9,8 @@ controller:
   executorMode: "NORMAL"
 
   admin:
-    username: "admin"
-    password: ""
+    username: <path:home-k8s/data/jenkins/users/root#username>
+    password: <path:home-k8s/data/jenkins/users/root#password>
 
     userKey: jenkins-admin-user
     passwordKey: jenkins-admin-password

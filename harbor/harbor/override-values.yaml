@@ -79,7 +79,7 @@ redis:
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
     username: "default"
-    password: <path:home-k8s/data/redis/root/password>
+    password: <path:home-k8s/data/redis/root#password>
     existingSecret: ""
   podAnnotations: {}
   podLabels: {}

@@ -88,6 +88,17 @@ exporter:
   replicas: 3
   nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              harbor: exporter
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    harbor: exporter
 
 nginx:
   replicas: 3
@@ -100,15 +111,26 @@ nginx:
         podAffinityTerm:
           labelSelector:
             matchLabels:
-              app: harbor-nginx
+              harbor: nginx
           topologyKey: kubernetes.io/hostname
   podLabels:
-    app: harbor-nginx
+    harbor: nginx
 
 portal:
   replicas: 3
   nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              harbor: portal
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    harbor: portal
 
 core:
   replicas: 3
@@ -121,22 +143,55 @@ core:
         podAffinityTerm:
           labelSelector:
             matchLabels:
-              app: harbor-core
+              harbor: core
           topologyKey: kubernetes.io/hostname
   podLabels:
-    app: harbor-core
+    harbor: core
 
 jobservice:
   replicas: 3
   nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              harbor: jobservice
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    harbor: jobservice
 
 registry:
   replicas: 3
   nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              harbor: registry
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    harbor: registry
 
 trivy:
   replicas: 3
   nodeSelector:
     node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              harbor: trivy
+          topologyKey: kubernetes.io/hostname
+  podLabels:
+    harbor: trivy

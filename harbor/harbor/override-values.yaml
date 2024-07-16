@@ -1,0 +1,180 @@
+expose:
+  tls:
+    enabled: false
+  ingress:
+    hosts:
+      core: registry.choigonyok.com
+    className: "cilium"
+    annotations:
+      ingress.kubernetes.io/proxy-body-size: "0"
+
+externalURL: https://registry.choigonyok.com
+
+persistence:
+  enabled: true
+  imageChartStorage:
+    disableredirect: true
+    type: s3
+    s3:
+      region: ap-northeast-2
+      bucket: registry
+      accesskey: <path:home-k8s/data/minio/users/root#username>
+      secretkey: <path:home-k8s/data/minio/users/root#password>
+      regionendpoint: http://app-minio-svc.minio-system.svc.cluster.local:9000
+      #encrypt: false
+      #keyid: mykeyid
+      #secure: true
+      #skipverify: false
+      #v4auth: true
+      #chunksize: "5242880"
+      #rootdirectory: /s3/object/name/prefix
+      #storageclass: STANDARD
+      #multipartcopychunksize: "33554432"
+      #multipartcopymaxconcurrency: 100
+      #multipartcopythresholdsize: "33554432"
+
+
+harborAdminPassword: <path:home-k8s/data/harbor/root#password>
+
+database:
+  type: external
+  external:
+    host: "harbor-pg.postgres-system.svc.cluster.local"
+    port: "5432"
+    username: "harbor"
+    password: <path:home-k8s/data/postgres/harbor#password>
+    coreDatabase: "harbor_db"
+    sslmode: "require"
+  maxIdleConns: 100
+  maxOpenConns: 900
+  podAnnotations: {}
+  podLabels: {}
+
+redis:
+  type: external
+  external:
+    addr: "app-redis-headless.redis-system.svc.cluster.local:6379"
+    sentinelMasterSet: "mymaster"
+    coreDatabaseIndex: "0"
+    jobserviceDatabaseIndex: "1"
+    registryDatabaseIndex: "2"
+    trivyAdapterIndex: "5"
+    harborDatabaseIndex: "6"
+    cacheLayerDatabaseIndex: "7"
+    username: "default"
+    password: <path:home-k8s/data/redis/root/password>
+    existingSecret: ""
+  podAnnotations: {}
+  podLabels: {}
+
+exporter:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-exporter
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-exporter
+
+nginx:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-nginx
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-nginx
+
+portal:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-portal
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-portal
+
+core:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-core
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-core
+
+jobservice:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-jobservice
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-jobservice
+
+registry:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-registry
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-registry
+
+trivy:
+  replicas: 3
+  nodeSelector: |
+    node-type: worker
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 50
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: harbor-trivy
+          topologyKey: kubernetes.io/hostname
+  podLabels: |
+    app: harbor-trivy

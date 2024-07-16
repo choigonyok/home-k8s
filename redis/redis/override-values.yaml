@@ -22,8 +22,5 @@ sentinel:
     debug: false
   resourcesPreset: "small"
 
-  masterService:
-    enabled: true
-
 volumePermissions:
   enabled: true

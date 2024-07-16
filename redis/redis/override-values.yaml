@@ -24,3 +24,6 @@ sentinel:
 
 volumePermissions:
   enabled: true
+
+auth:
+  sentinel: false

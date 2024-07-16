@@ -1,15 +1,35 @@
 global:
   redis:
-    password: <path:home-k8s/data/redis/config/rootPassword>
+    password: <path:home-k8s/data/redis/root/password>
   storageClass: "ceph-block"
 
 namespaceOverride: "redis-system"
 
+master:
+  count: 1
+  nodeSelector:
+    node-type: worker
+  resourcesPreset: "small"
+
 replica:
-  replicaCount: 3
+  replicaCount: 2
   nodeSelector:
     node-type: worker
   podAffinityPreset: "soft"
+  resourcesPreset: "small"
 
 sentinel:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/redis-sentinel
+    tag: 7.2.5-debian-12-r0
+    digest: ""
+    debug: false
+  resourcesPreset: "small"
+
+  masterService:
+    enabled: true
+
+volumePermissions:
   enabled: true

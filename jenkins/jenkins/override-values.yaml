@@ -135,7 +135,7 @@ controller:
     enabled: true
     paths:
     - backend:
-        serviceName: jenkins-service
+        serviceName: app-jenkins
         servicePort: "8080"
     apiVersion: "extensions/v1"
     labels: {}

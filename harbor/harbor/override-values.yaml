@@ -134,6 +134,8 @@ portal:
 
 core:
   replicas: 3
+  extraEnvVars:
+    - REDIS_PASSWORD: <path:home-k8s/data/redis/root#password>
   nodeSelector:
     node-type: worker
   affinity:

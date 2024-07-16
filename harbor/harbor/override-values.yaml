@@ -22,13 +22,13 @@ persistence:
         accessMode: ReadWriteOnce
         size: 1Gi
         annotations: {}
-      trivy:
-        existingClaim: ""
-        storageClass: "ceph-fs"
-        subPath: ""
-        accessMode: ReadWriteOnce
-        size: 5Gi
-        annotations: {}
+    trivy:
+      existingClaim: ""
+      storageClass: "ceph-fs"
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 5Gi
+      annotations: {}
   imageChartStorage:
     disableredirect: true
     type: s3

@@ -86,3 +86,18 @@ sessionStorage:
       masterName: ""
       # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
       connectionUrls: []
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /
+  pathType: prefix
+  hosts:
+    - proxy.auth.choigonyok.com
+  labels: {}
+  annotations: {}
+  # tls:
+    # Secrets must be manually created in the namespace.
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local

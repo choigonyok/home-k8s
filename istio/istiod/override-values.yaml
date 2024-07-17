@@ -1,7 +1,0 @@
-defaults:
-    cni:
-      enabled: true
-      provider: default
-
-    nodeSelector:
-      node-type: master

@@ -1,4 +1,0 @@
-defaults:
-  cni:
-    ambient:
-      enabled: true

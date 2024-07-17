@@ -25,14 +25,8 @@ server:
   ingress:
     enabled: true
     labels:
-    annotations:
-      ingress.cilium.io/loadbalancer-mode: shared
-      ingress.cilium.io/service-type: ClusterIP
-  annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
-
-    ingressClassName: "cilium"
+    annotations: {}
+    ingressClassName: "nginx"
     pathType: Prefix
     activeService: true
     hosts:

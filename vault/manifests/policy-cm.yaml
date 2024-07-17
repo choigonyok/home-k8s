@@ -12,3 +12,7 @@ data:
     path "home-k8s/data/mon/*" {
       capabilities = ["read", "list"]
     }
+  mon.hcl: |
+    path "pki/issue/consul-server" {
+      capabilities = ["create", "update"]
+    }    

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-oauth2-proxy
+  namespace: argocd-system
+spec:
+  destination:
+    name: ''
+    namespace: oauth-system
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: oauth2-proxy/oauth2-proxy
+      targetRevision: HEAD
+      plugin:
+        name: argocd-vault-plugin-helm
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

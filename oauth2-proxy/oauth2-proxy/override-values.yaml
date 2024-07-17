@@ -91,7 +91,7 @@ ingress:
   enabled: true
   className: nginx
   path: /
-  pathType: prefix
+  pathType: Prefix
   hosts:
     - proxy.auth.choigonyok.com
   labels: {}

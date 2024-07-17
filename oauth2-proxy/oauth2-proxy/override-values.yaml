@@ -13,8 +13,6 @@ extraEnv:
     value: https://network.choigonyok.com/oauth2/callback
   - name: OAUTH2_PROXY_OIDC_ISSUER_URL
     value: https://auth.choigonyok.com/realms/home-k8s
-  - name: OAUTH2_PROXY_EMAIL_DOMAIN
-    value: choigonyok.com
   - name: OAUTH2_PROXY_ALLOWED_ROLE
     value: oauth2-proxy-oauth:network-admin
   # - name: OAUTH2_PROXY_ALLOWED_GROUP
@@ -23,6 +21,69 @@ extraEnv:
     value: S256
   - name: OAUTH2_PROXY_PROVIDER
     value: keycloak-oidc
+
+  configFile: |-
+    http_address="0.0.0.0:4180"
+    redirect_url="http://app-oauth2-proxy.oauth-system.svc.cluster.local/oauth2/callback"
+
+    # skip_jwt_bearer_tokens = true
+
+    ## the http url(s) of the upstream endpoint. If multiple, routing is based on path
+    upstreams = [
+        static://200
+        # "http://server/"
+    ]
+    ## Logging configuration
+    #logging_filename = ""
+    #logging_max_size = 100
+    #logging_max_age = 7
+    #logging_local_time = true
+    #logging_compress = false
+    #standard_logging = true
+    #standard_logging_format = "[{{.Timestamp}}] [{{.File}}] {{.Message}}"
+    #request_logging = true
+    #request_logging_format = "{{.Client}} - {{.Username}} [{{.Timestamp}}] {{.Host}} {{.RequestMethod}} {{.Upstream}} {{.RequestURI}} {{.Protocol}} {{.UserAgent}} {{.StatusCode}} {{.ResponseSize}} {{.RequestDuration}}"
+    #auth_logging = true
+    #auth_logging_format = "{{.Client}} - {{.Username}} [{{.Timestamp}}] [{{.Status}}] {{.Message}}"
+
+    ## pass HTTP Basic Auth, X-Forwarded-User and X-Forwarded-Email information to upstream
+    # pass_basic_auth = true
+    # pass_user_headers = true
+    ## pass the request Host Header to upstream
+    ## when disabled the upstream Host is used as the Host Header
+    # pass_host_header = true
+
+    email_domains = "*"
+    client_id = "oauth2-proxy-oauth"
+    client_secret = "x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz"
+
+    pass_access_token = true
+
+    ssl_insecure_skip_verify = false
+
+    cookie_name = "_oauth2_proxy"
+    cookie_secret = "TkFlc29DN094K2U2alFkb2hibWJNSE82T2hlMC9JUkg="
+    cookie_expire = "12h"
+    cookie_refresh = "5m"
+    cookie_secure = false
+    # cookie_httponly = true
+
+    whitelist_domains = [
+        "choigonyok.com:*"
+    ]
+
+    oidc_issuer_url = "https://auth.choigonyok.com/realms/home-k8s"
+    provider_display_name = "Keycloak"
+    provider = "keycloak-oidc"
+    allowed_role= "oauth2-proxy-oauth:network-admin"
+
+    # Disable 'login screen'
+    skip_provider_button = "true"
+
+    request_logging = true
+    # Optional: Set additional headers at http://nginx.127.0.0.1.nip.io:9000/oauth2/auth
+    set_authorization_header = true
+    set_xauthrequest =  true
 
 initContainers:
   waitForRedis:

@@ -8,16 +8,23 @@ config:
   cookieSecret: "TkFlc29DN094K2U2alFkb2hibWJNSE82T2hlMC9JUkg="
   cookieName: ""
 
-  configFile: |-
-    provider = "keycloak-oidc"
-    client_id = "oauth2-proxy-oauth"
-    client_secret = "x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz"
-    redirect_url = "https://proxy.choigonyok.com/oauth2/callback"
-    oidc_issuer_url = "https://auth.choigonyok.com/realms/home-k8s"
-    allowed_role = "oauth2-proxy-oauth:network-admin"
-    code_challenge_method = "S256"
-# --email-domain=<yourcompany.com>
-
+extraArgs:
+  - --provider=keycloak-oidc
+  - --client-id=oauth2-proxy-oauth
+  - --client-secret=x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz
+  - --redirect-url=https://proxy.choigonyok.com/oauth2/callback
+  - --oidc-issuer-url=https://auth.choigonyok.com/realms/home-k8s
+  - --allowed-role=oauth2-proxy-oauth:network-admin
+  - --code-challenge-method=S256
+  # configFile: |-
+  #   provider = "keycloak-oidc"
+  #   client_id = "oauth2-proxy-oauth"
+  #   client_secret = "x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz"
+  #   redirect_url = "https://proxy.choigonyok.com/oauth2/callback"
+  #   oidc_issuer_url = "https://auth.choigonyok.com/realms/home-k8s"
+  #   code_challenge_method = "S256"
+# email_domain=<yourcompany.com>
+#  allowed_role = "oauth2-proxy-oauth:network-admin"
 initContainers:
   waitForRedis:
     enabled: true

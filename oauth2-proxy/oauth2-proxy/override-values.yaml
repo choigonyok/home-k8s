@@ -9,13 +9,13 @@ config:
   cookieName: ""
 
   configFile: |-
-    provider = keycloak-oidc
-    client-id = oauth2-proxy-oauth
-    client-secret = x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz
-    redirect-url = https://proxy.choigonyok.com/oauth2/callback
-    oidc-issuer-url = https://auth.choigonyok.com/realms/home-k8s
-    allowed-role = oauth2-proxy-oauth:network-admin
-    code-challenge-method = S256
+    provider = "keycloak-oidc"
+    client-id = "oauth2-proxy-oauth"
+    client-secret = "x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz"
+    redirect-url = "https://proxy.choigonyok.com/oauth2/callback"
+    oidc-issuer-url = "https://auth.choigonyok.com/realms/home-k8s"
+    allowed-role = "oauth2-proxy-oauth:network-admin"
+    code-challenge-method = "S256"
 # --email-domain=<yourcompany.com>
 
 initContainers:

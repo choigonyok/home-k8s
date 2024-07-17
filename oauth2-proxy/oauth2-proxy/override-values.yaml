@@ -93,7 +93,7 @@ ingress:
   path: /
   pathType: Prefix
   hosts:
-    - proxy.auth.choigonyok.com
+    - proxy.choigonyok.com
   labels: {}
   annotations: {}
   # tls:

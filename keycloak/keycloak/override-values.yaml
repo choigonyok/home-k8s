@@ -46,14 +46,12 @@ podAntiAffinityPreset: soft
 
 adminIngress:
   enabled: true
-  ingressClassName: "cilium"
+  ingressClassName: "nginx"
   pathType: Prefix
   hostname: auth.choigonyok.com
   path: "/"
   servicePort: http
-  annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
+  annotations: {}
 
 networkPolicy:
   enabled: false

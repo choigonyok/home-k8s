@@ -16,6 +16,7 @@ extraArgs:
   - --oidc-issuer-url=https://auth.choigonyok.com/realms/home-k8s
   - --allowed-role=oauth2-proxy-oauth:network-admin
   - --code-challenge-method=S256
+  - --email-domain="*"
   # configFile: |-
   #   provider = "keycloak-oidc"
   #   client_id = "oauth2-proxy-oauth"

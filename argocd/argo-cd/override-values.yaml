@@ -121,8 +121,6 @@ server:
   replicas: 2
   ingress:
     enabled: true
-    ingressClassName: cilium
-    annotations:
-      ingress.cilium.io/loadbalancer-mode: shared
-      ingress.cilium.io/service-type: ClusterIP
+    ingressClassName: nginx
+    annotations: {}
     extraTls: []

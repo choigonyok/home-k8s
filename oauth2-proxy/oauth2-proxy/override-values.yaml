@@ -15,8 +15,14 @@ extraArgs:
   - --redirect-url=https://proxy.choigonyok.com/oauth2/callback
   - --oidc-issuer-url=https://auth.choigonyok.com/realms/home-k8s
   - --allowed-role=oauth2-proxy-oauth:network-admin
-  - --code-challenge-method=S256
+  - --code-challenge-method=RS256
   - --email-domain="*"
+  - --cookie_secure="false"
+  - --http_address="0.0.0.0:4180"
+
+# oidc_issuer_url="http://keycloak.localtest.me:9080/auth/realms/master"
+# provider="oidc"
+# provider_display_name="Keycloak"
   # configFile: |-
   #   provider = "keycloak-oidc"
   #   client_id = "oauth2-proxy-oauth"

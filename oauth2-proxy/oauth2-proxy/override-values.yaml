@@ -18,7 +18,7 @@ extraArgs:
   - --code-challenge-method=S256
   - --email-domain="*"
   - --whitelist-domain="*.choigonyok.com"
-  - --insecure_oidc_allow_unverified_email=true
+  - --insecure-oidc-allow-unverified-email
 
 # oidc_issuer_url="http://keycloak.localtest.me:9080/auth/realms/master"
 # provider="oidc"

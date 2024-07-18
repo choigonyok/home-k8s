@@ -51,6 +51,7 @@ consoleIngress:
     ingress.cilium.io/websocket: enabled
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.org/websocket-services: "app-minio-console"
   path: /
   hosts:
     - s3.choigonyok.com

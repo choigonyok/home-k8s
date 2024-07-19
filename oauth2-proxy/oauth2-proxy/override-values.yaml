@@ -67,20 +67,20 @@ metrics:
 sessionStorage:
   type: redis
   redis:
-    existingSecret: "app-oauth2-proxy-redis-access"
-    passwordKey: "redis-password"
+    existingSecret: ""
+    passwordKey: ""
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
-    clientType: "sentinel"
+    clientType: "standalone"
     standalone:
       connectionUrl: ""
     cluster:
       connectionUrls: []
     sentinel:
-      passwordKey: "redis-sentinel-password"
-      existingSecret: "app-oauth2-proxy-redis-access"
-      password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
-      masterName: oauth2-proxy-master
-      connectionUrls: [192.123.123.125:26379,192.123.123.124:26379,192.123.123.123:26379]
+      passwordKey: ""
+      existingSecret: ""
+      password:
+      masterName:
+      connectionUrls: []
 
 ingress:
   enabled: true

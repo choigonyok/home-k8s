@@ -74,17 +74,20 @@ sessionStorage:
     existingSecret: ""
     passwordKey: "redis-password"
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
-    clientType: "standalone"
+    clientType: "sentinel"
     standalone:
-      connectionUrl: "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:6379"
+      connectionUrl: ""
     cluster:
       connectionUrls: []
     sentinel:
       passwordKey: "redis-sentinel-password"
       existingSecret: ""
-      password:
-      masterName:
-      connectionUrls: []
+      password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
+      masterName: oauth2-proxy-master
+      connectionUrls:
+      - "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
+      - "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
+      - "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
 
 ingress:
   enabled: true
@@ -109,14 +112,23 @@ redis:
       password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
     storageClass: "ceph-block"
 
+  sentinel:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnami/redis-sentinel
+      tag: 7.2.5-debian-12-r0
+      digest: ""
+      debug: false
+    resourcesPreset: "small"
+    masterSet: "oauth2-proxy-master"
+
   nameOverride: "redis-oauth2-proxy"
   fullnameOverride: "redis-oauth2-proxy"
   namespaceOverride: "redis-system"
 
-  architecture: standalone
-
-  master:
-    count: 3
+  replica:
+    replicaCount: 3
     nodeSelector:
       node-type: worker
     podAffinityPreset: "soft"
@@ -127,4 +139,4 @@ redis:
 
   auth:
     enabled: true
-    sentinel: false
+    sentinel: true

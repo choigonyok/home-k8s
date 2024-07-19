@@ -80,10 +80,7 @@ sessionStorage:
       existingSecret: "app-oauth2-proxy-redis-access"
       password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
       masterName: oauth2-proxy-master
-      connectionUrls:
-      - redis://redis-oauth2-proxy-node-0.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379
-      - redis://redis-oauth2-proxy-node-1.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379
-      - redis://redis-oauth2-proxy-node-2.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379
+      connectionUrls: [redis://192.123.123.125:26379,redis://192.123.123.124:26379,redis://192.123.123.123:26379]
 
 ingress:
   enabled: true

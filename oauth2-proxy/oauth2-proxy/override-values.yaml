@@ -364,7 +364,7 @@ sessionStorage:
     # Redis password value. Applicable for all Redis configurations. Taken from redis subchart secret if not set. `sessionStorage.redis.existingSecret` takes precedence
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
     # Key of the Kubernetes secret data containing the redis password value
-    passwordKey: "redis-password"
+    passwordKey: ""
     # Can be one of standalone|cluster|sentinel
     clientType: "sentinel"
     standalone:
@@ -379,14 +379,11 @@ sessionStorage:
       # Redis sentinel password. Used only for sentinel connection; any redis node passwords need to use `sessionStorage.redis.password`
       password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
       # Key of the Kubernetes secret data containing the redis sentinel password value
-      passwordKey: "redis-sentinel-password"
+      passwordKey: ""
       # Redis sentinel master name
       masterName: "oauth2-proxy-master"
       # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
-      connectionUrls:
-        - redis://redis-oauth2-proxy-node-0.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379
-        - redis://redis-oauth2-proxy-node-1.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379
-        - redis://redis-oauth2-proxy-node-2.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379
+      connectionUrls: [redis://192.123.123.125:26379,redis://192.123.123.124:26379,redis://192.123.123.123:26379]
 
 # Enables and configure the automatic deployment of the redis subchart
 redis:

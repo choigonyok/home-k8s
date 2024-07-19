@@ -10,7 +10,7 @@ namespaceOverride: "redis-system"
 architecture: standalone
 
 master:
-  replicaCount: 3
+  count: 3
   nodeSelector:
     node-type: worker
   podAffinityPreset: "soft"

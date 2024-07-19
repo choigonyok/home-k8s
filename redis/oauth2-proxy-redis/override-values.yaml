@@ -3,6 +3,7 @@ global:
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
   storageClass: "ceph-block"
 
+nameOverride: "oauth2-proxy-redis"
 fullnameOverride: "oauth2-proxy-redis"
 namespaceOverride: "redis-system"
 

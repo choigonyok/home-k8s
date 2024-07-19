@@ -29,5 +29,5 @@ volumePermissions:
   enabled: true
 
 auth:
-  enabled: false
-  sentinel: false
+  enabled: true
+  sentinel: true

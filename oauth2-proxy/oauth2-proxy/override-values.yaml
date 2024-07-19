@@ -91,8 +91,8 @@ extraArgs:
   - --allowed-role=oauth2-proxy-oauth:network-admin
   - --code-challenge-method=S256
   - --email-domain="*"
-  - --whitelist-domain="*.choigonyok.com"
-  - --insecure-oidc-allow-unverified-email
+  # - --whitelist-domain="*.choigonyok.com"
+  # - --insecure-oidc-allow-unverified-email
 
 extraEnv: []
 
@@ -167,14 +167,14 @@ serviceAccount:
   annotations: {}
 
 ingress:
-  enabled: false
-  # className: nginx
+  enabled: true
+  className: nginx
   path: /
   # Only used if API capabilities (networking.k8s.io/v1) allow it
-  pathType: ImplementationSpecific
+  pathType: Prefix
   # Used to create an Ingress record.
-  # hosts:
-    # - chart-example.local
+  hosts:
+    - proxy.choigonyok.com
   # Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
   # Warning! The configuration is dependant on your current k8s API version capabilities (networking.k8s.io/v1)
   # extraPaths:
@@ -369,7 +369,7 @@ sessionStorage:
     clientType: "standalone"
     standalone:
       # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
-      connectionUrl: "redis://redis-oauth2-proxy-headless:6379"
+      connectionUrl: "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:6379"
     cluster:
       # List of Redis cluster connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
       connectionUrls: []

@@ -3,6 +3,8 @@ global:
     password: <path:home-k8s/data/redis/root#password>
   storageClass: "ceph-block"
 
+nameOverride: "redis-harbor"
+fullnameOverride: "redis-harbor"
 namespaceOverride: "redis-system"
 
 replica:
@@ -21,6 +23,7 @@ sentinel:
     digest: ""
     debug: false
   resourcesPreset: "small"
+  masterSet: "harbor-master"
 
 volumePermissions:
   enabled: true

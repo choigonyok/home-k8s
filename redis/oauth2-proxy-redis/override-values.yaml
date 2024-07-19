@@ -1,0 +1,32 @@
+global:
+  redis:
+    password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
+  storageClass: "ceph-block"
+
+fullnameOverride: "oauth2-proxy-redis"
+namespaceOverride: "redis-system"
+
+replica:
+  replicaCount: 3
+  nodeSelector:
+    node-type: worker
+  podAffinityPreset: "soft"
+  resourcesPreset: "small"
+
+sentinel:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/redis-sentinel
+    tag: 7.2.5-debian-12-r0
+    digest: ""
+    debug: false
+  resourcesPreset: "small"
+  masterSet: "oauth2-proxy-master"
+
+volumePermissions:
+  enabled: true
+
+auth:
+  enabled: false
+  sentinel: false

@@ -11,7 +11,7 @@ spec:
   project: default
   sources:
     - repoURL: 'https://github.com/choigonyok/home-k8s.git'
-      path: application/apps
+      path: redis/application/apps
       targetRevision: HEAD
   syncPolicy:
     automated:

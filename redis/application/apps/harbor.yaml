@@ -11,7 +11,7 @@ spec:
   project: default
   sources:
     - repoURL: 'https://github.com/choigonyok/home-k8s.git'
-      path: redis/redis
+      path: redis/harbor
       targetRevision: HEAD
       plugin:
         name: argocd-vault-plugin-helm

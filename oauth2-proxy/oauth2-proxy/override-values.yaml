@@ -27,6 +27,7 @@ extraArgs:
   - --insecure-oidc-allow-unverified-email
   - --cookie-secure=false
   - --upstream=file:///dev/null
+  - --allowed-role=oauth2-proxy-oauth:network-admin
   - --skip-provider-button=true
   - --ssl-insecure-skip-verify
 

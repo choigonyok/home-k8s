@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-redis
+  name: redis-harbor
   namespace: argocd-system
 spec:
   destination:
@@ -11,8 +11,10 @@ spec:
   project: default
   sources:
     - repoURL: 'https://github.com/choigonyok/home-k8s.git'
-      path: application/apps
+      path: redis/redis
       targetRevision: HEAD
+      plugin:
+        name: argocd-vault-plugin-helm
   syncPolicy:
     automated:
       prune: true

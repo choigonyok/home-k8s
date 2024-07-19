@@ -8,16 +8,16 @@ config:
   configFile: ""
   annotations: {}
   clientID: "oauth2-proxy-oauth"
-  clientSecret: "x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz"
+  clientSecret: <path:home-k8s/data/oauth2-proxy/config#client-secret>
   # openssl rand -base64 32 | head -c 32 | base64
-  cookieSecret: "TkFlc29DN094K2U2alFkb2hibWJNSE82T2hlMC9JUkg="
+  cookieSecret: <path:home-k8s/data/oauth2-proxy/config#cookie-secret>
   cookieName: ""
   google: {}
 
 extraArgs:
   - --provider=keycloak-oidc
   - --client-id=oauth2-proxy-oauth
-  - --client-secret=x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz
+  - --client-secret=<path:home-k8s/data/oauth2-proxy/config#client-secret>
   - --redirect-url=https://proxy.choigonyok.com/oauth2/callback
   - --oidc-issuer-url=https://auth.choigonyok.com/realms/home-k8s
   - --allowed-role=oauth2-proxy-oauth:network-admin

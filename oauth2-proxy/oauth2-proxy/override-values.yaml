@@ -53,7 +53,7 @@ metrics:
   enabled: false
 
 sessionStorage:
-  type: redis
+  type: cookie
   redis:
     existingSecret: ""
     passwordKey: ""

@@ -383,7 +383,7 @@ sessionStorage:
       # Redis sentinel master name
       masterName: "oauth2-proxy-master"
       # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
-      connectionUrls: [redis://192.123.123.125:26379,redis://192.123.123.124:26379,redis://192.123.123.123:26379]
+      connectionUrls: [192.123.123.125:26379,192.123.123.124:26379,192.123.123.123:26379]
 
 # Enables and configure the automatic deployment of the redis subchart
 redis:

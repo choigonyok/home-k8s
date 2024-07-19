@@ -1,4 +1,8 @@
 namespaceOverride: "oauth-system"
+replicaCount: 3
+
+nodeSelector:
+  node-type: worker
 
 config:
   configFile: ""

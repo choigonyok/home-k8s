@@ -91,10 +91,20 @@ extraArgs:
   - --allowed-role=oauth2-proxy-oauth:network-admin
   - --code-challenge-method=S256
   - --email-domain="*"
-  # - --whitelist-domain="*.choigonyok.com"
-  # - --insecure-oidc-allow-unverified-email
+  - --whitelist-domain="*.choigonyok.com"
+  - --insecure-oidc-allow-unverified-email
 
-extraEnv: []
+extraEnv:
+  - name: OAUTH2_PROXY_REDIS_PASSWORD
+    value: <path:home-k8s/data/redis/oauth2-proxy/root#password>
+  - name: OAUTH2_PROXY_REDIS_CONNECTION_URL
+    value: "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:6379"
+  - name: OAUTH2_PROXY_REDIS_USE_SENTINEL
+    value: "false"
+  - name: OAUTH2_PROXY_REDIS_USE_CLUSTER
+    value: "false"
+  - name: OAUTH2_PROXY_SESSION_STORE_TYPE
+    value: "redis"
 
 envFrom: []
 # Load environment variables from a ConfigMap(s) and/or Secret(s)

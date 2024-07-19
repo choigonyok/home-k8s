@@ -1,6 +1,7 @@
 namespaceOverride: "oauth-system"
 
 config:
+  configFile: ""
   annotations: {}
   clientID: "oauth2-proxy-oauth"
   clientSecret: "x9Jb4KNWf3sRvMkUNwSCqykv3SBg9EBz"
@@ -49,6 +50,16 @@ initContainers:
       #   cpu: 100m
       #   memory: 300Mi
 
+deploymentAnnotations: {}
+podAnnotations: {}
+htpasswdFile:
+  enabled: false
+alphaConfig:
+  enabled: false
+authenticatedEmailsFile:
+  enabled: false
+
+  
 metrics:
   enabled: false
 

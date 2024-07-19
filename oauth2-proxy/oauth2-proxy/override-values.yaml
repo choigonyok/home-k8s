@@ -68,15 +68,15 @@ sessionStorage:
   type: redis
   redis:
     existingSecret: ""
-    passwordKey: ""
+    passwordKey: "redis-password"
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
     clientType: "standalone"
     standalone:
-      connectionUrl: ""
+      connectionUrl: "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:6379"
     cluster:
       connectionUrls: []
     sentinel:
-      passwordKey: ""
+      passwordKey: "redis-sentinel-password"
       existingSecret: ""
       password:
       masterName:

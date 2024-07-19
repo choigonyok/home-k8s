@@ -1,0 +1,418 @@
+nameOverride: ""
+fullnameOverride: ""
+
+mode: "daemonset"
+
+namespaceOverride: "grafana-system"
+
+# Handles basic configuration of components that
+# also require k8s modifications to work correctly.
+# .Values.config can be used to modify/add to a preset
+# component configuration, but CANNOT be used to remove
+# preset configuration. If you require removal of any
+# sections of a preset configuration, you cannot use
+# the preset. Instead, configure the component manually in
+# .Values.config and use the other fields supplied in the
+# values.yaml to configure k8s as necessary.
+presets:
+  # Configures the collector to collect logs.
+  # Adds the filelog receiver to the logs pipeline
+  # and adds the necessary volumes and volume mounts.
+  # Best used with mode = daemonset.
+  # See https://opentelemetry.io/docs/kubernetes/collector/components/#filelog-receiver for details on the receiver.
+  logsCollection:
+    enabled: true
+    includeCollectorLogs: false
+    storeCheckpoints: false
+    # The maximum bytes size of the recombined field.
+    # Once the size exceeds the limit, all received entries of the source will be combined and flushed.
+    maxRecombineLogSize: 102400
+  hostMetrics:
+    enabled: true
+  kubernetesAttributes:
+    enabled: true
+    extractAllPodLabels: true
+    extractAllPodAnnotations: true
+  kubeletMetrics:
+    enabled: true
+  kubernetesEvents:
+    enabled: false 
+  clusterMetrics:
+    enabled: false
+
+configMap:
+  create: true
+  existingName: ""
+
+config:
+  exporters:
+    # prometheusremotewrite:
+    #   auth:
+    #     authenticator: basicauth/client
+    #   endpoint: http://app-alloy-cluster.monitoring.svc.cluster.local:12345/api/v1/push
+    otlphttp/metrics:
+      endpoint: http://app-alloy-cluster.grafana-system.svc.cluster.local:4318
+      tls:
+        insecure: true
+        insecure_skip_verify: true
+    otlphttp/logs:
+      endpoint: http://app-alloy-cluster.grafana-system.svc.cluster.local:4318
+      tls:
+        insecure: true
+        insecure_skip_verify: true
+    otlp:
+      endpoint: http://app-alloy-cluster.grafana-system.svc.cluster.local:4317
+      tls:
+        insecure: true
+        insecure_skip_verify: true
+        
+  extensions:
+    # basicauth/server:
+    #   htpasswd: 
+    #     file: .htpasswd
+    #     inline: |
+    #       ${env:BASIC_AUTH_USERNAME}:${env:BASIC_AUTH_PASSWORD}
+    basicauth/client:
+      client_auth: 
+        username: username
+        password: password
+    health_check:
+      endpoint: ${env:MY_POD_IP}:13133
+
+  processors:
+    transform:
+      metric_statements:
+        - context: datapoint
+          statements:
+          - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+          - set(attributes["container"], resource.attributes["k8s.container.name"])
+          - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+          - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+          - set(attributes["node"], resource.attributes["k8s.node.name"])
+          - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+    # resource:
+    #   attributes:
+    #   - action: insert
+    #     key: loki.resource.labels
+    #     value: service_name, service_namespace, compose_service
+
+    
+  receivers:
+    hostmetrics:
+      root_path: /
+      collection_interval: 10s
+      scrapers:
+        cpu:
+        load:
+        memory:
+        disk:
+        filesystem:
+        network:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 127.0.0.1:4317
+        http:
+          endpoint: 127.0.0.1:4318
+
+
+  service:
+    extensions: [basicauth/client, health_check]
+    pipelines:
+      logs:
+        receivers: []
+        processors: []
+        exporters: [otlphttp/logs]
+      metrics:
+        receivers: [] # hostmetrics
+        processors: [transform]
+        exporters: [otlphttp/metrics]
+      # traces:
+      #   receivers: [otlp]
+      #   processors: []
+      #   exporters: [otlp]
+    
+image:
+  repository: "otel/opentelemetry-collector-contrib"
+  pullPolicy: IfNotPresent
+  tag: ""
+  digest: ""
+imagePullSecrets: []
+
+command:
+  name: ""
+  extraArgs: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "otel-sa"
+
+clusterRole:
+  create: true
+  annotations: {}
+  name: ""
+  rules:
+  - apiGroups:
+    - ''
+    resources:
+    - 'pods'
+    - 'nodes'
+    verbs:
+    - 'get'
+    - 'list'
+    - 'watch'
+
+  clusterRoleBinding:
+    annotations: {}
+    name: ""
+
+podSecurityContext: {}
+securityContext:
+  allowPrivilegeEscalation: true
+  readOnlyRootFilesystem: false
+  runAsNonRoot: false
+  runAsUser: 0
+  # capabilities:
+  #   add:
+  #     - SYS_PTRACE
+  #     - SYS_ADMIN
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+
+priorityClassName: ""
+
+extraEnvs:
+  - name: K8S_NODE_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.hostIP
+extraEnvsFrom: []
+extraVolumes: []
+extraVolumeMounts: []
+
+ports:
+  otlp:
+    enabled: true
+    containerPort: 4317
+    servicePort: 4317
+    hostPort: 4317
+    protocol: TCP
+    # nodePort: 30317
+    appProtocol: grpc
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    servicePort: 4318
+    hostPort: 4318
+    protocol: TCP
+  jaeger-compact:
+    enabled: true
+    containerPort: 6831
+    servicePort: 6831
+    hostPort: 6831
+    protocol: UDP
+  jaeger-thrift:
+    enabled: true
+    containerPort: 14268
+    servicePort: 14268
+    hostPort: 14268
+    protocol: TCP
+  jaeger-grpc:
+    enabled: true
+    containerPort: 14250
+    servicePort: 14250
+    hostPort: 14250
+    protocol: TCP
+  zipkin:
+    enabled: true
+    containerPort: 9411
+    servicePort: 9411
+    hostPort: 9411
+    protocol: TCP
+  metrics:
+    enabled: true
+    containerPort: 8888
+    servicePort: 8888
+    protocol: TCP
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 512Mi
+
+podAnnotations: {}
+podLabels: {}
+additionalLabels: {}
+hostNetwork: false
+hostAliases: []
+dnsPolicy: ""
+dnsConfig: {}
+
+# only used with deployment mode
+replicaCount: 1
+revisionHistoryLimit: 3
+
+annotations: {}
+extraContainers: []
+
+initContainers: []
+# initContainers:
+#  - name: init-fs
+#    image: busybox:latest
+#    command:
+#      - sh
+#      - '-c'
+#      - 'chown -R 10001: /var/lib/storage/otc' # use the path given as per `extensions.file_storage.directory` & `extraVolumeMounts[x].mountPath`
+#    volumeMounts:
+#      - name: opentelemetry-collector-data # use the name of the volume used for persistence
+#        mountPath: /var/lib/storage/otc # use the path given as per `extensions.file_storage.directory` & `extraVolumeMounts[x].mountPath`
+
+lifecycleHooks: {}
+livenessProbe:
+  httpGet:
+    port: 13133
+    path: /
+
+readinessProbe:
+  httpGet:
+    port: 13133
+    path: /
+
+service:
+  enabled: true
+  type: ClusterIP
+  externalTrafficPolicy: Cluster
+  annotations: {}
+
+ingress:
+  enabled: false
+  annotations: {}
+  ingressClassName: ""
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          port: 4318
+
+  additionalIngresses: []
+
+podMonitor:
+  enabled: true
+  metricsEndpoints:
+    - port: metrics
+      interval: 10s
+
+  extraLabels: {}
+
+serviceMonitor:
+  enabled: true
+  metricsEndpoints:
+    - port: metrics
+      interval: 10s
+
+  extraLabels: {}
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  behavior: {}
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+rollout:
+  rollingUpdate: {}
+  # When 'mode: daemonset', maxSurge cannot be used when hostPort is set for any of the ports
+  # maxSurge: 25%
+  # maxUnavailable: 0
+  strategy: RollingUpdate
+
+prometheusRule:
+  enabled: false
+  groups: []
+  # Create default rules for monitoring the collector
+  defaultRules:
+    enabled: false
+
+  # additional labels for the PrometheusRule
+  extraLabels: {}
+
+statefulset:
+  volumeClaimTemplates: []
+  podManagementPolicy: "Parallel"
+  persistentVolumeClaimRetentionPolicy:
+    enabled: false
+    whenDeleted: Retain
+    whenScaled: Retain
+
+networkPolicy:
+  enabled: false
+
+  annotations: {}
+
+  # Configure the 'from' clause of the NetworkPolicy.
+  # By default this will restrict traffic to ports enabled for the Collector. If
+  # you wish to further restrict traffic to other hosts or specific namespaces,
+  # see the standard NetworkPolicy 'spec.ingress.from' definition for more info:
+  # https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/network-policy-v1/
+  allowIngressFrom: []
+  # # Allow traffic from any pod in any namespace, but not external hosts
+  # - namespaceSelector: {}
+  # # Allow external access from a specific cidr block
+  # - ipBlock:
+  #     cidr: 192.168.1.64/32
+  # # Allow access from pods in specific namespaces
+  # - namespaceSelector:
+  #     matchExpressions:
+  #       - key: kubernetes.io/metadata.name
+  #         operator: In
+  #         values:
+  #           - "cats"
+  #           - "dogs"
+
+  # Add additional ingress rules to specific ports
+  # Useful to allow external hosts/services to access specific ports
+  # An example is allowing an external prometheus server to scrape metrics
+  #
+  # See the standard NetworkPolicy 'spec.ingress' definition for more info:
+  # https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/network-policy-v1/
+  extraIngressRules: []
+  # - ports:
+  #   - port: metrics
+  #     protocol: TCP
+  #   from:
+  #     - ipBlock:
+  #         cidr: 192.168.1.64/32
+
+  # Restrict egress traffic from the OpenTelemetry collector pod
+  # See the standard NetworkPolicy 'spec.egress' definition for more info:
+  # https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/network-policy-v1/
+  egressRules: []
+  #  - to:
+  #      - namespaceSelector: {}
+  #      - ipBlock:
+  #          cidr: 192.168.10.10/24
+  #    ports:
+  #      - port: 1234
+  #        protocol: TCP
+
+# When enabled, the chart will set the GOMEMLIMIT env var to 80% of the configured
+# resources.limits.memory and remove the memory ballast extension.
+# If no resources.limits.memory are defined enabling does nothing.
+# In a future release this setting will be enabled by default.
+# See https://github.com/open-telemetry/opentelemetry-helm-charts/issues/891
+# for more details.
+useGOMEMLIMIT: true
+
+# Allow containers to share processes across pod namespace
+shareProcessNamespace: false
+

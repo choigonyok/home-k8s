@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceSelector:
     matchLabels:
-      cilium.io/ingress: "true"
+      app.kubernetes.io/name: ingress-nginx
   nodeSelector:
     matchExpressions:
     - key: node-role.kubernetes.io/control-plane
@@ -21,7 +21,7 @@ metadata:
   name: "lb-pool"
 spec:
   blocks:
-  - cidr: "IP_CIDR" # ex) 192.168.100.0/30
+  - cidr: "192.168.123.105/32" # ex) 192.168.100.0/30
   serviceSelector:
     matchLabels:
-      cilium.io/ingress: "true"
+      app.kubernetes.io/name: ingress-nginx

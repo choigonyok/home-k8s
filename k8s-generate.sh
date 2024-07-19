@@ -114,19 +114,19 @@ helm upgrade cilium cilium/cilium --version 1.15.6 \
 cilium connectivity test
 
 helm upgrade cilium cilium/cilium --version 1.15.6 \
-    --set ingressController.enabled=true \
-    --set ingressController.default=true \
-    --set ingressController.loadbalancerMode=shared \
-    --set ingressController.enforceHttps=false \
-    --set ingressController.service.loadBalancerClass="io.cilium/l2-announcer" \
-    --set ingressController.service.insecureNodePort="30080" \
-    --set ingressController.service.secureNodePort="30443"   \
-    --set ingressController.hostNetwork.enabled=true \
+    --set ingressController.enabled=false \
     --reuse-values \
     --namespace kube-system
+    # --set ingressController.default=true \
+    # --set ingressController.loadbalancerMode=shared \
+    # --set ingressController.enforceHttps=false \
+    # --set ingressController.service.loadBalancerClass="io.cilium/l2-announcer" \
+    # --set ingressController.service.insecureNodePort="30080" \
+    # --set ingressController.service.secureNodePort="30443"   \
+    # --set ingressController.hostNetwork.enabled=true \
 
-# kubectl -n kube-system rollout restart deployment/cilium-operator
-# kubectl -n kube-system rollout restart ds/cilium
+kubectl -n kube-system rollout restart deployment/cilium-operator
+kubectl -n kube-system rollout restart ds/cilium
 
 kubectl apply -f /home/choigonyok/home-k8s/cilium/external-ip.yaml
 

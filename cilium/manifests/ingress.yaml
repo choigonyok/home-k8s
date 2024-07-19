@@ -2,11 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
   name: blog-ingress
 spec:
-  ingressClassName: cilium
+  ingressClassName: nginx
   rules:
   - host: www.choigonyok.com
     http:
@@ -23,12 +21,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
   name: rookceph-ingress
   namespace: rook-ceph
 spec:
-  ingressClassName: cilium
+  ingressClassName: nginx
   rules:
   - host: storage.choigonyok.com
     http:
@@ -45,12 +41,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
+    nginx.ingress.kubernetes.io/auth-url: "https://proxy.choigonyok.com/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://proxy.choigonyok.com/oauth2/start?rd=$escaped_request_uri"
   name: network-ingress
   namespace: kube-system
 spec:
-  ingressClassName: cilium
+  ingressClassName: nginx
   rules:
   - host: network.choigonyok.com
     http:
@@ -61,4 +57,24 @@ spec:
             port:
               number: 80
         path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+  name: mimir-ingress
+  namespace: metric-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mimir.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: app-mimir-distributor-headless
+            port:
+              number: 8080
+        path: /distributor/ha_tracker
         pathType: Prefix

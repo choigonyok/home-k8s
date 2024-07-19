@@ -54,12 +54,19 @@ metrics:
   enabled: false
 
 sessionStorage:
-  # Can be one of the supported session storage cookie|redis
   type: redis
   redis:
+    existingSecret: ""
+    passwordKey: ""
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
     clientType: "sentinel"
+    
+    standalone:
+      connectionUrl: ""
+    cluster:
+      connectionUrls: []
     sentinel:
+      passwordKey: ""
       existingSecret: ""
       password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
       masterName: "oauth2-proxy-master"

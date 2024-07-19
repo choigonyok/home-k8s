@@ -25,6 +25,10 @@ extraArgs:
   - --email-domain="*"
   - --whitelist-domain="*.choigonyok.com"
   - --insecure-oidc-allow-unverified-email
+  - --cookie-secure=false
+  - --upstream=file:///dev/null
+  - --skip-provider-button=true
+  - --ssl-insecure-skip-verify
 
 initContainers:
   waitForRedis:

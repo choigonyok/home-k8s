@@ -7,27 +7,22 @@ nameOverride: "redis-oauth2-proxy"
 fullnameOverride: "redis-oauth2-proxy"
 namespaceOverride: "redis-system"
 
-replica:
-  replicaCount: 3
+master:
   nodeSelector:
     node-type: worker
   podAffinityPreset: "soft"
   resourcesPreset: "small"
 
-sentinel:
-  enabled: true
-  image:
-    registry: docker.io
-    repository: bitnami/redis-sentinel
-    tag: 7.2.5-debian-12-r0
-    digest: ""
-    debug: false
+replica:
+  replicaCount: 2
+  nodeSelector:
+    node-type: worker
+  podAffinityPreset: "soft"
   resourcesPreset: "small"
-  masterSet: "oauth2-proxy-master"
 
 volumePermissions:
   enabled: true
 
 auth:
   enabled: true
-  sentinel: true
+  sentinel: false

@@ -53,10 +53,10 @@ metrics:
   enabled: false
 
 sessionStorage:
-  type: cookie
+  type: redis
   redis:
     existingSecret: ""
-    passwordKey: ""
+    passwordKey: "redis-password"
     password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
     clientType: "sentinel"
     standalone:
@@ -64,11 +64,14 @@ sessionStorage:
     cluster:
       connectionUrls: []
     sentinel:
-      passwordKey: ""
+      passwordKey: "redis-sentinel-password"
       existingSecret: ""
       password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
       masterName: "oauth2-proxy-master"
-      connectionUrls: ["redis://redis-oauth2-proxy-node-0.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379", "redis://redis-oauth2-proxy-node-1.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379", "redis://redis-oauth2-proxy-node-2.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"]
+      connectionUrls:
+      - "redis-oauth2-proxy-node-0.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
+      - "redis-oauth2-proxy-node-1.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
+      - "redis-oauth2-proxy-node-2.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
 
 ingress:
   enabled: true

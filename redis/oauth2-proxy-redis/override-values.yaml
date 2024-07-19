@@ -7,14 +7,10 @@ nameOverride: "redis-oauth2-proxy"
 fullnameOverride: "redis-oauth2-proxy"
 namespaceOverride: "redis-system"
 
-master:
-  nodeSelector:
-    node-type: worker
-  podAffinityPreset: "soft"
-  resourcesPreset: "small"
+architecture: standalone
 
-replica:
-  replicaCount: 2
+master:
+  replicaCount: 3
   nodeSelector:
     node-type: worker
   podAffinityPreset: "soft"

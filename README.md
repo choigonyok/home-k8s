@@ -6,8 +6,8 @@
 
 | Title         | Content                                 |
 |--------------|--------------------------------------|
-| [Features](#Features) | Main features of Techlog                    |
-| [Demo](#Demo) | URL of Techlog              |
+| [Features](#Features) | Main features of home-k8s                    |
+| [Demo](#Demo) | URLs of home-k8s              |
 
 ## Features
 

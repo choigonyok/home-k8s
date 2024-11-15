@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-techlog
+  namespace: argocd-system
+spec:
+  destination:
+    name: ''
+    namespace: dev-system
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://github.com/choigonyok/home-k8s.git'
+      path: techlog/manifest
+      targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

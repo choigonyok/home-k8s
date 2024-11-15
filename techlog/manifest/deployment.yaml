@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techlog
+  namespace: dev-system
+  labels:
+    app: techlog
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: techlog
+  template:
+    metadata:
+      labels:
+        app: techlog
+    spec:
+      containers:
+      - name: techlog
+        image: nginx:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: techlog-env
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: techlog-env
+  namespace: dev-system
+type: Opaque
+data:
+  HOME_IDP_GIT_OAUTH_CLIENT_ID: <path:kv/data/techlog#HOME_IDP_GIT_OAUTH_CLIENT_ID>
+  HOME_IDP_GIT_OAUTH_CLIENT_SECRET: <path:kv/data/techlog#HOME_IDP_GIT_OAUTH_CLIENT_SECRET>
+  OAUTH_RANDOM_STRING: <path:kv/data/techlog#OAUTH_RANDOM_STRING>
+  JWT_RANDOM_STRING: <path:kv/data/techlog#JWT_RANDOM_STRING>
+  AWS_ACCESS_KEY: <path:kv/data/techlog#AWS_ACCESS_KEY>
+  AWS_SECRET_KEY: <path:kv/data/techlog#AWS_SECRET_KEY>

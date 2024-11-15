@@ -17,12 +17,35 @@ spec:
     spec:
       containers:
       - name: techlog
-        image: nginx:latest
+        image: achoistic98/techlog:latest
         ports:
         - containerPort: 8080
         envFrom:
         - secretRef:
             name: techlog-env
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techlog-ui
+  namespace: dev-system
+  labels:
+    app: techlog-ui
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: techlog-ui
+  template:
+    metadata:
+      labels:
+        app: techlog-ui
+    spec:
+      containers:
+      - name: techlog-ui
+        image: achoistic98/techlog-ui:latest
+        ports:
+        - containerPort: 3000
 ---
 apiVersion: v1
 kind: Secret

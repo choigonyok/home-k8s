@@ -30,7 +30,7 @@ metadata:
   name: techlog-env
   namespace: dev-system
 type: Opaque
-data:
+stringData:
   HOME_IDP_GIT_OAUTH_CLIENT_ID: <path:kv/data/techlog#HOME_IDP_GIT_OAUTH_CLIENT_ID>
   HOME_IDP_GIT_OAUTH_CLIENT_SECRET: <path:kv/data/techlog#HOME_IDP_GIT_OAUTH_CLIENT_SECRET>
   OAUTH_RANDOM_STRING: <path:kv/data/techlog#OAUTH_RANDOM_STRING>

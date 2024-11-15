@@ -46,17 +46,6 @@ spec:
         image: achoistic98/techlog-ui:latest
         ports:
         - containerPort: 3000
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: techlog-env
-  namespace: dev-system
-type: Opaque
-stringData:
-  HOME_IDP_GIT_OAUTH_CLIENT_ID: <path:kv/data/techlog#HOME_IDP_GIT_OAUTH_CLIENT_ID>
-  HOME_IDP_GIT_OAUTH_CLIENT_SECRET: <path:kv/data/techlog#HOME_IDP_GIT_OAUTH_CLIENT_SECRET>
-  OAUTH_RANDOM_STRING: <path:kv/data/techlog#OAUTH_RANDOM_STRING>
-  JWT_RANDOM_STRING: <path:kv/data/techlog#JWT_RANDOM_STRING>
-  AWS_ACCESS_KEY: <path:kv/data/techlog#AWS_ACCESS_KEY>
-  AWS_SECRET_KEY: <path:kv/data/techlog#AWS_SECRET_KEY>
+        envFrom:
+        - secretRef:
+            name: techlog-ui-env

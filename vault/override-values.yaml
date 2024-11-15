@@ -73,7 +73,7 @@ server:
     # Size of the PVC created
     size: 10Gi
     mountPath: "/vault/data"
-    storageClass: ceph-fs
+    storageClass: ceph-block
     accessMode: ReadWriteOnce
     annotations: {}
     labels: {}
@@ -86,7 +86,7 @@ server:
     enabled: true
     size: 10Gi
     mountPath: "/vault/audit"
-    storageClass: ceph-fs
+    storageClass: ceph-block
     accessMode: ReadWriteOnce
     annotations: {}
     labels: {}

@@ -46,9 +46,14 @@ spec:
         image: achoistic98/techlog-ui:latest
         ports:
         - containerPort: 3000
-        envFrom:
-        - secretRef:
-            name: techlog-ui-env
+        volumeMounts:
+          - name: techlog-ui-env
+            mountPath: "/app/.env"
+            readOnly: true
+      volumes:
+      - name: techlog-ui-env
+        configmap:
+          name: techlog-ui-env
 ---
 apiVersion: v1
 kind: Secret
@@ -65,13 +70,12 @@ stringData:
   AWS_SECRET_KEY: <path:kv/data/techlog#AWS_SECRET_KEY>
 ---
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
   name: techlog-ui-env
-  namespace: dev-system
-type: Opaque
-stringData:
-  REACT_APP_HOST: techlog:8080
+data:
+  .env: |
+    REACT_APP_HOST=http://techlog:8080
 ---
 apiVersion: v1
 kind: Service

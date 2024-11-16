@@ -138,7 +138,7 @@ core:
     harbor: core
 
 jobservice:
-  replicas: 3
+  replicas: 1
   nodeSelector:
     node-type: worker
   affinity:

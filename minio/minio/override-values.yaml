@@ -99,7 +99,7 @@ policies:
         - 'arn:aws:s3:::*'
       actions:
         - 's3:Get*'
-        - 's3:List* '
+        - 's3:List*'
 
             
 users:

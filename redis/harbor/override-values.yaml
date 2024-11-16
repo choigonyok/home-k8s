@@ -30,4 +30,4 @@ volumePermissions:
 
 auth:
   enabled: true
-  sentinel: true
+  sentinel: false

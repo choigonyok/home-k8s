@@ -7,8 +7,8 @@ mode: distributed
 
 priorityClassName: ""
 runtimeClassName: ""
-rootUser: <path:home-k8s/data/minio/users/root#username>
-rootPassword: <path:home-k8s/data/minio/users/root#password>
+rootUser: <path:kv/data/minio#rootUser>
+rootPassword: <path:kv/data/minio#rootPassword>
 
 certsPath: "/etc/minio/certs/"
 configPathmc: "/etc/minio/mc/"
@@ -35,7 +35,7 @@ persistence:
   storageClass: "ceph-block"
   volumeName: ""
   accessMode: ReadWriteOnce
-  size: 250Gi
+  size: 150Gi
   subPath: ""
 
 ingress:
@@ -48,7 +48,7 @@ consoleIngress:
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    # nginx.org/websocket-services: "app-minio-console"
+    nginx.org/websocket-services: "app-minio-console"
   path: /
   hosts:
     - s3.choigonyok.com
@@ -84,16 +84,27 @@ resources:
   requests:
     memory: 2Gi
 
-policies: []
-# - name: adminpolicy
-#   statements:
-#     - effect: Allow 
-#       resources:
-#         - 'arn:aws:s3:::*'
-#       actions:
-#         - "s3:*"
+policies:
+- name: admin-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::*'
+      actions:
+        - "s3:*"
+- name: viewer-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::*'
+      actions:
+        - "s3:GetObject"
 
-users: []
+            
+users:
+  - accessKey: viewer
+    secretKey: viewer123
+    policy: viewer-policy
   # - accessKey: mimir
   #   secretKey: <path:home-k8s/data/minio/users/mimir#password>
   #   policy: consoleAdmin
@@ -159,7 +170,7 @@ oidc:
   enabled: false
   configUrl: "https://auth.choigonyok.com/realms/home-k8s/.well-known/openid-configuration"
   clientId: "minio-oauth"
-  clientSecret: <path:home-k8s/data/grafana/minio#client_secret>
+  clientSecret: ""
   existingClientSecretName: ""
   existingClientIdKey: ""
   existingClientSecretKey: ""

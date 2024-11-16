@@ -4,9 +4,7 @@ expose:
   ingress:
     hosts:
       core: registry.choigonyok.com
-    className: "cilium"
-    annotations:
-      ingress.kubernetes.io/proxy-body-size: "0"
+    className: "nginx"
 
 externalURL: https://registry.choigonyok.com
 
@@ -17,14 +15,14 @@ persistence:
     jobservice:
       jobLog:
         existingClaim: ""
-        storageClass: "ceph-fs"
+        storageClass: "ceph-block"
         subPath: ""
         accessMode: ReadWriteOnce
         size: 1Gi
         annotations: {}
     trivy:
       existingClaim: ""
-      storageClass: "ceph-fs"
+      storageClass: "ceph-block"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
@@ -35,23 +33,11 @@ persistence:
     s3:
       region: ap-northeast-2
       bucket: registry
-      accesskey: <path:home-k8s/data/minio/users/root#username>
-      secretkey: <path:home-k8s/data/minio/users/root#password>
+      accesskey: harbor
+      secretkey: <path:kv/data/minio#HARBOR_SECRET_KEY>
       regionendpoint: http://app-minio-svc.minio-system.svc.cluster.local:9000
-      #encrypt: false
-      #keyid: mykeyid
-      #secure: true
-      #skipverify: false
-      #v4auth: true
-      #chunksize: "5242880"
-      #rootdirectory: /s3/object/name/prefix
-      #storageclass: STANDARD
-      #multipartcopychunksize: "33554432"
-      #multipartcopymaxconcurrency: 100
-      #multipartcopythresholdsize: "33554432"
 
-
-harborAdminPassword: <path:home-k8s/data/harbor/root#password>
+harborAdminPassword: <path:kv/data/harbor#ADMIN_PASSWORD>
 
 database:
   type: external
@@ -59,7 +45,7 @@ database:
     host: "harbor-pg.postgres-system.svc.cluster.local"
     port: "5432"
     username: "harbor"
-    password: <path:home-k8s/data/postgres/harbor#password>
+    password: <path:kv/data/postgres#HARBOR_PASSWORD>
     coreDatabase: "harbor_db"
     sslmode: "require"
   maxIdleConns: 100
@@ -79,7 +65,7 @@ redis:
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
     username: ""
-    password: "" # <path:home-k8s/data/redis/root#password>
+    password: <path:kv/data/redis#ROOT_PASSWORD>
     existingSecret: ""
   podAnnotations: {}
   podLabels: {}

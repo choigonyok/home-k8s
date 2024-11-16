@@ -98,7 +98,8 @@ policies:
       resources:
         - 'arn:aws:s3:::*'
       actions:
-        - "s3:GetObject"
+        - 's3:Get*'
+        - 's3:List* '
 
             
 users:

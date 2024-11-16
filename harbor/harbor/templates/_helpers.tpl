@@ -181,7 +181,7 @@ app: "{{ template "harbor.name" . }}"
     {{- if (and (eq .type "external" ) (.external.existingSecret)) }}
       {{- printf ":%s@" (include "harbor.redis.pwdfromsecret" $) }}
     {{- else }}
-      {{- ternary (printf "%s:%s@" (.external.username | urlquery) (.external.password | urlquery)) "" (and (eq .type "external" ) (not (not .external.password))) }}
+      {{- ternary (printf "%s:%s@" (.external.username | urlquery) (.external.password )) "" (and (eq .type "external" ) (not (not .external.password))) }}
     {{- end }}
   {{- end }}
 {{- end -}}

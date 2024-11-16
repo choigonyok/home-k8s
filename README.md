@@ -19,14 +19,16 @@
 
 ## Demo
 
-[https://o11y.choigonyok.com](https://o11y.choigonyok.com) (Observability) <br/>
-[https://cd.choigonyok.com](https://cd.choigonyok.com) (ArgoCD) <br/>
-[https://vault.choigonyok.com](https://vault.choigonyok.com) (Vault) <br/>
-[https://kafka.choigonyok.com](https://kafka.choigonyok.com) (Kafka) <br/>
-[https://registry.choigonyok.com](https://registry.choigonyok.com) (Harbor) <br/>
-[https://s3.choigonyok.com](https://s3.choigonyok.com) (MinIO) <br/>
-[https://postgres.choigonyok.com](https://postgres.choigonyok.com) (Zalando PostgreSQL Operator) <br/>
-[https://network.choigonyok.com](https://network.choigonyok.com) (Cilium) <br/>
-[https://storage.choigonyok.com](https://storage.choigonyok.com) (Ceph) <br/>
-[https://www.choigonyok.com](https://www.choigonyok.com) (techlog) <br/>
-[https://idp.choigonyok.com](https://idp.choigonyok.com) (home-idp)
+| URL       | Service                                 | ID| PW|
+|--------------|--------------------------------------|-----|-----|
+| [https://o11y.choigonyok.com](https://o11y.choigonyok.com) | Observability | - | - |
+| [https://cd.choigonyok.com](https://cd.choigonyok.com) | ArgoCD | - | - |
+| [https://vault.choigonyok.com](https://vault.choigonyok.com) | Vault | - | - |
+| [https://kafka.choigonyok.com](https://kafka.choigonyok.com) | Kafka | - | - |
+| [https://registry.choigonyok.com](https://registry.choigonyok.com) | Harbor                    | viewer| Viewer123|
+| [https://s3.choigonyok.com](https://s3.choigonyok.com) | MinIO              | viewer| viewer123|
+| [https://postgres.choigonyok.com](https://postgres.choigonyok.com) | Zalando PostgreSQL Operator | - | - |
+| [https://network.choigonyok.com](https://network.choigonyok.com) | Cilium | - | - |
+| [https://storage.choigonyok.com](https://storage.choigonyok.com)  | Ceph | - | - |
+| [https://www.choigonyok.com](https://www.choigonyok.com) | techlog | - | - |
+| [https://idp.choigonyok.com](https://idp.choigonyok.com)  | home-idp | - | - |

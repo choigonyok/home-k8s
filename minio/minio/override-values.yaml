@@ -114,6 +114,13 @@ policies:
         - 'arn:aws:s3:::loki*/*'
       actions:
         - 's3:*'
+- name: mimir-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::mimir*/*'
+      actions:
+        - 's3:*'
 
             
 users:
@@ -126,6 +133,9 @@ users:
   - accessKey: loki
     secretKey: <path:kv/data/minio#LOKI_SECRET_KEY>
     policy: loki-policy
+  - accessKey: mimir
+    secretKey: <path:kv/data/minio#MIMIR_SECRET_KEY>
+    policy: mimir-policy
   # - accessKey: velero
   #   secretKey: <path:home-k8s/data/minio/users/velero#password>
   #   policy: consoleAdmin

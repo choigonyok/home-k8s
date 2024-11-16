@@ -66,8 +66,8 @@ loki:
       s3: http://app-minio-svc.minio-system.svc.cluster.local:9000
       endpoint:
       region: ap-northeast-2
-      accessKeyId: <path:home-k8s/data/minio/users/root#username>
-      secretAccessKey: <path:home-k8s/data/minio/users/root#password>
+      accessKeyId: loki
+      secretAccessKey: <path:kv/data/minio#LOKI_SECRET_KEY>
       s3ForcePathStyle: true
       insecure: true
       http_config: {}

@@ -107,6 +107,13 @@ policies:
         - 'arn:aws:s3:::registry/*'
       actions:
         - 's3:*'
+- name: loki-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::loki*/*'
+      actions:
+        - 's3:*'
 
             
 users:
@@ -116,6 +123,9 @@ users:
   - accessKey: harbor
     secretKey: <path:kv/data/minio#HARBOR_SECRET_KEY>
     policy: harbor-policy
+  - accessKey: loki
+    secretKey: <path:kv/data/minio#LOKI_SECRET_KEY>
+    policy: loki-policy
   # - accessKey: velero
   #   secretKey: <path:home-k8s/data/minio/users/velero#password>
   #   policy: consoleAdmin

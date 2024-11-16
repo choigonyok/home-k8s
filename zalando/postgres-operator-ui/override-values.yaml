@@ -22,10 +22,7 @@ envs:
 
 ingress:
   enabled: true
-  annotations:
-    ingress.cilium.io/loadbalancer-mode: shared
-    ingress.cilium.io/service-type: ClusterIP
-  ingressClassName: "cilium"
+  ingressClassName: "nginx"
   hosts:
     - host: postgres.choigonyok.com
       paths: ["/"]

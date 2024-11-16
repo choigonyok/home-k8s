@@ -100,15 +100,22 @@ policies:
       actions:
         - 's3:Get*'
         - 's3:List*'
+- name: harbor-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::registry/*'
+      actions:
+        - 's3:*'
 
             
 users:
   - accessKey: viewer
     secretKey: viewer123
     policy: viewer-policy
-  # - accessKey: mimir
-  #   secretKey: <path:home-k8s/data/minio/users/mimir#password>
-  #   policy: consoleAdmin
+  - accessKey: harbor
+    secretKey: <path:kv/data/minio#HARBOR_SECRET_KEY>
+    policy: harbor-policy
   # - accessKey: velero
   #   secretKey: <path:home-k8s/data/minio/users/velero#password>
   #   policy: consoleAdmin
@@ -119,6 +126,11 @@ users:
 svcaccts: []
 
 buckets:
+  - name:  registry
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
   - name:  mimir-alertmanager
     policy: none
     purge: false

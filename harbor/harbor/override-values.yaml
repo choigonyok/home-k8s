@@ -17,7 +17,7 @@ persistence:
         existingClaim: ""
         storageClass: "ceph-block"
         subPath: ""
-        accessMode: ReadWriteMany
+        accessMode: ReadWriteOnce
         size: 1Gi
         annotations: {}
     trivy:

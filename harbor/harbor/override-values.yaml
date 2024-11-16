@@ -56,7 +56,7 @@ database:
 redis:
   type: external
   external:
-    addr: "redis-harbor-headless.redis-system.svc.cluster.local:26379"
+    addr: "redis-harbor-node-0.redis-harbor-headless.redis-system.svc.cluster.local:26379,redis-harbor-node-1.redis-harbor-headless.redis-system.svc.cluster.local:26379,redis-harbor-node-2.redis-harbor-headless.redis-system.svc.cluster.local:26379"
     sentinelMasterSet: "harbor-master"
     coreDatabaseIndex: "0"
     jobserviceDatabaseIndex: "1"

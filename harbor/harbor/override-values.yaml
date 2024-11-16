@@ -64,7 +64,7 @@ redis:
     trivyAdapterIndex: "5"
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
-    username: ""
+    username: "default"
     password: <path:kv/data/redis#ROOT_PASSWORD>
     existingSecret: ""
   podAnnotations: {}

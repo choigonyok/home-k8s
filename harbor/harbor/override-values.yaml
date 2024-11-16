@@ -64,7 +64,6 @@ redis:
     trivyAdapterIndex: "5"
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
-    username: "default"
     password: <path:kv/data/redis#ROOT_PASSWORD>
     existingSecret: ""
   podAnnotations: {}
@@ -157,7 +156,7 @@ registry:
   registry:
     image:
       repository: goharbor/registry-photon
-      tag: v2.5.1
+      tag: v2.5.3
   replicas: 3
   nodeSelector:
     node-type: worker

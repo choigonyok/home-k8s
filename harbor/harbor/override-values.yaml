@@ -56,7 +56,7 @@ database:
 redis:
   type: external
   external:
-    addr: "redis-harbor-node-0.redis-harbor-headless.redis-system.svc.cluster.local:26379,redis-harbor-node-1.redis-harbor-headless.redis-system.svc.cluster.local:26379,redis-harbor-node-2.redis-harbor-headless.redis-system.svc.cluster.local:26379"
+    addr: "anonymous:<path:kv/data/redis#ROOT_PASSWORD>@redis-harbor-node-0.redis-harbor-headless.redis-system.svc.cluster.local:26379,anonymous:<path:kv/data/redis#ROOT_PASSWORD>@redis-harbor-node-1.redis-harbor-headless.redis-system.svc.cluster.local:26379,anonymous:<path:kv/data/redis#ROOT_PASSWORD>@redis-harbor-node-2.redis-harbor-headless.redis-system.svc.cluster.local:26379"
     sentinelMasterSet: "harbor-master"
     coreDatabaseIndex: "0"
     jobserviceDatabaseIndex: "1"
@@ -64,7 +64,6 @@ redis:
     trivyAdapterIndex: "5"
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
-    password: <path:kv/data/redis#ROOT_PASSWORD>
     existingSecret: ""
   podAnnotations: {}
   podLabels: {}

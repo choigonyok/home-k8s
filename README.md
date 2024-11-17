@@ -21,9 +21,10 @@
 
 | URL       | Service                                 | ID| PW|
 |--------------|--------------------------------------|-----|-----|
-| [https://o11y.choigonyok.com](https://o11y.choigonyok.com) | Observability | - | - |
+| [https://o11y.choigonyok.com](https://o11y.choigonyok.com) | Observability | viewer | viewer123 |
 | [https://cd.choigonyok.com](https://cd.choigonyok.com) | ArgoCD | - | - |
 | [https://vault.choigonyok.com](https://vault.choigonyok.com) | Vault | - | - |
+| [https://auth.choigonyok.com](https://auth.choigonyok.com) | Keycloak | viewer | viewer123 |
 | [https://kafka.choigonyok.com](https://kafka.choigonyok.com) | Kafka | - | - |
 | [https://registry.choigonyok.com](https://registry.choigonyok.com) | Harbor                    | viewer| Viewer123|
 | [https://s3.choigonyok.com](https://s3.choigonyok.com) | MinIO              | viewer| viewer123|

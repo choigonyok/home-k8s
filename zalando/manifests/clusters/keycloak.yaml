@@ -1,0 +1,40 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: keycloak-pg
+  namespace: postgres-system
+spec:
+  teamId: choigonyok
+  volume:
+    size: 5G
+    storageClass: ceph-block
+  numberOfInstances: 3
+  users:
+    choigonyok:
+    - superuser
+  databases:
+    keycloak_db: choigonyok
+  enableMasterLoadBalancer: false
+  enableReplicaLoadBalancer: false
+  postgresql:
+    version: "16"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 300m
+      memory: 500Mi
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-type
+              operator: In
+              values:
+                - worker
+  patroni:
+    pg_hba:
+      - local     all  all  trust
+      - host      all  all  0.0.0.0/0   md5
+      - host      all  all  ::1/128     md5

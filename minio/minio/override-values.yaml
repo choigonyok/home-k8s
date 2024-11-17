@@ -121,6 +121,15 @@ policies:
         - 'arn:aws:s3:::mimir*/*'
       actions:
         - 's3:*'
+- name: velero-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::postgresql/*'
+        - 'arn:aws:s3:::vault/*'
+        - 'arn:aws:s3:::redis/*'
+      actions:
+        - 's3:*'
 
             
 users:
@@ -136,9 +145,9 @@ users:
   - accessKey: mimir
     secretKey: <path:kv/data/minio#MIMIR_SECRET_KEY>
     policy: mimir-policy
-  # - accessKey: velero
-  #   secretKey: <path:home-k8s/data/minio/users/velero#password>
-  #   policy: consoleAdmin
+  - accessKey: velero
+    secretKey: <path:kv/data/minio#VELERO_SECRET_KEY>
+    policy: velero-policy
   # - accessKey: loki
   #   secretKey: <path:home-k8s/data/minio/users/loki#password>
   #   policy: consoleAdmin

@@ -164,22 +164,22 @@ configuration:
       s3ForcePathStyle: true
       s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
     annotations: {}
-  - name: minio-jenkins
-    provider: velero.io/aws
-    bucket: jenkins
-    caCert:
-    prefix:
-    default: true
-    validationFrequency:
-    accessMode: ReadWrite
-    credential:
-      name: s3-credential
-      key: keys
-    config:
-      region: ap-northeast-2
-      s3ForcePathStyle: true
-      s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
-    annotations: {}
+  # - name: minio-jenkins
+  #   provider: velero.io/aws
+  #   bucket: jenkins
+  #   caCert:
+  #   prefix:
+  #   default: true
+  #   validationFrequency:
+  #   accessMode: ReadWrite
+  #   credential:
+  #     name: s3-credential
+  #     key: keys
+  #   config:
+  #     region: ap-northeast-2
+  #     s3ForcePathStyle: true
+  #     s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
+  #   annotations: {}
 
   volumeSnapshotLocation:
   - name:
@@ -240,8 +240,8 @@ credentials:
   secretContents:
     keys: |
       [default]
-      aws_access_key_id=<path:home-k8s/data/minio/users/root#username>
-      aws_secret_access_key=<path:home-k8s/data/minio/users/root#password>
+      aws_access_key_id=velero
+      aws_secret_access_key=<path:kv/data/minio#VELERO_SECRET_KEY>
   extraEnvVars: {}
   extraSecretRef: ""
 

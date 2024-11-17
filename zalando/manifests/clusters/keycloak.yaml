@@ -41,4 +41,4 @@ spec:
       - local   replication     all                                     trust
       - host    replication     all             127.0.0.1/32            trust
       - host    replication     all             ::1/128                 trust
-      - host    replication     choigonyok    0.0.0.0/0         trust
+      - host    replication     standby    0.0.0.0/0         trust

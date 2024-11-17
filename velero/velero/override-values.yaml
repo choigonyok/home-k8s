@@ -280,7 +280,7 @@ schedules:
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "7d"
+      ttl: "120h"
       storageLocation: minio-postgres
       includedNamespaces:
       - postgres-system
@@ -294,7 +294,7 @@ schedules:
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "7d"
+      ttl: "120h"
       storageLocation: minio-vault
       includedNamespaces:
       - vault-system
@@ -308,7 +308,7 @@ schedules:
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "7d"
+      ttl: "120h"
       storageLocation: minio-redis
       includedNamespaces:
       - redis-system
@@ -322,7 +322,7 @@ schedules:
     useOwnerReferencesInBackup: false
     paused: false
     template:
-      ttl: "7d"
+      ttl: "120h"
       storageLocation: minio-jenkins
       includedNamespaces:
       - jenkins-system

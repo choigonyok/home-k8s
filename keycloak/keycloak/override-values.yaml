@@ -1,4 +1,4 @@
-namespaceOverride: "keycloak-system"
+namespaceOverride: "auth-system"
 
 image:
   registry: docker.io
@@ -8,7 +8,7 @@ image:
 
 auth:
   adminUser: choigonyok
-  adminPassword: <path:home-k8s/data/keycloak/admin#password>
+  adminPassword: <path:kv/data/keycloak#ADMIN_PASSWORD>
   existingSecret: ""
   passwordSecretKey: ""
   annotations: {}
@@ -62,9 +62,9 @@ postgresql:
 externalDatabase:
   host: "keycloak-pg.postgres-system.svc.cluster.local"
   port: 5432
-  user: keycloak
+  user: choigonyok
   database: keycloak_db
-  password: <path:home-k8s/data/postgres/keycloak#password>
+  password: <path:kv/data/postgres#KEYCLOAK_PASSWORD>
   existingSecret: ""
   existingSecretHostKey: ""
   existingSecretPortKey: ""

@@ -321,7 +321,7 @@ schedules:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-options: Delete=false,Prune=false
-    schedule: "*/10 * * * *"
+    schedule: "0 0 * * *"
     useOwnerReferencesInBackup: false
     paused: false
     template:

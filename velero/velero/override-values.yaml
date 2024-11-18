@@ -164,22 +164,21 @@ configuration:
       s3ForcePathStyle: true
       s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
     annotations: {}
-  # - name: minio-jenkins
-  #   provider: velero.io/aws
-  #   bucket: jenkins
-  #   caCert:
-  #   prefix:
-  #   default: true
-  #   validationFrequency:
-  #   accessMode: ReadWrite
-  #   credential:
-  #     name: s3-credential
-  #     key: keys
-  #   config:
-  #     region: ap-northeast-2
-  #     s3ForcePathStyle: true
-  #     s3Url: http://app-minio-svc.minio-system.svc.cluster.local:9000 # 수정
-  #   annotations: {}
+  - name: minio
+    provider: velero.io/aws
+    bucket: minio-choigonyok
+    caCert:
+    prefix:
+    default: true
+    validationFrequency:
+    accessMode: ReadWrite
+    credential:
+      name: s3-credential
+      key: aws-keys
+    config:
+      region: ap-northeast-2
+      s3Url: https://s3.ap-northeast-2.amazonaws.com/minio-choigonyok
+    annotations: {}
 
   volumeSnapshotLocation:
   - name:
@@ -242,6 +241,10 @@ credentials:
       [default]
       aws_access_key_id=velero
       aws_secret_access_key=<path:kv/data/minio#VELERO_SECRET_KEY>
+    aws-keys: |
+      [default]
+      aws_access_key_id=<path:kv/data/techlog#AWS_ACCESS_KEY>
+      aws_secret_access_key=<path:kv/data/techlog#AWS_SECRET_KEY>
   extraEnvVars: {}
   extraSecretRef: ""
 
@@ -312,19 +315,19 @@ schedules:
       storageLocation: minio-redis
       includedNamespaces:
       - redis-system
-  jenkins-backup:
-    disabled: false
+  minio-backup:
+    disabled: true
     labels:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-options: Delete=false,Prune=false
-    schedule: "0 0 * * *"
+    schedule: "*/10 * * * *"
     useOwnerReferencesInBackup: false
     paused: false
     template:
       ttl: "120h"
-      storageLocation: minio-jenkins
+      storageLocation: minio
       includedNamespaces:
-      - jenkins-system
+      - minio-system
 
 configMaps: {}

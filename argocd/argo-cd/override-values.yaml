@@ -107,16 +107,16 @@ configs:
           - CiliumIdentity
         clusters:
           - '*'
-  #   oidc.config: |
-  #     name: Keycloak
-  #     issuer: http://keycloak.kind.cluster/auth/realms/master
-  #     clientID: argocd
-  #     clientSecret: $CLIENT_SECRET
-  #     requestedScopes: ['openid', 'profile', 'email', 'groups']
-  # rbacConfig:
-  #   policy.default: role:readonly
-  #   policy.csv: |
-  #     g, argocd-admin, role:admin
+    oidc.config: |
+      name: Keycloak
+      issuer: https://auth.choigonyok.com/realms/home-k8s
+      clientID: argocd-client
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ['openid', 'profile', 'email', 'groups']
+  rbacConfig:
+    policy.default: role:readonly
+    policy.csv: |
+      g, argocd-admin, role:admin
 server:
   replicas: 2
   ingress:

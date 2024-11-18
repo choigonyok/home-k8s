@@ -115,7 +115,7 @@ configs:
       requestedScopes: ['openid', 'profile', 'email']
   rbac:
     policy.default: role:readonly
-    policy.csv: g, argocd-admin, role:admin
+    policy.csv: g, argocd-viewer, role:readonly
 server:
   replicas: 2
   ingress:

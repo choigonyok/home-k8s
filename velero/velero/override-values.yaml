@@ -169,7 +169,7 @@ configuration:
     bucket: minio-choigonyok
     caCert:
     prefix:
-    default: true
+    default: false
     validationFrequency:
     accessMode: ReadWrite
     credential:
@@ -316,7 +316,7 @@ schedules:
       includedNamespaces:
       - redis-system
   minio-backup:
-    disabled: true
+    disabled: false
     labels:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous

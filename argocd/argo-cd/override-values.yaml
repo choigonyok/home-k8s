@@ -112,10 +112,10 @@ configs:
       issuer: https://auth.choigonyok.com/realms/home-k8s
       clientID: argocd-client
       clientSecret: $oidc.keycloak.clientSecret
-      requestedScopes: ['openid', 'profile', 'email']
+      requestedScopes: ['openid', 'profile']
   rbac:
     policy.default: role:readonly
-    policy.csv: g, argocd-viewer, role:readonly
+    policy.csv: g, testers, role:readonly
 server:
   replicas: 2
   ingress:

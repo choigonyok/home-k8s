@@ -7,7 +7,7 @@ image:
   debug: false
 
 auth:
-  adminUser: keycloak
+  adminUser: choigonyok
   adminPassword: <path:kv/data/keycloak#ADMIN_PASSWORD>
   existingSecret: ""
   passwordSecretKey: ""
@@ -62,7 +62,7 @@ postgresql:
 externalDatabase:
   host: "keycloak-pg.postgres-system.svc.cluster.local"
   port: 5432
-  user: choigonyok
+  user: keycloak
   database: keycloak_db
   password: <path:kv/data/postgres#KEYCLOAK_PASSWORD>
   existingSecret: ""

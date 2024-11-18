@@ -10,10 +10,10 @@ spec:
     storageClass: ceph-block
   numberOfInstances: 3
   users:
-    choigonyok:
+    keycloak:
     - superuser
   databases:
-    keycloak_db: choigonyok
+    keycloak_db: keycloak
   enableMasterLoadBalancer: false
   enableReplicaLoadBalancer: false
   postgresql:

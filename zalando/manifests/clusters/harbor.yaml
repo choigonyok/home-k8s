@@ -4,7 +4,7 @@ metadata:
   name: harbor-pg
   namespace: postgres-system
 spec:
-  teamId: choigonyok
+  teamId: harbor
   volume:
     size: 30G
     storageClass: ceph-block

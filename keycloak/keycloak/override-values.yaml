@@ -7,7 +7,7 @@ image:
   debug: false
 
 auth:
-  adminUser: choigonyok
+  adminUser: keycloak
   adminPassword: <path:kv/data/keycloak#ADMIN_PASSWORD>
   existingSecret: ""
   passwordSecretKey: ""

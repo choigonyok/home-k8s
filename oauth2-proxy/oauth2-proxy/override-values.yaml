@@ -30,6 +30,7 @@ extraArgs:
   - --skip-provider-button=true
   - --ssl-insecure-skip-verify
   - --scope=openid profile
+  - --cookie-domain=".choigonyok.com"
 
 initContainers:
   waitForRedis:

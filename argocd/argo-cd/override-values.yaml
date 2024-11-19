@@ -121,9 +121,9 @@ configs:
       clientID: argocd-client
       clientSecret: $oidc.keycloak.clientSecret
       requestedScopes: ['openid', 'profile']
-  # rbac:
-  #   policy.default: role:readonly
-  #   policy.csv: g, testers, role:readonly
+  rbac:
+    policy.default: role:readonly
+    policy.csv: g, testers, role:readonly
 server:
   replicas: 2
   ingress:

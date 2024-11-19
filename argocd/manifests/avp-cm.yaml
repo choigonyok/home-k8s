@@ -42,6 +42,6 @@ data:
           - sh
           - "-c"
           - |
-            helm template $ARGOCD_APP_NAME --include-crds . |
+            helm template "$ARGOCD_APP_NAME" -n "$ARGOCD_APP_NAMESPACE" --include-crds . -f override-values.yaml |
             argocd-vault-plugin generate -
       lockRepo: false

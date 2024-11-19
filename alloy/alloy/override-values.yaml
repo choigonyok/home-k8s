@@ -1,4 +1,10 @@
 alloy:
+  extraPorts:
+  - name: "otlp"
+    port: 4317
+    targetPort: 4317
+    protocol: "TCP"
+    
   configMap:
     create: true
     content: |-
@@ -11,7 +17,7 @@ alloy:
         output {
           logs    = [otelcol.processor.attributes.default.input]
           metrics = [otelcol.exporter.prometheus.otel.input]
-          traces  = []
+          traces  = [otelcol.exporter.otlp.tempo.input]
         }
         grpc {
           endpoint = "0.0.0.0:4317"
@@ -33,7 +39,7 @@ alloy:
 
       otelcol.exporter.otlp "tempo" {
         client {
-            endpoint = "tempo-distributor-discovery.trace-system.svc.cluster.local:4317"
+            endpoint = "app-tempo-distributor-discovery.trace-system.svc.cluster.local:4317"
             tls {
                 insecure             = true
                 insecure_skip_verify = true
@@ -107,19 +113,6 @@ alloy:
           url = "http://app-loki-gateway.log-system.svc.cluster.local:80/loki/api/v1/push"
         }
       }
-
-# traces  = [otelcol.exporter.otlp.tempo.input]
-
-# forward_to = [loki.relabel.podip.receiver]
-
-# loki.relabel "podip" {
-#   forward_to = [loki.relabel.nodename.receiver]
-#   rule {
-#     action        = "replace"
-#     source_labels = ["cni_projectcalico_org_podIP"]
-#     target_label  = "ip"
-#   }
-# }
 
   clustering:
     enabled: true

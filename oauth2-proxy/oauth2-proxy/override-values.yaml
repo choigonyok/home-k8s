@@ -7,17 +7,17 @@ nodeSelector:
 config:
   configFile: ""
   annotations: {}
-  clientID: "oauth2-proxy-oauth"
-  clientSecret: <path:home-k8s/data/oauth2-proxy/config#client-secret>
+  clientID: "oauth2-proxy-client"
+  clientSecret: <path:kv/data/oauth2-proxy#CLIENT_SECRET>
   # openssl rand -base64 32 | head -c 32 | base64
-  cookieSecret: <path:home-k8s/data/oauth2-proxy/config#cookie-secret>
+  cookieSecret: <path:kv/data/oauth2-proxy#COOKIE_SECRET>
   cookieName: ""
   google: {}
 
 extraArgs:
   - --provider=keycloak-oidc
-  - --client-id=oauth2-proxy-oauth
-  - --client-secret=<path:home-k8s/data/oauth2-proxy/config#client-secret>
+  - --client-id=oauth2-proxy-client
+  - --client-secret=<path:kv/data/key-cloak#OAUTH2_PROXY_CLIENT_SECRET>
   - --redirect-url=https://proxy.choigonyok.com/oauth2/callback
   - --oidc-issuer-url=https://auth.choigonyok.com/realms/home-k8s
   - --allowed-role=oauth2-proxy-oauth:network-admin
@@ -69,7 +69,6 @@ alphaConfig:
 authenticatedEmailsFile:
   enabled: false
 
-
 metrics:
   enabled: false
 
@@ -78,18 +77,16 @@ sessionStorage:
   redis:
     existingSecret: ""
     passwordKey: "redis-password"
-    password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
-    clientType: "standalone"
-    standalone:
-      connectionUrl: "redis://redis-oauth2-proxy-headless.redis-system.svc.cluster.local:6379"
+    password: <path:kv/data/oauth2-proxy#REDIS_PASSWORD>
+    clientType: "sentinel"
     cluster:
       connectionUrls: []
     sentinel:
       passwordKey: "redis-sentinel-password"
       existingSecret: ""
-      password:
-      masterName:
-      connectionUrls: []
+      password: <path:kv/data/oauth2-proxy#REDIS_PASSWORD>
+      masterName: "oauth2-proxy-master"
+      connectionUrls: "redis+sentinel://redis-oauth2-proxy-0.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379,redis+sentinel://redis-oauth2-proxy-1.redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379,redis+sentinel://redis-oauth2-proxy-2redis-oauth2-proxy-headless.redis-system.svc.cluster.local:26379"
 
 ingress:
   enabled: true
@@ -100,32 +97,36 @@ ingress:
     - proxy.choigonyok.com
   labels: {}
   annotations: {}
-  # tls:
-    # Secrets must be manually created in the namespace.
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
 
 redis:
   enabled: true
   redisPort: 6379
   global:
     redis:
-      password: <path:home-k8s/data/redis/oauth2-proxy/root#password>
+      password: <path:kv/data/oauth2-proxy#REDIS_PASSWORD>
     storageClass: "ceph-block"
 
   nameOverride: "redis-oauth2-proxy"
   fullnameOverride: "redis-oauth2-proxy"
   namespaceOverride: "redis-system"
 
-  architecture: standalone
-
-  master:
-    count: 3
+  replica:
+    replicaCount: 3
     nodeSelector:
       node-type: worker
     podAffinityPreset: "soft"
     resourcesPreset: "small"
+    
+  sentinel:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnami/redis-sentinel
+      tag: 7.2.5-debian-12-r0
+      digest: ""
+      debug: false
+    resourcesPreset: "small"
+    masterSet: "oauth2-proxy-master"
 
   volumePermissions:
     enabled: true

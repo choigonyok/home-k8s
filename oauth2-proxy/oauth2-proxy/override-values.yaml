@@ -25,10 +25,11 @@ extraArgs:
   - --whitelist-domain="*.choigonyok.com"
   - --insecure-oidc-allow-unverified-email
   - --cookie-secure=false
-  - --allowed-role=tester
+  - --allowed-role=viewer
   - --allowed-group=testers
   - --skip-provider-button=true
   - --ssl-insecure-skip-verify
+  - --scope=openid profile
 
 initContainers:
   waitForRedis:

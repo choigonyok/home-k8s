@@ -19,17 +19,26 @@
 
 ## Demo
 
-| URL       | Service                                 | ID| PW|
-|--------------|--------------------------------------|-----|-----|
-| [https://o11y.choigonyok.com](https://o11y.choigonyok.com) | Observability | viewer | viewer123 |
-| [https://cd.choigonyok.com](https://cd.choigonyok.com) | ArgoCD | - | - |
-| [https://vault.choigonyok.com](https://vault.choigonyok.com) | Vault | - | - |
-| [https://auth.choigonyok.com](https://auth.choigonyok.com) | Keycloak | viewer | viewer123 |
-| [https://kafka.choigonyok.com](https://kafka.choigonyok.com) | Kafka | - | - |
-| [https://registry.choigonyok.com](https://registry.choigonyok.com) | Harbor                    | viewer| Viewer123|
-| [https://s3.choigonyok.com](https://s3.choigonyok.com) | MinIO              | viewer| viewer123|
-| [https://postgres.choigonyok.com](https://postgres.choigonyok.com) | Zalando PostgreSQL Operator | - | - |
-| [https://network.choigonyok.com](https://network.choigonyok.com) | Cilium | - | - |
-| [https://storage.choigonyok.com](https://storage.choigonyok.com)  | Ceph | - | - |
-| [https://www.choigonyok.com](https://www.choigonyok.com) | techlog | - | - |
-| [https://idp.choigonyok.com](https://idp.choigonyok.com)  | home-idp | - | - |
+You can login all of my services with `Keycloak` IdP, `Oauth2 Proxy` and `Nginx` ingress controller.
+
+### Keycloak ID / PW
+
+| ID | Password | Role |
+|---|---|---|
+| tester | tester1234 | viewer |
+
+### Services
+
+| URL       | Service                                 |
+|--------------|--------------------------------------|
+| [https://o11y.choigonyok.com](https://o11y.choigonyok.com) | Observability | 
+| [https://cd.choigonyok.com](https://cd.choigonyok.com) | ArgoCD | 
+| [https://vault.choigonyok.com](https://vault.choigonyok.com) | Vault |
+| [https://kafka.choigonyok.com](https://kafka.choigonyok.com) | Kafka | 
+| [https://registry.choigonyok.com](https://registry.choigonyok.com) | Harbor | 
+| [https://s3.choigonyok.com](https://s3.choigonyok.com) | MinIO | 
+| [https://postgres.choigonyok.com](https://postgres.choigonyok.com) | Zalando PostgreSQL Operator | 
+| [https://network.choigonyok.com](https://network.choigonyok.com) | Cilium | 
+| [https://storage.choigonyok.com](https://storage.choigonyok.com)  | Ceph | 
+| [https://www.choigonyok.com](https://www.choigonyok.com) | techlog | 
+| [https://idp.choigonyok.com](https://idp.choigonyok.com)  | home-idp | 

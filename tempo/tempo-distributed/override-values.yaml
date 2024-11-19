@@ -1,0 +1,28 @@
+---
+global:
+  clusterDomain: 'cluster.local'
+gateway:
+  enabled: true
+minio:
+  enabled: false
+storage:
+  trace:
+    backend: s3
+    s3:
+      access_key: 'tempo'
+      secret_key: '<path:kv/data/minio#TEMPO_SECRET_KEY>'
+      bucket: 'tempo-traces'
+      endpoint: 'app-minio-svc.minio-system.svc.cluster.local:9000'
+      insecure: true
+traces:
+  otlp:
+    http:
+      enabled: true
+    grpc:
+      enabled: true
+distributor:
+  config:
+    log_received_spans:
+      enabled: true
+    log_discarded_spans:
+      enabled: true

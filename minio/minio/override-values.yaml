@@ -121,6 +121,13 @@ policies:
         - 'arn:aws:s3:::mimir*/*'
       actions:
         - 's3:*'
+- name: tempo-policy
+  statements:
+    - effect: Allow 
+      resources:
+        - 'arn:aws:s3:::tempo*/*'
+      actions:
+        - 's3:*'
 - name: velero-policy
   statements:
     - effect: Allow 
@@ -145,6 +152,9 @@ users:
   - accessKey: mimir
     secretKey: <path:kv/data/minio#MIMIR_SECRET_KEY>
     policy: mimir-policy
+  - accessKey: tempo
+    secretKey: <path:kv/data/minio#TEMPO_SECRET_KEY>
+    policy: tempo-policy
   - accessKey: velero
     secretKey: <path:kv/data/minio#VELERO_SECRET_KEY>
     policy: velero-policy
@@ -205,13 +215,18 @@ buckets:
     purge: false
     versioning: true
     objectlocking: false
+  - name:  tempo-traces
+    policy: none
+    purge: false
+    versioning: true
+    objectlocking: false
 
 environment:
 
 oidc:
-  enabled: false
+  enabled: true
   configUrl: "https://auth.choigonyok.com/realms/home-k8s/.well-known/openid-configuration"
-  clientId: "minio-oauth"
+  clientId: "minio-client"
   clientSecret: ""
   existingClientSecretName: ""
   existingClientIdKey: ""

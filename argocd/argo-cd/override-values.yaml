@@ -18,20 +18,22 @@ repoServer:
       - avp-secret
   replicas: 2
   initContainers:
-    - name: download-tools
-      image: alpine/curl
-      env:
-        - name: AVP_VERSION
-          value: 1.16.1
-      command: [sh, -c]
-      args:
-        - >-
-          curl -L https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v$(AVP_VERSION)/argocd-vault-plugin_$(AVP_VERSION)_linux_amd64 -o argocd-vault-plugin &&
-          chmod +x argocd-vault-plugin &&
-          mv argocd-vault-plugin /custom-tools/
-      volumeMounts:
-        - mountPath: /custom-tools
-          name: custom-tools
+  - name: download-tools
+    image: alpine:3.8
+    command: [sh, -c]
+    env:
+      - name: AVP_VERSION
+        value: "1.18.1"
+    args:
+      - >-
+        wget -O argocd-vault-plugin
+        https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v${AVP_VERSION}/argocd-vault-plugin_${AVP_VERSION}_linux_amd64 &&
+        chmod +x argocd-vault-plugin &&
+        mv argocd-vault-plugin /custom-tools/
+    volumeMounts:
+      - mountPath: /custom-tools
+        name: custom-tools
+
   extraContainers:
     - name: avp-helm
       command: [/var/run/argocd/argocd-cmp-server]
@@ -54,7 +56,7 @@ repoServer:
           mountPath: /usr/local/bin/argocd-vault-plugin
     - name: avp
       command: [/var/run/argocd/argocd-cmp-server]
-      image: quay.io/argoproj/argocd:v2.7.4
+      image: registry.access.redhat.com/ubi8
       securityContext:
         runAsNonRoot: true
         runAsUser: 999
@@ -64,7 +66,7 @@ repoServer:
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         - mountPath: /tmp
-          name: tmp-dir
+          name: tmp
         - mountPath: /home/argocd/cmp-server/config/plugin.yaml
           subPath: avp.yaml
           name: cmp-plugin
@@ -113,9 +115,9 @@ configs:
       clientID: argocd-client
       clientSecret: $oidc.keycloak.clientSecret
       requestedScopes: ['openid', 'profile']
-  rbac:
-    policy.default: role:readonly
-    policy.csv: g, testers, role:readonly
+  # rbac:
+  #   policy.default: role:readonly
+  #   policy.csv: g, testers, role:readonly
 server:
   replicas: 2
   ingress:

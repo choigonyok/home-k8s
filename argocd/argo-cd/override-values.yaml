@@ -88,8 +88,6 @@ repoServer:
       emptyDir: {}
     - name: tmp-dir
       emptyDir: {}
-    - name: tmp-dir
-      emptyDir: {}
 
 applicationSet:
   replicas: 2

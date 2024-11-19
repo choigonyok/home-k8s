@@ -20,14 +20,13 @@ extraArgs:
   - --client-secret=<path:kv/data/key-cloak#OAUTH2_PROXY_CLIENT_SECRET>
   - --redirect-url=https://proxy.choigonyok.com/oauth2/callback
   - --oidc-issuer-url=https://auth.choigonyok.com/realms/home-k8s
-  - --allowed-role=oauth2-proxy-oauth:network-admin
   - --code-challenge-method=S256
   - --email-domain="*"
   - --whitelist-domain="*.choigonyok.com"
   - --insecure-oidc-allow-unverified-email
   - --cookie-secure=false
-  - --upstream=file:///dev/null
-  - --allowed-role=oauth2-proxy-oauth:network-admin
+  - --allowed-role=tester
+  - --allowed-group=testers
   - --skip-provider-button=true
   - --ssl-insecure-skip-verify
 

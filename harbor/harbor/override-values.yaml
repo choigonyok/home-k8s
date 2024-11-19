@@ -65,7 +65,7 @@ redis:
     harborDatabaseIndex: "6"
     cacheLayerDatabaseIndex: "7"
     username: "default"
-    password: <path:kv/data/redis#ROOT_PASSWORD>
+    password: \<path\:kv\/data\/redis\#ROOT_PASSWORD\>
     existingSecret: ""
   podAnnotations: {}
   podLabels: {}

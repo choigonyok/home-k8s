@@ -41,6 +41,9 @@ repoServer:
       securityContext:
         runAsNonRoot: true
         runAsUser: 999
+      envFrom:
+      - secretRef:
+          name: avp-secret
       volumeMounts:
         - mountPath: /var/run/argocd
           name: var-files
@@ -60,6 +63,9 @@ repoServer:
       securityContext:
         runAsNonRoot: true
         runAsUser: 999
+      envFrom:
+      - secretRef:
+          name: avp-secret
       volumeMounts:
         - mountPath: /var/run/argocd
           name: var-files
@@ -79,6 +85,8 @@ repoServer:
         name: cmp-plugin
       name: cmp-plugin
     - name: custom-tools
+      emptyDir: {}
+    - name: tmp-dir
       emptyDir: {}
     - name: tmp-dir
       emptyDir: {}

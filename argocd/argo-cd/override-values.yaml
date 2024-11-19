@@ -123,7 +123,10 @@ configs:
       requestedScopes: ['openid', 'profile']
   rbac:
     policy.default: role:readonly
-    policy.csv: g, testers, role:readonly
+    policy.csv: |
+      p, role:viewer, applications, get, *, allow
+      p, role:viewer, projects, get, *, allow
+      g, testers, role:viewer
 server:
   replicas: 2
   ingress:

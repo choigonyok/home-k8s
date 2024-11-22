@@ -4,7 +4,7 @@ alloy:
     port: 4317
     targetPort: 4317
     protocol: "TCP"
-    
+
   configMap:
     create: true
     content: |-
@@ -16,7 +16,7 @@ alloy:
       otelcol.receiver.otlp "otel" {
         output {
           logs    = [otelcol.processor.attributes.default.input]
-          metrics = [otelcol.exporter.prometheus.otel.input]
+          metrics = [otelcol.exporter.prometheus.otel.input, ]
           traces  = [otelcol.exporter.otlp.tempo.input]
         }
         grpc {
@@ -25,6 +25,11 @@ alloy:
         http {
           endpoint = "0.0.0.0:4318"
         }
+      }
+
+      prometheus.scrape "ceph" {
+        targets    = [{"__address__" = "rook-ceph-exporter.rook-ceph.svc.cluster.local:9926", group = "infrastructure", service = "ceph"}]
+        forward_to = [prometheus.remote_write.otel.receiver]
       }
 
       otelcol.exporter.prometheus "otel" {

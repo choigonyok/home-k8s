@@ -30,6 +30,7 @@ alloy:
       prometheus.scrape "ceph" {
         targets    = [{"__address__" = "rook-ceph-exporter.rook-ceph.svc.cluster.local:9926", group = "infrastructure", service = "ceph"}]
         forward_to = [prometheus.remote_write.otel.receiver]
+        scrape_interval = 5s"
       }
 
       otelcol.exporter.prometheus "otel" {

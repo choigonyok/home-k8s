@@ -29,7 +29,6 @@ alloy:
 
       mimir.rules.kubernetes "local" {
         address = "app-mimir-ruler.metric-system.svc.cluster.local:8080"
-        tenant_id = "team-choigonyok"
 
         rule_selector {
           match_labels = {

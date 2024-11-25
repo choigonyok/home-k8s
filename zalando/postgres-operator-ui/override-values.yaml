@@ -22,6 +22,9 @@ envs:
 
 ingress:
   enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/auth-signin: https://proxy.choigonyok.com/oauth2/start?rd=https://$host$request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://proxy.choigonyok.com/oauth2/auth
   ingressClassName: "nginx"
   hosts:
     - host: postgres.choigonyok.com

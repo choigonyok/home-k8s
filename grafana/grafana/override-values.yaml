@@ -26,7 +26,9 @@ hostAliases: []
 ingress:
   enabled: true
   ingressClassName: nginx
-  labels: {}
+  annotations:
+    nginx.ingress.kubernetes.io/auth-signin: https://proxy.choigonyok.com/oauth2/start?rd=https://$host$request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://proxy.choigonyok.com/oauth2/auth
   path: /
   pathType: Prefix
   hosts:

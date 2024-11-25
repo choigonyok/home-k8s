@@ -5,6 +5,9 @@ expose:
     hosts:
       core: registry.choigonyok.com
     className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/auth-signin: https://proxy.choigonyok.com/oauth2/start?rd=https://$host$request_uri
+      nginx.ingress.kubernetes.io/auth-url: https://proxy.choigonyok.com/oauth2/auth
 
 externalURL: https://registry.choigonyok.com
 

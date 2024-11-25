@@ -1,0 +1,40 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    alloy: "yes"
+  name: metric-rule
+  namespace: alloy-system
+spec:
+  groups:
+  - name: metric-group
+    rules:
+    - alert: CephStorageUsage
+      expr: |
+        round(avg_over_time((ceph_osd_stat_bytes_used / ceph_osd_stat_bytes * 100)[10m:1m]), 0.1)
+      for: 0m
+      labels:
+        severity: periodic
+      annotations:
+        summary: "Ceph OSD Storage Usage Ratio"
+        description: "{{ $labels.ceph_daemon }} is using {{$value}}%"
+
+
+# apiVersion: v1
+# kind: ServiceAccount
+# metadata:
+#   name: alloy
+#   namespace: alloy-system
+# ---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRoleBinding
+# metadata:
+#   name: alloy
+# subjects:
+# - kind: ServiceAccount
+#   name: alloy
+#   namespace: alloy-system
+# roleRef:
+#   kind: ClusterRole
+#   name: alloy
+#   apiGroup: rbac.authorization.k8s.io

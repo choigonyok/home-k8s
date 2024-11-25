@@ -30,7 +30,7 @@ extraArgs:
   - --skip-provider-button=true
   - --ssl-insecure-skip-verify
   - --scope=openid profile
-  - --cookie-domain=".choigonyok.com"
+  - --cookie-domain=".choigonyok.com" # 중요, 서브도메인 간 쿠키 공유
 
 initContainers:
   waitForRedis:

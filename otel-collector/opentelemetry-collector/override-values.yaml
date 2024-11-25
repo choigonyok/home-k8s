@@ -299,9 +299,9 @@ rollout:
 
 prometheusRule:
   enabled: false
-  groups: []
+  groups: otel-collector
   defaultRules:
-    enabled: false
+    enabled: true
   extraLabels: {}
 
 statefulset:

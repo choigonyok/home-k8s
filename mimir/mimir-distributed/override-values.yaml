@@ -64,7 +64,7 @@ alertmanager:
         slack_configs:
           - api_url: "<path:kv/data/slack#WEBHOOK_URL>"
             channel: "#ceph-notification"
-            title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+            title: "{{ .Annotations.summary }}\n{{ end }}"
             text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
 
 compactor:

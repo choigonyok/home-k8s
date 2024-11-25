@@ -40,9 +40,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/auth-url: "https://proxy.choigonyok.com/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://proxy.choigonyok.com/oauth2/start?rd=$escaped_request_uri"
   name: network-ingress
   namespace: kube-system
 spec:
@@ -78,3 +75,93 @@ spec:
               number: 8080
         path: /distributor/ha_tracker
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+  name: vault-ingress
+  namespace: vault-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: vault.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: vault-ui
+            port:
+              number: 8200
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: techlog-ui-ingress
+  namespace: dev-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: www.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: techlog-ui
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: postgres-ingress
+  namespace: postgres-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: postgres.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: app-zalando-operators-postgres-operator-ui
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mimir-ingress
+  namespace: metric-system
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /alertmanager
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: alert.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: app-mimir-alertmanager
+            port:
+              number: 8080
+        path: /
+        pathType: Exact
+  - host: alert.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: app-mimir-alertmanager
+            port:
+              number: 8080
+        path: /alertmanager
+        pathType: Exact
+---

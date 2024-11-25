@@ -10,7 +10,7 @@ systemctl restart ssh
 
 ssh-keygen -t rsa -b 2048 -m PEM -f ~/.ssh/k8s-{NUM}.pem # 수정
 cat ~/.ssh/k8s-{NUM}.pem.pub > ~/.ssh/authorized_keys # 수정
-
+cat ~/.ssh/k8s-1.pem.pub > ~/.ssh/authorized_keys
 apt-get install net-tools
 
 swapoff -a
@@ -36,7 +36,6 @@ systemctl enable docker.service && systemctl enable containerd.service
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 systemctl restart containerd.service && systemctl restart docker.service
-
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
@@ -53,7 +52,6 @@ export KUBECONFIG=/home/choigonyok/.kube/config
 kubectl label node k8s-2 node-role.kubernetes.io/worker-1=
 kubectl label node k8s-3 node-role.kubernetes.io/worker-2=
 kubectl label node k8s-4 node-role.kubernetes.io/worker-3=
-
 
 
 CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
@@ -128,7 +126,7 @@ helm upgrade cilium cilium/cilium --version 1.15.6 \
 kubectl -n kube-system rollout restart deployment/cilium-operator
 kubectl -n kube-system rollout restart ds/cilium
 
-kubectl apply -f /home/choigonyok/home-k8s/cilium/external-ip.yaml
+kubectl apply -f ~/home-k8s/cilium/manifests/external-ip.yaml
 
 cilium connectivity test
 
@@ -154,3 +152,6 @@ source /home/choigonyok/.bashrc
 # swapoff -a
 # sudo modprobe rbd
 # sudo modprobe ceph
+
+
+

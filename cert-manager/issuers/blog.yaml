@@ -2,6 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: blog-issuer
+  namespace: dev-system
 spec:
   acme:
     email: "achoistic98@naver.com"
@@ -11,4 +12,4 @@ spec:
     solvers:
     - http01:
         ingress:
-          class: cilium
+          class: nginx

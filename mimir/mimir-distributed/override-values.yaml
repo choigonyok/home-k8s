@@ -62,7 +62,7 @@ alertmanager:
     receivers:
       - name: "slack-receiver"
         slack_configs:
-          - api_url: "https://hooks.slack.com/services/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"
+          - api_url: "https://hooks.slack.com/services/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"
             channel: "#ceph-notification"
             username: "Alertmanager"
             title: "{{ .CommonAnnotations.summary }}"

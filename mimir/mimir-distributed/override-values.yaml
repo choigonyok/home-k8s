@@ -48,6 +48,31 @@ alertmanager:
     readOnlyRootFilesystem: false
     runAsNonRoot: false
     runAsUser: 0
+  fallbackConfig: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: "slack"
+      group_by: ['service']
+      group_wait: 30s
+      group_interval: 1m
+      repeat_interval: 5m
+
+      routes:
+        - match:
+            severity: periodic
+          receiver: "slack-receiver"
+
+    receivers:
+      - name: "slack-receiver"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#ceph-notification"
+            username: "Alertmanager"
+            title: "{{ .CommonAnnotations.summary }}"
+            text: >-
+              {{ .CommonAnnotations.description }}
 
 compactor:
   nodeSelector:

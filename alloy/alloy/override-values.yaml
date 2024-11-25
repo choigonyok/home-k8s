@@ -27,6 +27,17 @@ alloy:
         }
       }
 
+      mimir.rules.kubernetes "local" {
+        address = "app-mimir-ruler.metric-system.svc.cluster.local:8080"
+        tenant_id = "team-choigonyok"
+
+        rule_selector {
+          match_labels = {
+              alloy = "yes",
+          }
+        }
+      }
+
       prometheus.scrape "ceph" {
         targets    = [{"__address__" = "rook-ceph-exporter.rook-ceph.svc.cluster.local:9926", group = "infrastructure", service = "ceph"}]
         forward_to = [prometheus.remote_write.otel.receiver]

@@ -50,7 +50,7 @@ alertmanager:
     runAsUser: 0
   fallbackConfig: |
     global:
-      resolve_timeout: 5m
+      resolve_timeout: 60m
 
     route:
       receiver: "slack-receiver"

@@ -226,7 +226,7 @@ buckets:
 environment:
 
 oidc:
-  enabled: true
+  enabled: false
   configUrl: "https://auth.choigonyok.com/realms/home-k8s/.well-known/openid-configuration"
   clientId: "minio-client"
   clientSecret: "<path:kv/data/key-cloak#MINIO_CLIENT_SECRET>"

@@ -33,7 +33,7 @@ alloy:
 
         rule_selector {
           match_labels = {
-              alloy = "yes",
+            alloy = "yes",
           }
         }
       }
@@ -138,3 +138,7 @@ alloy:
   mounts:
     varlog: false
     dockercontainers: false
+
+serviceAccount:
+  create: false
+  name: alloy

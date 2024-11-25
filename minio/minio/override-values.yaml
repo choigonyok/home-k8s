@@ -229,16 +229,16 @@ oidc:
   enabled: false
   configUrl: "https://auth.choigonyok.com/realms/home-k8s/.well-known/openid-configuration"
   clientId: "minio-client"
-  clientSecret: ""
+  clientSecret: "<path:kv/data/key-cloak#MINIO_CLIENT_SECRET>"
   existingClientSecretName: ""
   existingClientIdKey: ""
   existingClientSecretKey: ""
-  claimName: "consoleAdmin"
+  claimName: "policy"
   scopes: "openid,profile,email,roles"
   redirectUri: "https://s3.choigonyok.com/oauth_callback"
-  claimPrefix: "roles"
-  comment: "test"
-  displayName: "Login with Keycloak"
+  claimPrefix: ""
+  comment: ""
+  displayName: "Login with KeyCloak"
 
 networkPolicy:
   enabled: false

@@ -16,7 +16,6 @@ spec:
       labels:
         severity: periodic
       annotations:
-        summary: "Ceph OSD Storage Usage Ratio"
         description: "{{ $labels.ceph_daemon }} is using {{$value}}%"
 
 

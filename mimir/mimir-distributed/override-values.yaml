@@ -64,7 +64,7 @@ alertmanager:
         slack_configs:
           - api_url: "<path:kv/data/slack#WEBHOOK_URL>"
             channel: "#ceph-notification"
-            title: "{{ .Annotations.summary }}\n{{ end }}"
+            title: "Ceph OSD Storage Usage Ratio\n"
             text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
 
 compactor:

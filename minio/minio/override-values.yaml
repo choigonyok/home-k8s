@@ -234,7 +234,7 @@ oidc:
   existingClientIdKey: ""
   existingClientSecretKey: ""
   claimName: "policy"
-  scopes: "openid,profile,email,roles"
+  scopes: "openid,profile,email,roles,groups"
   redirectUri: "https://s3.choigonyok.com/oauth_callback"
   claimPrefix: ""
   comment: ""

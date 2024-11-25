@@ -32,9 +32,10 @@ mimir:
       ha_tracker:
         enable_ha_tracker: true
         kvstore:
-          store: consul
-          consul:
-            host: consul-server.ha-system.svc.cluster.local:8500
+          store: inmemory
+        ring:
+          kvstore:
+            store: inmemory
 
 alertmanager:
   nodeSelector:

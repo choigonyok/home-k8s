@@ -124,9 +124,7 @@ configs:
   rbac:
     policy.default: role:readonly
     policy.csv: |
-      p, role:viewer, applications, get, *, allow
-      p, role:viewer, projects, get, *, allow
-      g, testers, role:viewer
+      g, testers, role:readonly
 server:
   replicas: 2
   ingress:

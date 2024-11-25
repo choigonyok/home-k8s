@@ -16,7 +16,7 @@ alloy:
       otelcol.receiver.otlp "otel" {
         output {
           logs    = [otelcol.processor.attributes.default.input]
-          metrics = [otelcol.exporter.prometheus.otel.input, ]
+          metrics = [otelcol.exporter.prometheus.otel.input]
           traces  = [otelcol.exporter.otlp.tempo.input]
         }
         grpc {
@@ -28,7 +28,6 @@ alloy:
       }
 
       mimir.rules.kubernetes "local" {
-      app-mimir-ruler.metric-system.svc.cluster.local
         address = "http://app-mimir-ruler.metric-system.svc.cluster.local:8080"
         tenant_id = "fake"
 

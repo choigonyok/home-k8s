@@ -29,7 +29,7 @@ extraArgs:
   - --allowed-group=testers
   - --skip-provider-button=true
   - --ssl-insecure-skip-verify
-  - --scope=openid profile groups email
+  - --scope=openid profile groups email roles
   - --cookie-domain=".choigonyok.com" # 중요, 서브도메인 간 쿠키 공유
 
 initContainers:

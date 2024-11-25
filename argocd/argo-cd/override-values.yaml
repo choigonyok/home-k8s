@@ -124,6 +124,7 @@ configs:
   rbac:
     policy.default: role:readonly
     policy.csv: |
+      p, role:readonly, *, *, *, allow
       g, testers, role:readonly
 server:
   replicas: 2

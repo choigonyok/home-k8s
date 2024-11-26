@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: <path:kv/data/test#IMAGE_NAME>:latest
+    ports:
+    - containerPort: 80

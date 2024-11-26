@@ -1,0 +1,6 @@
+  image:
+    registry: docker.io
+    repository: bitnami/nginx-exporter
+    tag: <path:kv/data/test#IMAGE_TAG>
+    digest: ""
+    pullPolicy: IfNotPresent

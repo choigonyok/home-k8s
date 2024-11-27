@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-harbor-ingress-oauth
+  namespace: registry-system
+  annotations:
+    ingress.kubernetes.io/proxy-body-size: "0"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-signin: https://proxy.choigonyok.com/oauth2/start?rd=https://$host$request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://proxy.choigonyok.com/oauth2/auth
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: registry.choigonyok.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: app-harbor-portal
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

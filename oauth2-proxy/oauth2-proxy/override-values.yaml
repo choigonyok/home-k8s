@@ -23,6 +23,7 @@ extraArgs:
   - --code-challenge-method=S256
   - --email-domain="*"
   - --whitelist-domain="*.choigonyok.com"
+  - --skip-auth-regex="^/api/.*|^/service/token"
   - --insecure-oidc-allow-unverified-email
   - --cookie-secure=false
   - --allowed-role=viewer

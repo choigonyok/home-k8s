@@ -1,5 +1,10 @@
 expose:
-  type: clusterIP
+  tls:
+    enabled: false
+  ingress:
+    hosts:
+      core: registry.choigonyok.com
+    className: "nginx"
 
 externalURL: https://registry.choigonyok.com
 

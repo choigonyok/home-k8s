@@ -161,6 +161,7 @@ registry:
   replicas: 3
   nodeSelector:
     node-type: worker
+  relativeurls: true
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:

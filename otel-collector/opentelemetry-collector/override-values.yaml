@@ -52,7 +52,7 @@ config:
     #   htpasswd: 
     #     file: .htpasswd
     #     inline: |
-    #       ${env:BASIC_AUTH_USERNAME}:${env:BASIC_AUTH_PASSWORD}
+    #       <path:kv/data/otel#USERNAME>:<path:kv/data/otel#PASSWORD>
     basicauth/client:
       client_auth: 
         username: username

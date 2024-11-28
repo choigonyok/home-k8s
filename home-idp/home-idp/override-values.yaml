@@ -1,0 +1,55 @@
+global:
+  prefix: home-idp
+  namespace: dev-system
+  image:
+      tag: "1.0"
+
+auth:
+  adminPassword: <path:kv/data/home-idp#ADMIN_PASSWORD>
+
+git:
+  username: choigonyok
+  email: achoistic98@naver.com
+  repository:
+    name: home-idp-repo
+    token: <path:kv/data/home-idp#GITHUB_TOKEN>
+  oauth:
+    clientId: <path:kv/data/home-idp#OAUTH_CLIENT_ID>
+    clientSecret: <path:kv/data/home-idp#OAUTH_CLIENT_SECRET>
+
+ingress:
+  ui:
+    host: idp.choigonyok.com
+    port: 443
+    tls: true
+    annotations:
+      nginx.ingress.kubernetes.io/auth-signin: https://proxy.choigonyok.com/oauth2/start?rd=https://$host$request_uri
+      nginx.ingress.kubernetes.io/auth-url: https://proxy.choigonyok.com/oauth2/auth
+  gateway:
+    host: api-idp.choigonyok.com
+    port: 443
+    tls: true
+  harbor:
+    host: ci.choigonyok.com
+    port: 80
+    tls: false
+    adminPassword: <path:kv/data/home-idp#ADMIN_PASSWORD>
+
+storage:
+  database: 
+    type: postgresql
+    port: 5432
+    name: home-idp
+    username: choigonyok
+    password: <path:kv/data/home-idp#ADMIN_PASSWORD>
+  persistence:
+    storageClass: ceph-block
+    size: 5Gi
+
+replicas:
+  ui: 2
+  deployManager: 2
+  installManager: 2
+  traceManager: 2
+  rbacManager: 2
+  gateway: 2

@@ -6,7 +6,7 @@ expose:
       core: registry.choigonyok.com
     className: "nginx"
   annotations:
-    ingress.kubernetes.io/proxy-body-size: "0"
+    ingress.kubernetes.io/proxy-body-size: 0
     ingress.kubernetes.io/ssl-redirect: "true"
 
 externalURL: https://registry.choigonyok.com

@@ -23,7 +23,7 @@ repoServer:
     command: [sh, -c]
     env:
       - name: AVP_VERSION
-        value: "1.18.0"
+        value: "1.18.1"
     args:
       - >-
         wget -O argocd-vault-plugin

@@ -49,7 +49,7 @@ storage:
 replicas:
   ui: 2
   deployManager: 2
-  installManager: 2
+  installManager: 1
   traceManager: 2
   rbacManager: 2
   gateway: 2

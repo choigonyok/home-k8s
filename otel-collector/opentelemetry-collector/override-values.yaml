@@ -50,8 +50,8 @@ config:
   extensions:
     basicauth/client:
       client_auth: 
-        username: <path:kv/data/otel#USERNAME>
-        password: <path:kv/data/otel#PASSWORD>
+        username: username
+        password: password
     health_check:
       endpoint: ${env:MY_POD_IP}:13133
 

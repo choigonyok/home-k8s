@@ -294,7 +294,7 @@ rollout:
 
 prometheusRule:
   enabled: false
-  groups: otel-collector
+  groups: [{"service": "otel-collector"}]
   defaultRules:
     enabled: true
   extraLabels: {}

@@ -48,15 +48,10 @@ config:
         insecure_skip_verify: true
         
   extensions:
-    # basicauth/server:
-    #   htpasswd: 
-    #     file: .htpasswd
-    #     inline: |
-    #       <path:kv/data/otel#USERNAME>:<path:kv/data/otel#PASSWORD>
     basicauth/client:
       client_auth: 
-        username: username
-        password: password
+        username: <path:kv/data/otel#USERNAME>
+        password: <path:kv/data/otel#PASSWORD>
     health_check:
       endpoint: ${env:MY_POD_IP}:13133
 

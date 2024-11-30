@@ -49,7 +49,7 @@ storage:
 ui:
   replicas: 1
   image:
-    tag: "1.0"
+    tag: "1.0.1"
 
 deployManager:
   replicas: 1

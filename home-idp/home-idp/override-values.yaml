@@ -75,3 +75,13 @@ gateway:
   replicas: 1
   image:
     tag: "1.0.1"
+
+cd:
+  type: argocd
+  install: true
+  namespace: argocd-system
+  tls:
+    enabled: false
+  server: 
+    service:
+      name: argocd-server

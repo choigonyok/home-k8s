@@ -58,3 +58,13 @@ replicas:
   traceManager: 1
   rbacManager: 1
   gateway: 1
+
+cd:
+  type: argocd
+  install: true
+  namespace: namespace
+  tls:
+    enabled: false
+  server: 
+    service:
+      name: service-name

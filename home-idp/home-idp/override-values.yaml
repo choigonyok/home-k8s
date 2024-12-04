@@ -78,7 +78,7 @@ gateway:
 
 cd:
   type: argocd
-  install: true
+  install: false
   namespace: argocd-system
   tls:
     enabled: false
